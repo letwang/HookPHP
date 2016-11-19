@@ -5,5 +5,7 @@
 君子性非异也，善假于物也！
 # 安装
 1.http://pecl.php.net/package/yaf
+
 2.http://pecl.php.net/package/redis
+
 3.http://pecl.php.net/package/mongodb
