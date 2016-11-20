@@ -21,6 +21,9 @@ class Bootstrap extends Bootstrap_Abstract
         // auto load redis
         $redis = new Redis();
         $redis->connect($this->config->redis->host, $this->config->redis->port, $this->config->redis->timeout, $this->config->redis->reserved, $this->config->redis->interval);
+        if (!empty($this->config->redis->auth)) {
+            $redis->auth($this->config->redis->auth);
+        }
         Registry::set('Redis', $redis);
         
         // auto load mysql

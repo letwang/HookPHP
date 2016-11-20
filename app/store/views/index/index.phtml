@@ -1,6 +1,6 @@
 <?php require APP_PATH.'/layout/head.phtml';?>
 
-<link href="/css/login.css" rel="stylesheet" />
+<link href="<?php echo Yaf\Registry::get('Config')->HTTP_URI;?>css/login.css" rel="stylesheet" />
 <title><?php echo $this->title;?></title>
 <meta name="description" content="<?php echo $this->description;?>" />
 <meta name="keywords" content="<?php echo $this->keywords;?>" />
@@ -10,7 +10,7 @@
 		<form class="form-signin" role="form">
 			<h2 class="form-signin-heading">Please sign in</h2>
 			<input type="email" class="form-control" placeholder="Email address"
-				required autofocus> <input type="password" class="form-control"
+				required autofocus><br /> <input type="password" class="form-control"
 				placeholder="Password" required>
 			<div class="checkbox">
 				<label> <input type="checkbox" value="remember-me"> Remember me
