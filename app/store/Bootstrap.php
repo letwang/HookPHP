@@ -1,5 +1,6 @@
 <?php
 use Yaf\Session, Yaf\Registry, Yaf\Dispatcher, Yaf\Application, Yaf\Bootstrap_Abstract, Yaf\Loader;
+use Let\Db\Db;
 
 class Bootstrap extends Bootstrap_Abstract
 {
@@ -21,12 +22,13 @@ class Bootstrap extends Bootstrap_Abstract
         // auto load redis
         $redis = new Redis();
         $redis->connect($this->config->redis->host, $this->config->redis->port, $this->config->redis->timeout, $this->config->redis->reserved, $this->config->redis->interval);
-        if (!empty($this->config->redis->auth)) {
+        if (! empty($this->config->redis->auth)) {
             $redis->auth($this->config->redis->auth);
         }
         Registry::set('Redis', $redis);
         
         // auto load mysql
+        Registry::set('Db', new Db());
         
         // auto load model
         Registry::set('I18n', new I18nModel($redis, $this->config->application->name, 'zh_CN'));

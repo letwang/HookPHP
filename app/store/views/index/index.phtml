@@ -1,23 +1,10 @@
 <?php require APP_PATH.'/layout/head.phtml';?>
 
-<link href="<?php echo Yaf\Registry::get('Config')->HTTP_URI;?>css/login.css" rel="stylesheet" />
+<link href="css/login.css" rel="stylesheet" />
 <title><?php echo $this->title;?></title>
 <meta name="description" content="<?php echo $this->description;?>" />
 <meta name="keywords" content="<?php echo $this->keywords;?>" />
 </head>
 <body>
-	<div class="container">
-		<form class="form-signin" role="form">
-			<h2 class="form-signin-heading">Please sign in</h2>
-			<input type="email" class="form-control" placeholder="Email address"
-				required autofocus><br /> <input type="password" class="form-control"
-				placeholder="Password" required>
-			<div class="checkbox">
-				<label> <input type="checkbox" value="remember-me"> Remember me
-				</label>
-			</div>
-			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign
-				in</button>
-		</form>
-	</div>
+	<h1>Index</h1>
 <?php require APP_PATH.'/layout/foot.phtml';?>
