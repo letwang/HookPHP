@@ -1,7 +1,7 @@
 # HookPHP
 这是一款出自10年+编程经验者创造的PHP框架！
 # 特点
-基于PHP7、安全、性能、SEO
+上手快、成本低、PHP7起步、重安全、高性能、SEO优化
 # 依赖
 1.http://pecl.php.net/package/yaf
 
