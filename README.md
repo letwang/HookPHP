@@ -12,6 +12,10 @@
 4.http://sphinxsearch.com/downloads/release/
 # php.ini
 ```
+[Session]
+session.save_handler = redis
+session.save_path = "tcp://127.0.0.1:6379?weight=1&auth=123456&database=0, tcp://127.0.0.1:6379?weight=2&auth=123456&database=0"
+
 [yaf]
 yaf.use_namespace = 1
 yaf.use_spl_autoload = 1
