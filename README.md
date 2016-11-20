@@ -11,6 +11,8 @@
 
 4.http://sphinxsearch.com/downloads/release/
 # php.ini
+```
 [yaf]
 yaf.use_namespace = 1
 yaf.use_spl_autoload = 1
+```
