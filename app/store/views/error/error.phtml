@@ -1,0 +1,7 @@
+<?php require APP_PATH.'/layout/head.phtml';?>
+<title><?php echo $this->globalTitle;?></title>
+</head>
+<body>
+<?php require APP_PATH.'/layout/navigation.phtml';?>
+<div class="error"><?php echo "Error Msg:" . $this->exception->getMessage();?></div>
+<?php require APP_PATH.'/layout/foot.phtml';?>
