@@ -4,21 +4,241 @@ namespace Install\Init;
 class Mysql
 {
 
-    const base = "CREATE TABLE `hp_user` (
+    const base = "
+CREATE TABLE `hp_acl_group` (
   `id` int(10) UNSIGNED NOT NULL,
-  `user` varchar(64) NOT NULL,
-  `pass` char(64) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
-  `active` tinyint(3) UNSIGNED NOT NULL DEFAULT '1'
+  `type` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `status` tinyint(3) UNSIGNED NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `hp_user` (`id`, `user`, `pass`, `active`) VALUES
-(1, 'admin@hookphp.com', '6abedafaed3f1d50eb07a087d5a93d15de821702dbb4c4fcc136cb69ae05f9a6', 1);
+INSERT INTO `hp_acl_group` (`id`, `type`, `status`) VALUES
+(1, 0, 1);
+
+CREATE TABLE `hp_acl_group_lang` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `id_lang` int(10) UNSIGNED NOT NULL DEFAULT '1',
+  `name` char(16) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `hp_acl_group_lang` (`id`, `id_lang`, `name`) VALUES
+(1, 1, '客户端资源列表');
+
+CREATE TABLE `hp_acl_group_resource` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `group_id` int(10) UNSIGNED NOT NULL,
+  `resource_id` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(3) UNSIGNED NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `hp_acl_group_resource` (`id`, `group_id`, `resource_id`, `status`) VALUES
+(1, 1, 1, 1),
+(2, 1, 2, 1),
+(3, 1, 3, 1);
+
+CREATE TABLE `hp_acl_resource` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(3) UNSIGNED NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `hp_acl_resource` (`id`, `status`) VALUES
+(1, 1),
+(2, 1),
+(3, 1);
+
+CREATE TABLE `hp_acl_resource_lang` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `id_lang` int(10) UNSIGNED NOT NULL DEFAULT '1',
+  `name` char(16) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `hp_acl_resource_lang` (`id`, `id_lang`, `name`) VALUES
+(1, 1, '用户删除'),
+(2, 1, '订单修改'),
+(3, 1, '用户查看');
+
+CREATE TABLE `hp_acl_role` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(3) UNSIGNED NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `hp_acl_role` (`id`, `status`) VALUES
+(1, 1),
+(2, 1),
+(3, 1),
+(4, 1);
+
+CREATE TABLE `hp_acl_role_lang` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `id_lang` int(10) UNSIGNED NOT NULL DEFAULT '1',
+  `name` char(16) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `hp_acl_role_lang` (`id`, `id_lang`, `name`) VALUES
+(1, 1, '管理员'),
+(2, 1, '会计'),
+(3, 1, '销售'),
+(4, 1, '研发');
+
+CREATE TABLE `hp_acl_role_resource` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `role_id` int(10) UNSIGNED NOT NULL,
+  `resource_id` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(3) UNSIGNED NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `hp_acl_role_resource` (`id`, `role_id`, `resource_id`, `status`) VALUES
+(1, 1, 1, 1),
+(2, 1, 2, 1),
+(3, 1, 3, 1),
+(4, 2, 3, 1),
+(5, 3, 2, 1),
+(6, 4, 3, 1);
+
+CREATE TABLE `hp_acl_user_resource` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `resource_id` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(3) UNSIGNED NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `hp_acl_user_resource` (`id`, `user_id`, `resource_id`, `status`) VALUES
+(1, 1, 3, 1);
+
+CREATE TABLE `hp_acl_user_role` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `role_id` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(3) UNSIGNED NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `hp_acl_user_role` (`id`, `user_id`, `role_id`, `status`) VALUES
+(1, 1, 1, 1),
+(2, 1, 2, 1),
+(3, 1, 3, 1),
+(4, 1, 4, 1);
+
+CREATE TABLE `hp_lang` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `name` char(32) NOT NULL,
+  `iso_code` char(2) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+  `language_code` char(5) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+  `status` tinyint(3) UNSIGNED NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `hp_lang` (`id`, `name`, `iso_code`, `language_code`, `status`) VALUES
+(1, '简体中文 (简体中文)', 'cn', 'zh-cn', 1),
+(2, 'English (English)', 'en', 'en-us', 1);
+
+CREATE TABLE `hp_user` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `user` char(64) NOT NULL,
+  `pass` char(64) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+  `name` char(16) NOT NULL DEFAULT '',
+  `status` tinyint(3) UNSIGNED NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `hp_user` (`id`, `user`, `pass`, `name`, `status`) VALUES
+(1, 'admin@hookphp.com', '6abedafaed3f1d50eb07a087d5a93d15de821702dbb4c4fcc136cb69ae05f9a6', 'bobstephen', 1);
+
+
+ALTER TABLE `hp_acl_group`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `hp_acl_group_lang`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_lang` (`id_lang`);
+
+ALTER TABLE `hp_acl_group_resource`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `group_id` (`group_id`,`resource_id`),
+  ADD KEY `resource_id` (`resource_id`);
+
+ALTER TABLE `hp_acl_resource`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `hp_acl_resource_lang`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_lang` (`id_lang`);
+
+ALTER TABLE `hp_acl_role`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `hp_acl_role_lang`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_lang` (`id_lang`);
+
+ALTER TABLE `hp_acl_role_resource`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `role_id` (`role_id`,`resource_id`),
+  ADD KEY `resource_id` (`resource_id`);
+
+ALTER TABLE `hp_acl_user_resource`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `user_id` (`user_id`,`resource_id`),
+  ADD KEY `resource_id` (`resource_id`);
+
+ALTER TABLE `hp_acl_user_role`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `user_id` (`user_id`,`role_id`),
+  ADD KEY `role_id` (`role_id`);
+
+ALTER TABLE `hp_lang`
+  ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `hp_user`
   ADD PRIMARY KEY (`id`);
 
+
+ALTER TABLE `hp_acl_group`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+ALTER TABLE `hp_acl_group_lang`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+ALTER TABLE `hp_acl_group_resource`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `hp_acl_resource`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `hp_acl_resource_lang`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `hp_acl_role`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+ALTER TABLE `hp_acl_role_lang`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+ALTER TABLE `hp_acl_role_resource`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+ALTER TABLE `hp_acl_user_resource`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+ALTER TABLE `hp_acl_user_role`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+ALTER TABLE `hp_lang`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 ALTER TABLE `hp_user`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;";
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+ALTER TABLE `hp_acl_group_lang`
+  ADD CONSTRAINT `FK_000009` FOREIGN KEY (`id_lang`) REFERENCES `hp_lang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `hp_acl_group_resource`
+  ADD CONSTRAINT `FK_000001` FOREIGN KEY (`group_id`) REFERENCES `hp_acl_group` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `FK_000002` FOREIGN KEY (`resource_id`) REFERENCES `hp_acl_resource` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `hp_acl_resource_lang`
+  ADD CONSTRAINT `FK_000010` FOREIGN KEY (`id_lang`) REFERENCES `hp_lang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `hp_acl_role_lang`
+  ADD CONSTRAINT `FK_000011` FOREIGN KEY (`id_lang`) REFERENCES `hp_lang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `hp_acl_role_resource`
+  ADD CONSTRAINT `FK_000003` FOREIGN KEY (`resource_id`) REFERENCES `hp_acl_resource` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `FK_000004` FOREIGN KEY (`role_id`) REFERENCES `hp_acl_role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `hp_acl_user_resource`
+  ADD CONSTRAINT `FK_000005` FOREIGN KEY (`user_id`) REFERENCES `hp_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `FK_000006` FOREIGN KEY (`resource_id`) REFERENCES `hp_acl_resource` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `hp_acl_user_role`
+  ADD CONSTRAINT `FK_000007` FOREIGN KEY (`role_id`) REFERENCES `hp_acl_role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `FK_000008` FOREIGN KEY (`user_id`) REFERENCES `hp_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+";
 
     const translation = 'CREATE TABLE IF NOT EXISTS `translation` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -29,191 +249,5 @@ ALTER TABLE `hp_user`
   `data` text NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_lang_from_id_lang_to_key_crc32` (`id_lang_from`,`id_lang_to`,`key_crc32`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
-
-
--- phpMyAdmin SQL Dump
--- version 4.6.4
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Generation Time: Nov 30, 2016 at 09:42 AM
--- Server version: 5.6.31-0ubuntu0.14.04.2
--- PHP Version: 5.6.21-1+donate.sury.org~precise+4
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `test`
---
-
--- --------------------------------------------------------
-
---
--- Table structure for table `acl`
---
-
-CREATE TABLE `acl` (
-  `id_acl` int(10) UNSIGNED NOT NULL,
-  `id_group` int(10) UNSIGNED NOT NULL,
-  `id_resource` int(10) UNSIGNED NOT NULL,
-  `view` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-  `add` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-  `edit` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-  `delete` tinyint(3) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `employee`
---
-
-CREATE TABLE `employee` (
-  `id_employee` int(10) UNSIGNED NOT NULL,
-  `id_group` int(10) UNSIGNED NOT NULL,
-  `id_lang` int(10) UNSIGNED NOT NULL,
-  `firstname` varchar(32) NOT NULL,
-  `lastname` varchar(32) NOT NULL,
-  `email` varchar(64) NOT NULL,
-  `active` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-  `pass` varchar(64) NOT NULL,
-  `time_add` int(10) UNSIGNED NOT NULL,
-  `time_upd` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `group`
---
-
-CREATE TABLE `group` (
-  `id_group` int(10) UNSIGNED NOT NULL,
-  `active` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-  `time_add` int(10) UNSIGNED NOT NULL,
-  `time_upd` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `group_lang`
---
-
-CREATE TABLE `group_lang` (
-  `id_group` int(10) UNSIGNED NOT NULL,
-  `id_lang` int(10) UNSIGNED NOT NULL,
-  `name` varchar(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `resource`
---
-
-CREATE TABLE `resource` (
-  `id_resource` int(10) UNSIGNED NOT NULL,
-  `key` varchar(64) NOT NULL,
-  `active` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-  `time_add` int(10) UNSIGNED NOT NULL,
-  `time_upd` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `resource_lang`
---
-
-CREATE TABLE `resource_lang` (
-  `id_resource` int(10) UNSIGNED NOT NULL,
-  `id_lang` int(10) UNSIGNED NOT NULL,
-  `name` varchar(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `acl`
---
-ALTER TABLE `acl`
-  ADD PRIMARY KEY (`id_acl`),
-  ADD UNIQUE KEY `id_group_resource` (`id_group`,`id_resource`) USING BTREE;
-
---
--- Indexes for table `employee`
---
-ALTER TABLE `employee`
-  ADD PRIMARY KEY (`id_employee`),
-  ADD UNIQUE KEY `email` (`email`),
-  ADD UNIQUE KEY `active_pass` (`active`,`pass`) USING BTREE,
-  ADD KEY `id_group` (`id_group`);
-
---
--- Indexes for table `group`
---
-ALTER TABLE `group`
-  ADD PRIMARY KEY (`id_group`),
-  ADD KEY `active` (`active`) USING BTREE;
-
---
--- Indexes for table `group_lang`
---
-ALTER TABLE `group_lang`
-  ADD UNIQUE KEY `id_group_lang` (`id_group`,`id_lang`) USING BTREE;
-
---
--- Indexes for table `resource`
---
-ALTER TABLE `resource`
-  ADD PRIMARY KEY (`id_resource`),
-  ADD UNIQUE KEY `key_active` (`key`,`active`) USING BTREE;
-
---
--- Indexes for table `resource_lang`
---
-ALTER TABLE `resource_lang`
-  ADD UNIQUE KEY `id_resource_lang` (`id_resource`,`id_lang`) USING BTREE;
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `acl`
---
-ALTER TABLE `acl`
-  MODIFY `id_acl` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `employee`
---
-ALTER TABLE `employee`
-  MODIFY `id_employee` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `group`
---
-ALTER TABLE `group`
-  MODIFY `id_group` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `resource`
---
-ALTER TABLE `resource`
-  MODIFY `id_resource` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-
-';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;';
 }
