@@ -8,39 +8,44 @@ class Mysql
 CREATE TABLE IF NOT EXISTS `hp_acl_group` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(3) unsigned NOT NULL DEFAULT '1',
+  `date_add` int(10) unsigned NOT NULL,
+  `date_upd` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
-INSERT INTO `hp_acl_group` (`id`, `status`) VALUES
-(1, 1);
+INSERT INTO `hp_acl_group` (`id`, `status`, `date_add`, `date_upd`) VALUES
+(1, 1, 1493439330, 1493439330);
 
 CREATE TABLE IF NOT EXISTS `hp_acl_group_lang` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `lang_id` int(10) unsigned NOT NULL,
   `group_id` int(10) unsigned NOT NULL,
   `name` char(16) NOT NULL,
+  `date_add` int(10) unsigned NOT NULL,
+  `date_upd` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `group_id` (`group_id`,`lang_id`) USING BTREE,
   KEY `lang_id` (`lang_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
-INSERT INTO `hp_acl_group_lang` (`id`, `lang_id`, `group_id`, `name`) VALUES
-(1, 1, 1, '华东地区订单授权');
+INSERT INTO `hp_acl_group_lang` (`id`, `lang_id`, `group_id`, `name`, `date_add`, `date_upd`) VALUES
+(1, 1, 1, '华东地区订单授权', 1493439330, 1493439330);
 
 CREATE TABLE IF NOT EXISTS `hp_acl_group_resource` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `group_id` int(10) unsigned NOT NULL,
   `resource_id` int(10) unsigned NOT NULL,
   `status` tinyint(3) unsigned NOT NULL DEFAULT '1',
+  `date_add` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `group_id` (`group_id`,`resource_id`),
   KEY `resource_id` (`resource_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
-INSERT INTO `hp_acl_group_resource` (`id`, `group_id`, `resource_id`, `status`) VALUES
-(1, 1, 1, 1),
-(2, 1, 2, 1),
-(3, 1, 3, 1);
+INSERT INTO `hp_acl_group_resource` (`id`, `group_id`, `resource_id`, `status`, `date_add`) VALUES
+(1, 1, 1, 1, 1493439330),
+(2, 1, 2, 1, 1493439330),
+(3, 1, 3, 1, 1493439330);
 
 CREATE TABLE IF NOT EXISTS `hp_acl_resource` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -49,115 +54,128 @@ CREATE TABLE IF NOT EXISTS `hp_acl_resource` (
   `controller` char(16) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   `action` char(16) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   `status` tinyint(3) unsigned NOT NULL DEFAULT '1',
+  `date_add` int(10) unsigned NOT NULL,
+  `date_upd` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `AMCA` (`app`,`module`,`controller`,`action`) USING BTREE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
-INSERT INTO `hp_acl_resource` (`id`, `app`, `module`, `controller`, `action`, `status`) VALUES
-(1, 'store', 'order', 'list', 'view', 1),
-(2, 'store', 'order', 'refund', 'edit', 1),
-(3, 'store', 'order', 'detail', 'delete', 1);
+INSERT INTO `hp_acl_resource` (`id`, `app`, `module`, `controller`, `action`, `status`, `date_add`, `date_upd`) VALUES
+(1, 'store', 'order', 'list', 'view', 1, 1493439330, 1493439330),
+(2, 'store', 'order', 'refund', 'edit', 1, 1493439330, 1493439330),
+(3, 'store', 'order', 'detail', 'delete', 1, 1493439330, 1493439330);
 
 CREATE TABLE IF NOT EXISTS `hp_acl_resource_lang` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `lang_id` int(10) unsigned NOT NULL,
   `resource_id` int(10) unsigned NOT NULL,
   `name` char(16) NOT NULL,
+  `date_add` int(10) unsigned NOT NULL,
+  `date_upd` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `resource_id` (`resource_id`,`lang_id`),
   KEY `lang_id` (`lang_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
-INSERT INTO `hp_acl_resource_lang` (`id`, `lang_id`, `resource_id`, `name`) VALUES
-(1, 1, 1, '订单列表查看'),
-(2, 1, 2, '订单退货编辑'),
-(3, 1, 3, '订单详情删除');
+INSERT INTO `hp_acl_resource_lang` (`id`, `lang_id`, `resource_id`, `name`, `date_add`, `date_upd`) VALUES
+(1, 1, 1, '订单列表查看', 1493439330, 1493439330),
+(2, 1, 2, '订单退货编辑', 1493439330, 1493439330),
+(3, 1, 3, '订单详情删除', 1493439330, 1493439330);
 
 CREATE TABLE IF NOT EXISTS `hp_acl_role` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(3) unsigned NOT NULL DEFAULT '1',
+  `date_add` int(10) unsigned NOT NULL,
+  `date_upd` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
-INSERT INTO `hp_acl_role` (`id`, `status`) VALUES
-(1, 1),
-(2, 1),
-(3, 1),
-(4, 1);
+INSERT INTO `hp_acl_role` (`id`, `status`, `date_add`, `date_upd`) VALUES
+(1, 1, 1493439330, 1493439330),
+(2, 1, 1493439330, 1493439330),
+(3, 1, 1493439330, 1493439330),
+(4, 1, 1493439330, 1493439330);
 
 CREATE TABLE IF NOT EXISTS `hp_acl_role_lang` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `lang_id` int(10) unsigned NOT NULL,
   `role_id` int(10) unsigned NOT NULL,
   `name` char(16) NOT NULL,
+  `date_add` int(10) unsigned NOT NULL,
+  `date_upd` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `role_id` (`role_id`,`lang_id`),
   KEY `lang_id` (`lang_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
-INSERT INTO `hp_acl_role_lang` (`id`, `lang_id`, `role_id`, `name`) VALUES
-(1, 1, 1, '江苏办总经理'),
-(2, 1, 2, '上海办总经理'),
-(3, 1, 3, '昆山办经理'),
-(4, 1, 4, '苏州办总经理');
+INSERT INTO `hp_acl_role_lang` (`id`, `lang_id`, `role_id`, `name`, `date_add`, `date_upd`) VALUES
+(1, 1, 1, '江苏办总经理', 1493439330, 1493439330),
+(2, 1, 2, '上海办总经理', 1493439330, 1493439330),
+(3, 1, 3, '昆山办经理', 1493439330, 1493439330),
+(4, 1, 4, '苏州办总经理', 1493439330, 1493439330);
 
 CREATE TABLE IF NOT EXISTS `hp_acl_role_resource` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `role_id` int(10) unsigned NOT NULL,
   `resource_id` int(10) unsigned NOT NULL,
   `status` tinyint(3) unsigned NOT NULL DEFAULT '1',
+  `date_add` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `role_id` (`role_id`,`resource_id`),
   KEY `resource_id` (`resource_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
-INSERT INTO `hp_acl_role_resource` (`id`, `role_id`, `resource_id`, `status`) VALUES
-(1, 1, 1, 1),
-(2, 1, 2, 1),
-(3, 1, 3, 1),
-(4, 2, 3, 1),
-(5, 3, 2, 1),
-(6, 4, 3, 1);
+INSERT INTO `hp_acl_role_resource` (`id`, `role_id`, `resource_id`, `status`, `date_add`) VALUES
+(1, 1, 1, 1, 1493439330),
+(2, 1, 2, 1, 1493439330),
+(3, 1, 3, 1, 1493439330),
+(4, 2, 3, 1, 1493439330),
+(5, 3, 2, 1, 1493439330),
+(6, 4, 3, 1, 1493439330);
 
 CREATE TABLE IF NOT EXISTS `hp_acl_user_resource` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL,
   `resource_id` int(10) unsigned NOT NULL,
   `status` tinyint(3) unsigned NOT NULL DEFAULT '1',
+  `date_add` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`,`resource_id`),
   KEY `resource_id` (`resource_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
-INSERT INTO `hp_acl_user_resource` (`id`, `user_id`, `resource_id`, `status`) VALUES
-(1, 1, 3, 1);
+INSERT INTO `hp_acl_user_resource` (`id`, `user_id`, `resource_id`, `status`, `date_add`) VALUES
+(1, 1, 3, 1, 1493439330);
 
 CREATE TABLE IF NOT EXISTS `hp_acl_user_role` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL,
   `role_id` int(10) unsigned NOT NULL,
   `status` tinyint(3) unsigned NOT NULL DEFAULT '1',
+  `date_add` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`,`role_id`),
   KEY `role_id` (`role_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
-INSERT INTO `hp_acl_user_role` (`id`, `user_id`, `role_id`, `status`) VALUES
-(1, 1, 1, 1),
-(2, 1, 2, 1),
-(3, 1, 3, 1),
-(4, 1, 4, 1);
+INSERT INTO `hp_acl_user_role` (`id`, `user_id`, `role_id`, `status`, `date_add`) VALUES
+(1, 1, 1, 1, 1493439330),
+(2, 1, 2, 1, 1493439330),
+(3, 1, 3, 1, 1493439330),
+(4, 1, 4, 1, 1493439330);
 
 CREATE TABLE IF NOT EXISTS `hp_config` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `key` char(16) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   `value` varchar(255) NOT NULL,
+  `date_add` int(10) unsigned NOT NULL,
+  `date_upd` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `key` (`key`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
-INSERT INTO `hp_config` (`id`, `key`, `value`) VALUES
-(1, 'HP_LANG_DEFAULT', '1');
+INSERT INTO `hp_config` (`id`, `key`, `value`, `date_add`, `date_upd`) VALUES
+(1, 'HP_LANG_DEFAULT', '1', 1493439330, 1493439330);
 
 CREATE TABLE IF NOT EXISTS `hp_lang` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -165,12 +183,14 @@ CREATE TABLE IF NOT EXISTS `hp_lang` (
   `iso_code` char(2) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   `language_code` char(5) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   `status` tinyint(3) unsigned NOT NULL DEFAULT '1',
+  `date_add` int(10) unsigned NOT NULL,
+  `date_upd` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
-INSERT INTO `hp_lang` (`id`, `name`, `iso_code`, `language_code`, `status`) VALUES
-(1, '简体中文 (简体中文)', 'cn', 'zh-cn', 1),
-(2, 'English (English)', 'en', 'en-us', 1);
+INSERT INTO `hp_lang` (`id`, `name`, `iso_code`, `language_code`, `status`, `date_add`, `date_upd`) VALUES
+(1, '简体中文 (简体中文)', 'cn', 'zh-cn', 1, 1493439330, 1493439330),
+(2, 'English (English)', 'en', 'en-us', 1, 1493439330, 1493439330);
 
 CREATE TABLE IF NOT EXISTS `hp_user` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -178,11 +198,13 @@ CREATE TABLE IF NOT EXISTS `hp_user` (
   `pass` char(64) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   `name` char(16) NOT NULL DEFAULT '',
   `status` tinyint(3) unsigned NOT NULL DEFAULT '1',
+  `date_add` int(10) unsigned NOT NULL,
+  `date_upd` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
-INSERT INTO `hp_user` (`id`, `user`, `pass`, `name`, `status`) VALUES
-(1, 'admin@hookphp.com', '6abedafaed3f1d50eb07a087d5a93d15de821702dbb4c4fcc136cb69ae05f9a6', 'bobstephen', 1);
+INSERT INTO `hp_user` (`id`, `user`, `pass`, `name`, `status`, `date_add`, `date_upd`) VALUES
+(1, 'admin@hookphp.com', '6abedafaed3f1d50eb07a087d5a93d15de821702dbb4c4fcc136cb69ae05f9a6', 'bobstephen', 1, 1493439330, 1493439330);
 
 
 ALTER TABLE `hp_acl_group_lang`
