@@ -33,6 +33,7 @@ class Bootstrap extends Bootstrap_Abstract
         // auto load model
         Registry::set('I18n', new I18nModel($redis, $this->config->application->name, 'zh_CN'));
         Registry::set('Cache', new CacheModel($redis, $this->config->application->name));
+        Registry::set('Table', new TableModel());
         
         // auto load Analysis model
         
