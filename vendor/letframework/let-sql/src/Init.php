@@ -1,10 +1,10 @@
 <?php
-namespace Install\Init;
+namespace Let\Sql;
 
-class Mysql
+class Install
 {
 
-    const base = "
+    const system = "
 CREATE TABLE IF NOT EXISTS `hp_acl_group` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(3) unsigned NOT NULL DEFAULT '1',
