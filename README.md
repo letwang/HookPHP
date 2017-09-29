@@ -6,8 +6,11 @@
 
 # 依赖
 1.http://pecl.php.net/package/yaf
+
 2.http://pecl.php.net/package/redis
+
 3.http://pecl.php.net/package/mongodb
+
 4.http://sphinxsearch.com/downloads/release/
 
 # 配置
