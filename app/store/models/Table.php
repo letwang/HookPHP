@@ -1,11 +1,11 @@
 <?php
-use Yaf\Registry;
+use Yaf\Registry, \Let\Validate\Validate;
 
 class TableModel
 {
 
     public $table;
-    public $operator = ['>' => 1, '>=' => 1, '<' => 1, '<=' => 1, '!=' => 1, 'LIKE' => 1, 'NOT LIKE' => 1, 'IN' => 1, 'NOT IN' => 1];
+    public $operator = ['>' => '>', '>=' => '>=', '<' => '<', '<=' => '<=', '!=' => '!=', 'LIKE' => 'LIKE', 'NOT LIKE' => 'NOT LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
 
     /**
      * 单表操作初始化
@@ -27,75 +27,68 @@ class TableModel
         }
         return $this;
     }
-    
+
+    /**
+    *[
+        'column' => ['id'],
+        'where' => ['id' => 1, 'status' => ['NOT IN' => [1, 5]]],
+        'group' => ['id' => 'ASC', 'type' => 'DESC'],
+        'order' => ['id' => 'ASC', 'type' => 'DESC'],
+        'offset' => 0,
+        'limit' => 10,
+        'function' => 'fetchAll'
+      ]
+     * @param array $param
+     * @return array
+     */
     public function read(array $param = [])
     {
-        $param += ['column' => ['id'], 'where' => null, 'offset' => null, 'limit' => null, 'order' => null, 'group' => null, 'function' => 'fetchAll'];
-        
-        if (array_diff_key(array_flip($param['column']), $this->data)) {
-            throw new \Exception('db hack~');
-        }
-        
+        $param += ['column' => ['id'], 'where' => null, 'group' => null, 'order' => null, 'offset' => null, 'limit' => null, 'function' => 'fetchAll'];
+
         //筛选
         $where = $parameters = [];
-        if (is_array($param['where']) && $param['where']) {
-            if (array_diff_key($param['where'], $this->data)) {
-                throw new \Exception('db hack~');
-            }
-            
-            foreach ($param['where'] as $k => $v) {
-                if (is_array($v)) {
-                    if (array_diff_key($v, $this->operator)) {
-                        throw new \Exception('db hack~');
-                    }
-                    
-                    foreach ($v as $operator => $vv) {
-                        $where[] = '`'.$k.'` '.$operator.' ('.implode(',', array_fill(0, count($vv), '?')).')';
-                        $parameters = array_merge($parameters, $vv);
+        if (is_array($param['where']) && !empty($param['where'])) {
+            foreach ($param['where'] as $field => $data) {
+                if (is_array($data)) {
+                    foreach ($data as $operator => $value) {
+                        $where[] = '`'.$field.'` '.$this->operator[$operator].' ('.implode(',', array_fill(0, count($value), '?')).')';
+                        $parameters = array_merge($parameters, $value);
                     }
                 } else {
-                    $where[] = '`'.$k.'`=?';
-                    $parameters[] = $v;
+                    $where[] = '`'.$field.'`=?';
+                    $parameters[] = $data;
                 }
             }
         }
-        
+
         $query = $where ? ' WHERE '.join(' AND ', $where) : '';
-        
+
         //分组
-        if (is_array($param['group']) && $param['group']) {
-            if (array_diff_key($param['group'], $this->data)) {
-                throw new \Exception('db hack~');
-            }
-            
+        if (is_array($param['group']) && !empty($param['group'])) {
             $group = [];
-            foreach ($param['group'] as $k => $v) {
-                $group[] = '`'.$k.'` '.(strtoupper($v) === 'ASC' ? 'ASC' : 'DESC');
+            foreach ($param['group'] as $field => $expr) {
+                $group[] = '`'.$field.'` '.Validate::order($expr);
             }
             $query .= ' GROUP BY '.join(',', $group);
         }
-        
+
         //排序
-        if (is_array($param['order']) && $param['order']) {
-            if (array_diff_key($param['order'], $this->data)) {
-                throw new \Exception('db hack~');
-            }
-            
+        if (is_array($param['order']) && !empty($param['order'])) {
             $order = [];
-            foreach ($param['order'] as $k => $v) {
-                $order[] = '`'.$k.'` '.(strtoupper($v) === 'ASC' ? 'ASC' : 'DESC');
+            foreach ($param['order'] as $field => $expr) {
+                $order[] = '`'.$field.'` '.Validate::order($expr);
             }
             $query .= ' ORDER BY '.join(',', $order);
         }
-        
+
         //分页
         if ($param['offset'] >= 0 && $param['limit'] > 0 ) {
             $query .= ' LIMIT '.(int) $param['offset'].', '.(int) $param['limit'];
         }
-        
+
         //动态调用DB方法
         $query = 'SELECT `'.join('`,`', $param['column']).'` FROM `'.$this->table.'`'.$query;
-        
+
         //var_dump($query,$parameters);exit();
         return Registry::get('Db')->{$param['function']}($query, $parameters);
     }

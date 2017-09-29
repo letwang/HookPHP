@@ -105,8 +105,8 @@ class Validate
         ]) : $default;
     }
 
-    public static function order(&$order, $default = 'desc')
+    public static function order(&$expr, $default = 'DESC')
     {
-        return isset($order) && $order === 'asc' ? $order : $default;
+        return isset($expr) && $expr === 'ASC' ? $expr : $default;
     }
 }
