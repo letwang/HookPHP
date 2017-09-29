@@ -43,7 +43,6 @@ server {
 	 }
 }
 ```
-```
 # 账户
 ```
 admin@hookphp.com
