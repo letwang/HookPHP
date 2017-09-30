@@ -2,7 +2,6 @@
 namespace Let\Db;
 
 use PDO;
-use Let\Tools\Tools;
 
 class Db extends PDO
 {
@@ -119,9 +118,20 @@ class Db extends PDO
         return self::$connections[$target][$key];
     }
 
-    public function fetchAll($query, array $parameters = [], $type = \PDO::FETCH_ASSOC)
+    /**
+     * @param string $statement
+     * @param array $parameters
+     * @param int $type
+* {
+*       \PDO::FETCH_KEY_PAIR   返回 以第一列为KEY，第二列为VALUE的 数据结构，如果KEY重复，则自动去重且保留最后一个KEY的VALUE
+*       \PDO::FETCH_UNIQUE    返回 以第一列为KEY，其余列为数组VALUE的 数据结构，如果KEY重复，则自动去重且保留最后一个KEY的数组VALUE
+*       \PDO::FETCH_GROUP      返回 以第一列为KEY，其余列为二数组VALUE的 数据结构，如果KEY重复，则其值自动加入二维数组中
+* }
+     * @return array
+     */
+    public function fetchAll(string $statement, array $parameters = [], $type = \PDO::FETCH_ASSOC):array
     {
-        $rs = $this->query($query, $parameters);
+        $rs = $this->query($statement, $parameters);
         $results = $rs->fetchAll($type);
         $rs->closeCursor();
         $rs = null;
@@ -132,14 +142,14 @@ class Db extends PDO
     /**
      * 返回第一行数据组成的一维数组
      *
-     * @param string $query            
+     * @param string $statement
      * @param array $parameters            
      * @param int $type            
-     * @return array
+     * @return mixed[array|false]
      */
-    public function fetch($query, array $parameters = [], $type = \PDO::FETCH_ASSOC)
+    public function fetch($statement, array $parameters = [], $type = \PDO::FETCH_ASSOC)
     {
-        $rs = $this->query($query, $parameters);
+        $rs = $this->query($statement, $parameters);
         $results = $rs->fetch($type);
         $rs->closeCursor();
         $rs = null;
@@ -150,14 +160,14 @@ class Db extends PDO
     /**
      * 返回第一行指定索引列的值
      *
-     * @param string $query            
+     * @param string $statement
      * @param array $parameters            
      * @param int $column            
-     * @return scalar
+     * @return mixed[string|false]
      */
-    public function fetchColumn($query, array $parameters = [], $column = 0)
+    public function fetchColumn($statement, array $parameters = [], $column = 0)
     {
-        $rs = $this->query($query, $parameters);
+        $rs = $this->query($statement, $parameters);
         $results = $rs->fetchColumn($column);
         $rs->closeCursor();
         $rs = null;
@@ -165,84 +175,9 @@ class Db extends PDO
         return $results;
     }
 
-    /**
-     * 返回 以第一列为KEY，第二列为VALUE的 数据结构【如果KEY重复，则自动去重且保留最后一个KEY的VALUE】
-     *
-     * @param string $query            
-     * @param array $parameters            
-     * @return array
-     */
-    public function getKV($query, array $parameters = [])
+    public function query($statement, array $parameters = [])
     {
-        return $this->fetchAll($query, $parameters, \PDO::FETCH_KEY_PAIR);
-    }
-
-    /**
-     * 返回 以第一列为KEY，其余列为数组VALUE的 数据结构【如果KEY重复，则自动去重且保留最后一个KEY的数组VALUE】
-     *
-     * @param string $query            
-     * @param array $parameters            
-     * @return array
-     */
-    public function getKVArray($query, array $parameters = [])
-    {
-        return $this->fetchAll($query, $parameters, \PDO::FETCH_UNIQUE);
-    }
-
-    /**
-     * 返回 以第一列为KEY，其余列为二数组VALUE的 数据结构【如果KEY重复，则其值自动加入二维数组中】
-     *
-     * @param string $query            
-     * @param array $parameters            
-     * @return array
-     */
-    public function getKVGroup($query, array $parameters = [])
-    {
-        return $this->fetchAll($query, $parameters, \PDO::FETCH_GROUP);
-    }
-
-    public function insert($table, array $data, $type = 0)
-    {
-        switch ($type) {
-            case 0:
-                $type === 'INSERT';
-                break;
-            case 1:
-                $type === 'REPLACE';
-                break;
-            case 2:
-                $type === 'INSERT DELAYED';
-                break;
-            case 3:
-                $type === 'REPLACE DELAYED';
-            case 4:
-                $type === 'INSERT LOW_PRIORITY';
-            case 5:
-                $type === 'REPLACE LOW_PRIORITY';
-            case 6:
-                $type === 'INSERT HIGH_PRIORITY';
-            case 7:
-                $type === 'REPLACE HIGH_PRIORITY';
-            case 8:
-                $type === 'INSERT HIGH_PRIORITY';
-                break;
-        }
-        return $this->query($type . ' INTO `' . Tools::safeSqlByBacktick($table) . '` (`' . implode('`,`', array_keys($data)) . '`) VALUES (' . implode(',', array_fill(0, count($data), '?')) . ');', array_values($data));
-    }
-
-    public function update($table, array $data, $where = '1')
-    {
-        return $this->query('UPDATE `' . $table . '` SET `' . implode('`=?,`', array_keys($data)) . '`=? WHERE ' . $where . ';', array_values($data));
-    }
-
-    public function delete($table, $where = '1')
-    {
-        return $this->query('DELETE FROM `' . $table . '` WHERE ' . $where . ';');
-    }
-
-    public function query($query, array $parameters = [])
-    {
-        $rs = $this->prepare($query);
+        $rs = $this->prepare($statement);
         if ($rs) {
             foreach ($parameters as $index => $value) {
                 switch (1) {
@@ -265,7 +200,7 @@ class Db extends PDO
             $rs->execute();
             return $rs;
         } else {
-            throw new \Exception($query);
+            throw new \Exception($statement);
         }
     }
 }

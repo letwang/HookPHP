@@ -6,7 +6,7 @@ class TableModel
 
     public $table;
     public $operator = ['>' => '>', '>=' => '>=', '<' => '<', '<=' => '<=', '!=' => '!=', 'LIKE' => 'LIKE', 'NOT LIKE' => 'NOT LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
-
+    public $selectExpr = ['DISTINCT', 'DISTINCTROW', 'SQL_CACHE', 'SQL_NO_CACHE', 'SQL_CALC_FOUND_ROWS'];
     /**
      * 单表操作初始化
      * @param string $table
@@ -29,26 +29,42 @@ class TableModel
     }
 
     /**
+     * 单表查询操作
     *[
-        'column' => ['id'],
-        'where' => ['id' => 1, 'status' => ['NOT IN' => [1, 5]]],
-        'group' => ['id' => 'ASC', 'type' => 'DESC'],
-        'order' => ['id' => 'ASC', 'type' => 'DESC'],
-        'offset' => 0,
-        'limit' => 10,
-        'function' => 'fetchAll'
+        'selectExpr' => ['SQL_CALC_FOUND_ROWS', 'DISTINCT'],
+        'COLUMN' => ['id'],
+        'WHERE' => ['id' => 1, 'status' => ['NOT IN' => [1, 5]]],
+        'GROUP' => ['id' => 'ASC', 'status' => 'DESC'],
+        'ORDER' => ['id' => 'ASC', 'status' => 'DESC'],
+        'OFFSET' => 0,
+        'LIMIT' => 10,
+        'CALLBACK' => 'fetchAll'
       ]
      * @param array $param
      * @return array
      */
     public function read(array $param = [])
     {
-        $param += ['column' => ['id'], 'where' => null, 'group' => null, 'order' => null, 'offset' => null, 'limit' => null, 'function' => 'fetchAll'];
+        $sql = 'SELECT ';
+        $param += ['selectExpr' => null, 'COLUMN' => ['id'], 'WHERE' => null, 'GROUP' => null, 'ORDER' => null, 'OFFSET' => null, 'LIMIT' => null, 'CALLBACK' => 'fetchAll'];
+
+        //查询表达式
+        if (is_array($param['selectExpr']) && !empty($param['selectExpr'])) {
+            $sql .= join(' ', array_intersect($param['selectExpr'], $this->selectExpr));
+        }
+
+        //查询列
+        if (is_array($param['COLUMN']) && $param['COLUMN'][0] === '*' || $param['COLUMN'][0]=== 'COUNT(*)') {
+            $sql .= ' '.$param['COLUMN'][0];
+        } else {
+            $sql .= ' `'.join('`,`', (array) $param['COLUMN']).'`';
+        }
+        $sql .= ' FROM `'.$this->table.'`';
 
         //筛选
         $where = $parameters = [];
-        if (is_array($param['where']) && !empty($param['where'])) {
-            foreach ($param['where'] as $field => $data) {
+        if (is_array($param['WHERE']) && !empty($param['WHERE'])) {
+            foreach ($param['WHERE'] as $field => $data) {
                 if (is_array($data)) {
                     foreach ($data as $operator => $value) {
                         $where[] = '`'.$field.'` '.$this->operator[$operator].' ('.implode(',', array_fill(0, count($value), '?')).')';
@@ -59,38 +75,44 @@ class TableModel
                     $parameters[] = $data;
                 }
             }
+            $sql .= ' WHERE '.join(' AND ', $where);
         }
 
-        $query = $where ? ' WHERE '.join(' AND ', $where) : '';
-
         //分组
-        if (is_array($param['group']) && !empty($param['group'])) {
+        if (is_array($param['GROUP']) && !empty($param['GROUP'])) {
             $group = [];
-            foreach ($param['group'] as $field => $expr) {
+            foreach ($param['GROUP'] as $field => $expr) {
                 $group[] = '`'.$field.'` '.Validate::order($expr);
             }
-            $query .= ' GROUP BY '.join(',', $group);
+            $sql .= ' GROUP BY '.join(',', $group);
         }
 
         //排序
-        if (is_array($param['order']) && !empty($param['order'])) {
+        if (is_array($param['ORDER']) && !empty($param['ORDER'])) {
             $order = [];
-            foreach ($param['order'] as $field => $expr) {
+            foreach ($param['ORDER'] as $field => $expr) {
                 $order[] = '`'.$field.'` '.Validate::order($expr);
             }
-            $query .= ' ORDER BY '.join(',', $order);
+            $sql .= ' ORDER BY '.join(',', $order);
         }
 
         //分页
-        if ($param['offset'] >= 0 && $param['limit'] > 0 ) {
-            $query .= ' LIMIT '.(int) $param['offset'].', '.(int) $param['limit'];
+        if ($param['OFFSET'] >= 0 && $param['LIMIT'] > 0 ) {
+            $sql .= ' LIMIT '.(int) $param['OFFSET'].', '.(int) $param['LIMIT'];
         }
 
-        //动态调用DB方法
-        $query = 'SELECT `'.join('`,`', $param['column']).'` FROM `'.$this->table.'`'.$query;
+        //sql字段名注入检查
+        preg_match_all('/`(\w+)`/', $sql, $matches);
+        $whiteField = $this->data + [$this->table => ['Field' => $this->table]];
+        foreach ($matches[1] as $field) {
+            if (!isset($whiteField[$field])) {
+                throw new \Exception('db hack~');
+            }
+        }
 
-        //var_dump($query,$parameters);exit();
-        return Registry::get('Db')->{$param['function']}($query, $parameters);
+        //var_dump($sql, $parameters);
+        //动态调用DB方法
+        return Registry::get('Db')->{$param['CALLBACK']}($sql, $parameters);
     }
     
     /**
