@@ -8,18 +8,12 @@ class Db extends PDO
 {
     public static $instance = [];
 
-    public function __construct($target = 'master')
+    public function __construct($dbNode = 'master')
     {
-        $dsn = 'mysql:host='.Registry::get('Config')->mysql->{$target}['host'];
-        $dsn .= ';port='.Registry::get('Config')->mysql->{$target}['port'];
-        $dsn .= ';dbname='.Registry::get('Config')->mysql->{$target}['dbname'];
-        $dsn .= ';charset='.Registry::get('Config')->mysql->{$target}['charset'];
-        parent::__construct(
-            $dsn,
-            Registry::get('Config')->mysql->{$target}['username'],
-            Registry::get('Config')->mysql->{$target}['passwd'],
-            Registry::get('Config')->mysql->{$target}['options']->toArray()
-        );
+        $config = Registry::get('Config')->mysql->$dbNode;
+        $dsn = 'mysql:host='.$config['host'].';port='.$config['port'];
+        $dsn .= ';dbname='.$config['dbname'].';charset='.$config['charset'];
+        parent::__construct($dsn, $config['username'], $config['passwd'], $config['options']->toArray());
     }
 
     public function __destruct()
@@ -27,23 +21,23 @@ class Db extends PDO
         //
     }
 
-    public static function getInstance($target = 'master', $key = 'default'): self
+    public static function getInstance($dbNode = 'master', $key = 'default'): self
     {
-        if (isset(self::$instance[$target][$key])) {
-            return self::$instance[$target][$key];
+        if (isset(self::$instance[$dbNode][$key])) {
+            return self::$instance[$dbNode][$key];
         }
-        return self::$instance[$target][$key] = new self($target);
+        return self::$instance[$dbNode][$key] = new self($dbNode);
     }
 
     /**
+     * PDO::FETCH_COLUMN | PDO::FETCH_UNIQUE 返回 以第一列为KEY，第二列为VALUE的 数据结构【如果KEY重复，则自动去重且保留最后一个KEY的VALUE】
+     * PDO::FETCH_COLUMN | PDO::FETCH_GROUP 返回 以第一列为KEY，第二列为数组VALUE的元素 数据结构【如果KEY重复，则其值自动加入二维数组中】
+     * PDO::FETCH_UNIQUE 返回 以第一列为KEY，其余列为数组VALUE的 数据结构【如果KEY重复，则自动去重且保留最后一个KEY的数组VALUE】
+     * PDO::FETCH_GROUP 返回 以第一列为KEY，其余列为二数组VALUE的 数据结构【如果KEY重复，则其值自动加入二维数组中】
+     * PDO::FETCH_OBJ 返回对象结构
      * @param string $statement
      * @param array $parameters
      * @param int $type
-* {
-*       \PDO::FETCH_KEY_PAIR   返回 以第一列为KEY，第二列为VALUE的 数据结构，如果KEY重复，则自动去重且保留最后一个KEY的VALUE
-*       \PDO::FETCH_UNIQUE     返回 以第一列为KEY，其余列为数组VALUE的 数据结构，如果KEY重复，则自动去重且保留最后一个KEY的数组VALUE
-*       \PDO::FETCH_GROUP      返回 以第一列为KEY，其余列为二数组VALUE的 数据结构，如果KEY重复，则其值自动加入二维数组中
-* }
      * @return array
      */
     public function fetchAll(string $statement, array $parameters = [], $type = \PDO::FETCH_ASSOC): array
@@ -100,7 +94,7 @@ class Db extends PDO
     public function insert($statement, $parameters = []): array
     {
         return [
-            'rowCount' => $this->_query($statement, $parameters, $parameters)->rowCount(),
+            'rowCount' => $this->_query($statement, $parameters)->rowCount(),
             'lastInsertId' => $this->lastInsertId()
         ];
     }
