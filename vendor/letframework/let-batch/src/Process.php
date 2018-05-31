@@ -28,7 +28,7 @@ class Process
         $offset = 0;
         $rows = isset($param['rows']) ? (int) $param['rows'] : 30;
         
-        $stmt = Db::getConnection()->query(sprintf($param['sql'], $offset * $rows, $rows), $param['placeholder']);
+        $stmt = Db::getInstance()->query(sprintf($param['sql'], $offset * $rows, $rows), $param['placeholder']);
         
         $data = [];
         $num = func_num_args();
@@ -40,7 +40,7 @@ class Process
             }
             
             $offset ++;
-            $stmt = Db::getConnection()->query(sprintf($param['sql'], $offset * $rows, $rows), $param['placeholder']);
+            $stmt = Db::getInstance()->query(sprintf($param['sql'], $offset * $rows, $rows), $param['placeholder']);
             
             usleep(100);
         }

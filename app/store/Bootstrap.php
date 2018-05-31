@@ -28,7 +28,7 @@ class Bootstrap extends Bootstrap_Abstract
         Registry::set('Redis', $redis);
         
         // auto load mysql
-        Registry::set('Db', new Db());
+        Registry::set('Db', Db::getInstance());
         
         // auto load model
         Registry::set('I18n', new I18nModel($redis, $this->config->application->name, 'zh_CN'));

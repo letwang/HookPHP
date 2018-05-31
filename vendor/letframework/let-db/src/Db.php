@@ -2,106 +2,24 @@
 namespace Let\Db;
 
 use PDO;
+use Yaf\Registry;
 
 class Db extends PDO
 {
-
-    public static $options = [
-        'master' => [
-            'host' => '127.0.0.1',
-            'port' => 3306,
-            'database' => 'test',
-            'charset' => 'utf8',
-            'collation' => 'utf8_general_ci',
-            'username' => 'root',
-            'password' => '123456',
-            'pdo' => [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-            ]
-        ],
-        'slave0' => [
-            'host' => '127.0.0.1',
-            'port' => 3306,
-            'database' => 'mysql',
-            'charset' => 'utf8',
-            'collation' => 'utf8_general_ci',
-            'username' => 'root',
-            'password' => '123456',
-            'pdo' => [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-            ]
-        ],
-        'slave1' => [
-            'host' => '127.0.0.1',
-            'port' => 3306,
-            'database' => 'phpmyadmin',
-            'charset' => 'utf8',
-            'collation' => 'utf8_general_ci',
-            'username' => 'root',
-            'password' => '123456',
-            'pdo' => [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-            ]
-        ],
-        'slave2' => [
-            'host' => '127.0.0.1',
-            'port' => 3306,
-            'database' => 'performance_schema',
-            'charset' => 'utf8',
-            'collation' => 'utf8_general_ci',
-            'username' => 'root',
-            'password' => '123456',
-            'pdo' => [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-            ]
-        ]
-    ];
-
-    public static $connections = [];
+    public static $instance = [];
 
     public function __construct($target = 'master')
     {
-        $options = self::$options[$target];
-        
-        if (isset($options['unix_socket'])) {
-            $dsn = 'mysql:unix_socket=' . $options['unix_socket'];
-        } else {
-            $dsn = 'mysql:host=' . $options['host'] . ';port=' . (isset($options['port']) ? $options['port'] : 3306);
-        }
-        $dsn .= ';charset=' . $options['charset'];
-        if (isset($options['database'])) {
-            $dsn .= ';dbname=' . $options['database'];
-        }
-        
-        $options += [
-            'pdo' => []
-        ];
-        $options['pdo'] += [
-            PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
-            PDO::ATTR_EMULATE_PREPARES => true
-        ];
-        
-        parent::__construct($dsn, $options['username'], $options['password'], $options['pdo']);
-        
-        $options += [
-            'commands' => []
-        ];
-        
-        if (isset($options['collation'])) {
-            $options['commands'] += [
-                'names' => 'SET NAMES ' . $options['charset'] . ' COLLATE ' . $options['collation']
-            ];
-        } else {
-            $options['commands'] += [
-                'names' => 'SET NAMES ' . $options['charset']
-            ];
-        }
-        
-        $options['commands'] += [
-            'sql_mode' => "SET sql_mode = 'ANSI,STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER'"
-        ];
-        
-        $this->exec(implode('; ', $options['commands']));
+        $dsn = 'mysql:host='.Registry::get('Config')->mysql->{$target}['host'];
+        $dsn .= ';port='.Registry::get('Config')->mysql->{$target}['port'];
+        $dsn .= ';dbname='.Registry::get('Config')->mysql->{$target}['dbname'];
+        $dsn .= ';charset='.Registry::get('Config')->mysql->{$target}['charset'];
+        parent::__construct(
+            $dsn,
+            Registry::get('Config')->mysql->{$target}['username'],
+            Registry::get('Config')->mysql->{$target}['passwd'],
+            Registry::get('Config')->mysql->{$target}['options']->toArray()
+        );
     }
 
     public function __destruct()
@@ -109,13 +27,12 @@ class Db extends PDO
         //
     }
 
-    public static function getConnection($target = 'master', $key = 'default'):self
+    public static function getInstance($target = 'master', $key = 'default'): self
     {
-        if (isset(self::$connections[$target][$key])) {
-            return self::$connections[$target][$key];
+        if (isset(self::$instance[$target][$key])) {
+            return self::$instance[$target][$key];
         }
-        self::$connections[$target][$key] = new self($target);
-        return self::$connections[$target][$key];
+        return self::$instance[$target][$key] = new self($target);
     }
 
     /**
@@ -129,7 +46,7 @@ class Db extends PDO
 * }
      * @return array
      */
-    public function fetchAll(string $statement, array $parameters = [], $type = \PDO::FETCH_ASSOC):array
+    public function fetchAll(string $statement, array $parameters = [], $type = \PDO::FETCH_ASSOC): array
     {
         $rs = $this->_query($statement, $parameters);
         $results = $rs->fetchAll($type);
@@ -180,7 +97,7 @@ class Db extends PDO
      * @param array $parameters
      * @return array
      */
-    public function insert($statement, $parameters = []):array
+    public function insert($statement, $parameters = []): array
     {
         return [
             'rowCount' => $this->_query($statement, $parameters, $parameters)->rowCount(),
@@ -193,7 +110,7 @@ class Db extends PDO
      * @param array $parameters
      * @return int
      */
-    public function update($statement, $parameters = []):int
+    public function update($statement, $parameters = []): int
     {
         return $this->_query($statement, $parameters)->rowCount();
     }
@@ -203,7 +120,7 @@ class Db extends PDO
      * @param array $parameters
      * @return int
      */
-    public function delete($statement, $parameters = []):int
+    public function delete($statement, $parameters = []): int
     {
         return $this->_query($statement, $parameters)->rowCount();
     }
