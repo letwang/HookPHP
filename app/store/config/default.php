@@ -15,7 +15,7 @@ return [
         'master' => [
             'host' => '127.0.0.1',
             'port' => 3306,
-            'dbname' => 'master',
+            'dbname' => 'test',
             'charset' => 'utf8',
             'username' => 'root',
             'passwd' => '123456',
