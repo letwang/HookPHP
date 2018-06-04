@@ -3,19 +3,13 @@ use Yaf\Session, Yaf\Dispatcher, Yaf\Application, Yaf\Bootstrap_Abstract, Yaf\Lo
 
 class Bootstrap extends Bootstrap_Abstract
 {
-
-    public $config;
-
     public function _init(Dispatcher $dispatcher)
     {
         // auto start session
         Session::getInstance()->start();
         
-        // auto load config data
-        $this->config = Application::app()->getConfig();
-        
         // auto load framework
-        Loader::import($this->config->application->library->directory . '/Autoload.php');
+        Loader::import(APP_CONFIG['application']['library']['directory'] . '/Autoload.php');
         
         // auto load plugin
         $dispatcher->registerPlugin(new GlobalPlugin());
