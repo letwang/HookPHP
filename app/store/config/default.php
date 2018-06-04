@@ -65,7 +65,8 @@ return [
             'timeout' => 1,
             'reserved' => NULL,
             'interval' => 100,
-            'auth' => 123456
+            'auth' => 123456,
+            'dbindex' => 0
         ],
         'slave0' => [
             'host' => '127.0.0.1',
@@ -73,7 +74,8 @@ return [
             'timeout' => 1,
             'reserved' => NULL,
             'interval' => 100,
-            'auth' => 123456
+            'auth' => 123456,
+            'dbindex' => 1
         ]
     ],
     'HTTP_SERVER' => 'http://www.svn.com',

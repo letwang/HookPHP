@@ -17,6 +17,7 @@ class Cache extends Redis
         if (! empty($config['auth'])) {
             $this->redis->auth($config['auth']);
         }
+        $this->redis->select($config['dbindex']);
     }
 
     public function __destruct()
