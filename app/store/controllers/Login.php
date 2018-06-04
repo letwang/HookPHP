@@ -1,6 +1,6 @@
 <?php
-use Yaf\Registry, Yaf\Session;
-use Let\Http\Header;
+use Yaf\Session;
+use Let\Http\Header, Let\Db\Db;
 
 class LoginController extends InitController
 {
@@ -23,10 +23,10 @@ class LoginController extends InitController
         $pass = $this->getRequest()->getPost('pass');
         $referer = $this->getRequest()->getPost('referer', '/');
         
-        $login = Registry::get('Db')->fetch(Let\Sql\UserLogin::SQL_TABLE_LOGIN_USER, [
-            $user,
-            $this->pass($user, $pass)
-        ]);
+        $login = Db::getInstance()->fetch(
+            Let\Sql\UserLogin::SQL_TABLE_LOGIN_USER,
+            [$user, $this->pass($user, $pass)]
+        );
         
         if ($login) {
             Session::getInstance()->offsetSet(self::SESSIONNAME, $login);

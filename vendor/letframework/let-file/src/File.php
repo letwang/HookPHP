@@ -107,9 +107,7 @@ class File
                 $directory = array_merge($directory, $add);
             }
         }
-        return array_merge([
-            $dir
-        ], $directory);
+        return array_merge([$dir], $directory);
     }
 
     public static function findFiles($dir, $extensions = '*.*')

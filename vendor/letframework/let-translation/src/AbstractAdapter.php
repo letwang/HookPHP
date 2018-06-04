@@ -40,18 +40,25 @@ abstract class AbstractAdapter implements TranslationInterface
     protected function save($data)
     {
         if (isset($this->id)) {
-            return $this->db->update($this->table, [
-                'data' => $data
-            ], '`id` = ' . $this->id);
+            return $this->db->update(
+                $this->table,
+                [
+                    'data' => $data
+                ],
+                '`id` = ' . $this->id
+            );
         }
         
-        return $this->db->insert($this->table, [
-            'id_lang_from' => $this->id_lang_from,
-            'id_lang_to' => $this->id_lang_to,
-            'key_crc32' => $this->key_crc32,
-            'key' => $this->key,
-            'data' => $data
-        ]);
+        return $this->db->insert(
+            $this->table,
+            [
+                'id_lang_from' => $this->id_lang_from,
+                'id_lang_to' => $this->id_lang_to,
+                'key_crc32' => $this->key_crc32,
+                'key' => $this->key,
+                'data' => $data
+            ]
+        );
     }
 
     protected function spider($url, $post = NULL)
@@ -65,9 +72,8 @@ abstract class AbstractAdapter implements TranslationInterface
 
     protected function output($status = false, $data = NULL)
     {
-        return json_encode([
-            'status' => $status,
-            'data' => $data
-        ]);
+        return json_encode(
+            ['status' => $status, 'data' => $data]
+        );
     }
 }

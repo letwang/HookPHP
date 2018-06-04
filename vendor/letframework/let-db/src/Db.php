@@ -2,7 +2,6 @@
 namespace Let\Db;
 
 use PDO;
-use Yaf\Registry;
 
 class Db extends PDO
 {
@@ -10,10 +9,10 @@ class Db extends PDO
 
     public function __construct(string $dbNode = 'master')
     {
-        $config = Registry::get('Config')->mysql->$dbNode;
+        $config = APP_CONFIG['mysql'][$dbNode];
         $dsn = 'mysql:host='.$config['host'].';port='.$config['port'];
         $dsn .= ';dbname='.$config['dbname'].';charset='.$config['charset'];
-        parent::__construct($dsn, $config['username'], $config['passwd'], $config['options']->toArray());
+        parent::__construct($dsn, $config['username'], $config['passwd'], $config['options']);
     }
 
     public function __destruct()

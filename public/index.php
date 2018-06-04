@@ -3,9 +3,7 @@ define('APP_PUBLIC', getcwd());
 chdir(dirname(__DIR__));
 define('APP_ROOT', getcwd());
 define('APP_PATH', APP_ROOT . '/app/store');
+define('APP_CONFIG', require APP_PATH . '/config/default.php');
 
-define('MEMORY', memory_get_usage(true));
-define('MEMORYPEAK', memory_get_peak_usage(true));
-
-$app = new Yaf\Application(require APP_PATH . '/config/default.php');
+$app = new Yaf\Application(APP_CONFIG);
 $app->bootstrap()->run();

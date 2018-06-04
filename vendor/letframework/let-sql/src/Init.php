@@ -419,7 +419,7 @@ ALTER TABLE `hp_user_guest`
   ADD CONSTRAINT `FK_000025` FOREIGN KEY (`browser_id`) REFERENCES `hp_user_browser` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ";
 
-    const translation = 'CREATE TABLE IF NOT EXISTS `translation` (
+    const translation = 'CREATE TABLE IF NOT EXISTS `hp_translation` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `id_lang_from` tinyint(3) unsigned NOT NULL,
   `id_lang_to` tinyint(3) unsigned NOT NULL,

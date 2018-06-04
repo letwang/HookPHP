@@ -7,7 +7,9 @@ abstract class AbstractAdapter implements ExtractInterface
 {
 
     public function __construct()
-    {}
+    {
+        //
+    }
 
     public function mbDetectEncoding($str)
     {

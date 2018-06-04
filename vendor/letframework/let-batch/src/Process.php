@@ -71,9 +71,13 @@ class Process
         fputcsv($handle, $fields);
         
         if (isset($param['sql'])) {
-            self::read($param, \PDO::FETCH_FUNC, function () use (&$handle) {
-                fputcsv($handle, func_get_args());
-            });
+            self::read(
+                $param,
+                \PDO::FETCH_FUNC,
+                function () use (&$handle) {
+                    fputcsv($handle, func_get_args());
+                }
+            );
         } else {
             foreach ($param as $param) {
                 fputcsv($handle, $param);

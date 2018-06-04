@@ -47,15 +47,13 @@ class BingAdapter extends AbstractAdapter implements TranslationInterface
 
     private function format(&$data)
     {
-        $data = json_decode(str_replace([
-            'onComplete_0(',
-            '﻿',
-            ');'
-        ], [
-            '',
-            '',
-            ''
-        ], $data['content']));
+        $data = json_decode(
+            str_replace(
+                ['onComplete_0(', '﻿', ');'],
+                ['', '', ''],
+                $data['content']
+            )
+        );
         
         if (json_last_error() === JSON_ERROR_NONE && $data = $data[0]->TranslatedText) {
             return true;

@@ -14,10 +14,7 @@ class Tools
     public static function safeOutPut($string, $type = ENT_QUOTES)
     {
         if (is_array($string)) {
-            return array_map([
-                'self',
-                'safeOutPut'
-            ], $string);
+            return array_map(['self', 'safeOutPut'], $string);
         }
         return htmlentities((string) $string, $type, 'utf-8');
     }
@@ -25,10 +22,7 @@ class Tools
     public static function safeOutPutDecode($string)
     {
         if (is_array($string)) {
-            return array_map([
-                'self',
-                'safeOutPutDecode'
-            ], $string);
+            return array_map(['self', 'safeOutPutDecode'], $string);
         }
         return html_entity_decode((string) $string, ENT_QUOTES, 'utf-8');
     }
@@ -95,13 +89,7 @@ class Tools
 
     public static function formatUrl($url)
     {
-        return str_replace([
-            ' ',
-            '&amp;'
-        ], [
-            '%20',
-            '&'
-        ], $url);
+        return str_replace([' ', '&amp;'], ['%20', '&'], $url);
     }
 
     public static function removeLink($string)

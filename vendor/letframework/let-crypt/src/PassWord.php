@@ -36,9 +36,11 @@ class PassWord
 
     public static function hash($password)
     {
-        return password_hash($password, self::$algo, [
-            'cost' => self::$cost
-        ]);
+        return password_hash(
+            $password,
+            self::$algo,
+            ['cost' => self::$cost]
+        );
     }
 
     public static function verify($password, $hash)
@@ -48,8 +50,10 @@ class PassWord
 
     public static function rehash($hash)
     {
-        return password_needs_rehash($hash, self::$algo, [
-            'cost' => self::$cost
-        ]);
+        return password_needs_rehash(
+            $hash,
+            self::$algo,
+            ['cost' => self::$cost]
+        );
     }
 }

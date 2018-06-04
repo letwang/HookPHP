@@ -28,13 +28,16 @@ class BaiduAdapter extends AbstractAdapter implements TranslationInterface
             return $this->output(true, $data);
         }
         
-        $data = $this->spider($this->url(), [
-            'from' => self::$LANG[$this->id_lang_from],
-            'to' => self::$LANG[$this->id_lang_to],
-            'query' => $this->key,
-            'simple_means_flag' => 3,
-            'transtype' => 'realtime'
-        ]);
+        $data = $this->spider(
+            $this->url(),
+            [
+                'from' => self::$LANG[$this->id_lang_from],
+                'to' => self::$LANG[$this->id_lang_to],
+                'query' => $this->key,
+                'simple_means_flag' => 3,
+                'transtype' => 'realtime'
+            ]
+        );
         
         if (! $data['error'] && $this->format($data) === true) {
             $this->save($data);

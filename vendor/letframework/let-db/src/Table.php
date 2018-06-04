@@ -1,52 +1,35 @@
 <?php
-use Yaf\Registry, \Let\Validate\Validate;
+namespace Let\Db;
 
-class TableModel
+use Redis, PDO;
+use \Let\Validate\Validate, \Let\Cache\Cache;
+
+class Table
 {
 
     public $table;
     public $operator = ['>' => '>', '>=' => '>=', '<' => '<', '<=' => '<=', '!=' => '!=', 'LIKE' => 'LIKE', 'NOT LIKE' => 'NOT LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
     public $selectExpr = ['DISTINCT', 'DISTINCTROW', 'SQL_CACHE', 'SQL_NO_CACHE', 'SQL_CALC_FOUND_ROWS'];
-    /**
-     * 单表操作初始化
-     * @param string $table
-     * @return self
-     */
-    public function init(string $table):self
+
+    public function __construct(string $table)
     {
         $this->table = $table;
-        $redis = Registry::get('Cache')->redis;
+        $redis = Cache::getInstance()->redis;
         $redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_PHP);
-        $redis->setOption(Redis::OPT_PREFIX, Registry::get('Cache')->app . ':table:');
+        $redis->setOption(Redis::OPT_PREFIX, APP_CONFIG['application']['name'] . ':table:');
         if ($redis->exists($this->table)) {
             $this->data = $redis->hGetAll($this->table);
         } else {
-            $data = Registry::get('Db')->fetchAll('DESC ' . $this->table);
+            $data = Db::getInstance()->fetchAll('DESC ' . $this->table);
             $this->data = array_combine(array_column($data, 'Field'), $data);
-            $redis->hMSet($this->table, $this->data);
+            $redis->hMset($this->table, $this->data);
         }
-        return $this;
     }
 
-    /**
-     * 单表查询操作
-    *[
-        'selectExpr' => ['SQL_CALC_FOUND_ROWS', 'DISTINCT'],
-        'COLUMN' => ['id'],
-        'WHERE' => ['id' => 1, 'status' => ['NOT IN' => [1, 5]]],
-        'GROUP' => ['id' => 'ASC', 'status' => 'DESC'],
-        'ORDER' => ['id' => 'ASC', 'status' => 'DESC'],
-        'OFFSET' => 0,
-        'LIMIT' => 10,
-        'CALLBACK' => 'fetchAll'
-      ]
-     * @param array $param
-     * @return array
-     */
     public function read(array $param = [])
     {
         $sql = 'SELECT ';
-        $param += ['selectExpr' => null, 'COLUMN' => ['id'], 'WHERE' => null, 'GROUP' => null, 'ORDER' => null, 'OFFSET' => null, 'LIMIT' => null, 'CALLBACK' => 'fetchAll'];
+        $param += ['selectExpr' => null, 'COLUMN' => ['id'], 'WHERE' => null, 'GROUP' => null, 'ORDER' => null, 'OFFSET' => null, 'LIMIT' => null, 'CALLBACK' => 'fetchAll', 'TYPE' => PDO::FETCH_ASSOC];
 
         //查询表达式
         if (is_array($param['selectExpr']) && !empty($param['selectExpr'])) {
@@ -54,7 +37,7 @@ class TableModel
         }
 
         //查询列
-        if (is_array($param['COLUMN']) && $param['COLUMN'][0] === '*' || $param['COLUMN'][0]=== 'COUNT(*)') {
+        if (is_array($param['COLUMN']) && $param['COLUMN'][0] === '*' || $param['COLUMN'][0] === 'COUNT(*)') {
             $sql .= ' '.$param['COLUMN'][0];
         } else {
             $sql .= ' `'.join('`,`', (array) $param['COLUMN']).'`';
@@ -112,34 +95,19 @@ class TableModel
 
         //var_dump($sql, $parameters);
         //动态调用DB方法
-        return Registry::get('Db')->{$param['CALLBACK']}($sql, $parameters);
+        return Db::getInstance()->{$param['CALLBACK']}($sql, $parameters, (int) $param['TYPE']);
     }
-    
-    /**
-     * 返回当前表结构
-     * @return array
-     */
+
     public function desc():array
     {
         return $this->data;
     }
 
-    /**
-     * 判断表中字段是否存在
-     * @param string $column
-     * @return bool
-     */
     public function exist(string $column):bool
     {
         return isset($this->data[$column]);
     }
 
-    /**
-     * 验证字段入值合法性，如果传入$needle参数，则自动判断该参数[本身|长度|范围]是否在此规则中并一起返回
-     * @param string $column
-     * @param null|int|string $column
-     * @return array $column
-     */
     public function validate(string $column, $needle = null):array
     {
         $type = $this->data[$column]['Type'];
@@ -177,7 +145,13 @@ class TableModel
                 }
                 break;
             case strpos($type, 'enum') === 0:
-                $type = array_flip(preg_replace(['/enum\(/', '/\)/', '/\'/'], '', explode("','" ,$type)));
+                $type = array_flip(
+                    preg_replace(
+                        ['/enum\(/', '/\)/', '/\'/'],
+                        '',
+                        explode("','", $type)
+                    )
+                );
                 $data = ['min' => 0, 'max' => count($type)];
                 if ($needle !== null) {
                     $data['validate'] = isset($type[$needle]);
@@ -217,11 +191,6 @@ class TableModel
         return $data;
     }
 
-    /**
-     * 返回某个字段的默认值
-     * @param string $column
-     * @return null|string
-     */
     public function default(string $column):?string
     {
         return $this->data[$column]['Default'];

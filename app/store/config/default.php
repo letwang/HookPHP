@@ -59,12 +59,22 @@ return [
         ]
     ],
     'redis' => [
-        'host' => '127.0.0.1',
-        'port' => 6379,
-        'timeout' => 1,
-        'reserved' => NULL,
-        'interval' => 100,
-        'auth' => 123456
+        'master' => [
+            'host' => '127.0.0.1',
+            'port' => 6379,
+            'timeout' => 1,
+            'reserved' => NULL,
+            'interval' => 100,
+            'auth' => 123456
+        ],
+        'slave0' => [
+            'host' => '127.0.0.1',
+            'port' => 6379,
+            'timeout' => 1,
+            'reserved' => NULL,
+            'interval' => 100,
+            'auth' => 123456
+        ]
     ],
     'HTTP_SERVER' => 'http://www.svn.com',
     'HTTP_URI' => '/'

@@ -1,6 +1,4 @@
 <?php
-use Yaf\Registry;
-
 class IndexController extends InitController
 {
 
@@ -11,11 +9,11 @@ class IndexController extends InitController
 
     public function indexAction()
     {
-        $table = Registry::get('Table')->init('hp_acl_role');
-        var_dump($table->read());
+        $table = new \Let\Db\Table('hp_acl_resource');
+        var_dump($table->desc());
         exit();
-        $this->_view->assign([
-            'test' => '888'
-        ]);
+        $this->_view->assign(
+            ['test' => '888']
+        );
     }
 }

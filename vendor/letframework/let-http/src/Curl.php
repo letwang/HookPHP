@@ -104,23 +104,31 @@ class Curl
 
     public function setHttpHeader()
     {
-        $this->options[CURLOPT_HTTPHEADER] = array_map(function ($v) {
-            return str_replace([
-                '%s',
-                '%u'
-            ], [
-                $this->acceptLanguage[array_rand($this->acceptLanguage)],
-                mt_rand(1, 9)
-            ], $v);
-        }, $this->httpHeader);
+        $this->options[CURLOPT_HTTPHEADER] = array_map(
+            function ($v) {
+                return str_replace(
+                    ['%s', '%u'],
+                    [$this->acceptLanguage[array_rand($this->acceptLanguage)], mt_rand(1, 9)],
+                    $v
+                );
+            },
+            $this->httpHeader
+        );
     }
 
     public function setCookie($file, array $cookie = [])
     {
         $this->options[CURLOPT_COOKIEJAR] = $this->options[CURLOPT_COOKIEFILE] = $file;
-        $this->options[CURLOPT_COOKIE] = join('; ', array_map(function (&$k, &$v) {
-            return $k . '=' . $v;
-        }, array_keys($cookie), $cookie));
+        $this->options[CURLOPT_COOKIE] = join(
+            '; ',
+            array_map(
+                function (&$k, &$v) {
+                    return $k . '=' . $v;
+                },
+                array_keys($cookie),
+                $cookie
+            )
+        );
     }
 
     public function setMultiplePagesDuringOneSession($enable = true)

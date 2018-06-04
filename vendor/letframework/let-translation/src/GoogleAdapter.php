@@ -41,15 +41,13 @@ class GoogleAdapter extends AbstractAdapter implements TranslationInterface
 
     private function format(&$data)
     {
-        $data = json_decode(preg_replace([
-            '/,+/',
-            '/\[,/',
-            '/,]/'
-        ], [
-            ',',
-            '[',
-            ']'
-        ], $data['content']));
+        $data = json_decode(
+            preg_replace(
+                ['/,+/', '/\[,/', '/,]/'],
+                [',', '[', ']'],
+                $data['content']
+            )
+        );
         
         if (json_last_error() === JSON_ERROR_NONE && $data = $data[0][0][0]) {
             return true;
