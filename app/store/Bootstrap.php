@@ -1,5 +1,5 @@
 <?php
-use Yaf\Session, Yaf\Dispatcher, Yaf\Application, Yaf\Bootstrap_Abstract, Yaf\Loader;
+use Yaf\{Session, Dispatcher, Bootstrap_Abstract, Loader};
 
 class Bootstrap extends Bootstrap_Abstract
 {
