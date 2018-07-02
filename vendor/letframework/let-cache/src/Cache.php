@@ -25,7 +25,15 @@ class Cache extends Redis
         //
     }
 
-    public function &globalStatic($name, $defaultValue = null, $reset = false) {
+    public static function getInstance(string $dbNode = 'master', string $key = 'default'): self
+    {
+        if (isset(self::$instance[$dbNode][$key])) {
+            return self::$instance[$dbNode][$key];
+        }
+        return self::$instance[$dbNode][$key] = new self($dbNode);
+    }
+
+    public static function &static($name, $defaultValue = null, $reset = false) {
         static $data = [], $default = [];
         if (isset($data[$name]) || array_key_exists($name, $data)) {
             if ($reset) {
@@ -46,7 +54,7 @@ class Cache extends Redis
         return $data;
     }
 
-    public function globalStaticReset($name = null) {
-        self::globalStatic($name, null, true);
+    public static function staticReset($name = null) {
+        self::static($name, null, true);
     }
 }

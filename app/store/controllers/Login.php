@@ -24,7 +24,7 @@ class LoginController extends InitController
         $referer = $this->getRequest()->getPost('referer', '/');
         
         $login = Db::getInstance()->fetch(
-            Let\Sql\UserLogin::SQL_TABLE_LOGIN_USER,
+            Let\Sql\Login::SQL_LOGIN,
             [$user, $this->pass($user, $pass)]
         );
         
