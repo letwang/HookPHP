@@ -8,9 +8,6 @@ class Bootstrap extends Bootstrap_Abstract
         // auto start session
         Session::getInstance()->start();
         
-        // auto load framework
-        Loader::import(APP_CONFIG['application']['library']['directory'] . '/Autoload.php');
-        
         // auto load plugin
         $dispatcher->registerPlugin(new GlobalPlugin());
         

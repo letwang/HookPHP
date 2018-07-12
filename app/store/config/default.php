@@ -2,7 +2,7 @@
 return [
     'application' => [
         'name' => 'PHP7',
-        'modules' => 'index',
+        'modules' => 'index,cart,order,payment',
         'directory' => APP_PATH,
         'library' => [
             'directory' => APP_ROOT . '/vendor'

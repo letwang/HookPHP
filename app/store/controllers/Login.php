@@ -1,6 +1,6 @@
 <?php
 use Yaf\Session;
-use Let\Http\Header, Let\Db\Db;
+use Hook\Http\Header, Hook\Db\Db;
 
 class LoginController extends InitController
 {
@@ -24,7 +24,7 @@ class LoginController extends InitController
         $referer = $this->getRequest()->getPost('referer', '/');
         
         $login = Db::getInstance()->fetch(
-            Let\Sql\Login::SQL_LOGIN,
+            Hook\Sql\Login::SQL_LOGIN,
             [$user, $this->pass($user, $pass)]
         );
         

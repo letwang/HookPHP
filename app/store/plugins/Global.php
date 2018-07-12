@@ -1,6 +1,6 @@
 <?php
 use Yaf\{Plugin_Abstract, Request_Abstract, Response_Abstract, Session};
-use Let\Http\Header;
+use Hook\Http\Header;
 
 class GlobalPlugin extends Plugin_Abstract
 {

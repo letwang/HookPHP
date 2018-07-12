@@ -13,7 +13,7 @@ class IndexController extends InitController
        // var_dump($table->desc());
        // exit();
         $this->_view->assign(
-            ['test' => 'Index']
+            ['test' => 'Order']
         );
     }
 }
