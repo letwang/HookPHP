@@ -4,9 +4,7 @@ return [
         'name' => 'PHP7',
         'modules' => 'index,cart,order,payment',
         'directory' => APP_PATH,
-        'library' => [
-            'directory' => APP_ROOT . '/vendor'
-        ],
+        'library' => APP_ROOT . '/vendor',
         'dispatcher' => [
             'catchException' => 1
         ]
