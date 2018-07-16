@@ -24,6 +24,8 @@
 # 依赖
 http://php.net/
 
+http://nginx.org/
+
 http://pecl.php.net/package/yaf
 
 http://php.net/manual/zh/ref.pdo-mysql.php
