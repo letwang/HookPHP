@@ -22,20 +22,16 @@
 5.支持行业主流特性：`读写分离`、`负载均衡`...
 
 # 依赖
-http://php.net/
-
-http://nginx.org/
-
-http://pecl.php.net/package/yaf
-
-http://php.net/manual/zh/ref.pdo-mysql.php
-
-http://pecl.php.net/package/redis
-
-http://pecl.php.net/package/mongodb
-
-http://pecl.php.net/package/sphinx
-
++ http://php.net/
++ http://php.net/manual/zh/ref.pdo-mysql.php
++ http://nginx.org/
++ http://pecl.php.net/package/yaf
++ http://pecl.php.net/package/redis
++ http://pecl.php.net/package/mongodb
++ http://pecl.php.net/package/sphinx
++ http://pecl.php.net/package/swoole
++ http://pecl.php.net/package/seaslog
++ http://pecl.php.net/package/lua
 
 # 配置
 ## php.ini
