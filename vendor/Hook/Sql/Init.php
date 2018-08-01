@@ -222,7 +222,11 @@ CREATE TABLE IF NOT EXISTS `hp_hook_module` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 INSERT INTO `hp_hook_module` (`id`, `hook_id`, `module_id`, `position`, `date_add`, `date_upd`) VALUES
-(1, 1, 1, 0, 1493439330, 1493439330);
+(1, 1, 1, 0, 1493439330, 1493439330),
+(2, 2, 2, 0, 1493439330, 1493439330),
+(3, 3, 3, 2, 1493439330, 1493439330),
+(4, 3, 1, 0, 1493439330, 1493439330),
+(5, 3, 2, 1, 1493439330, 1493439330);
 
 CREATE TABLE IF NOT EXISTS `hp_lang` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -282,7 +286,9 @@ CREATE TABLE IF NOT EXISTS `hp_module` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 INSERT INTO `hp_module` (`id`, `key`, `version`, `status`, `date_add`, `date_upd`) VALUES
-(1, 'homeNews', '0.0.1', 1, 1493439330, 1493439330);
+(1, 'One', '0.0.1', 1, 1493439330, 1493439330),
+(2, 'Two', '0.0.1', 1, 1493439330, 1493439330),
+(3, 'Three', '0.0.1', 1, 1493439330, 1493439330);
 
 CREATE TABLE IF NOT EXISTS `hp_user` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,

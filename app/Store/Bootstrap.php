@@ -20,7 +20,7 @@ class Bootstrap extends Bootstrap_Abstract
         }
         
         // auto set http protocol to action except http get protocol
-        if (! $request->isGet()) {
+        if (!$request->isGet()) {
             $dispatcher->setDefaultAction($request->getMethod());
         }
     }
