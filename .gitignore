@@ -1,3 +1,9 @@
+composer.lock
+
 .buildpath
 .project
 .settings/
+
+vendor/autoload.php
+vendor/mongodb
+vendor/composer

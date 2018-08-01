@@ -34,6 +34,7 @@
 + http://pecl.php.net/package/lua
 
 # 配置
+## composer.phar install
 ## php.ini
 ```
 [Session]
