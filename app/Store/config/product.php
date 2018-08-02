@@ -76,6 +76,23 @@ return [
             'dbindex' => 1
         ]
     ],
+    'mongo' => [
+        'master' => [
+            'uri' => 'mongodb://root:root@localhost:27017,127.0.0.1:27017/user?readPreference=secondary',
+            'uriOptions' => [],
+            'driverOptions' => []
+        ],
+        'user' => [
+            'uri' => 'mongodb://root:root@localhost:27017,127.0.0.1:27017/user?readPreference=secondary',
+            'uriOptions' => [],
+            'driverOptions' => []
+        ],
+        'log' => [
+            'uri' => 'mongodb://root:root@127.0.0.1:27017,localhost:27017/log?readPreference=secondary',
+            'uriOptions' => [],
+            'driverOptions' => []
+        ]
+    ],
     'HTTP_SERVER' => 'http://www.svn.com',
     'HTTP_URI' => '/'
 ];

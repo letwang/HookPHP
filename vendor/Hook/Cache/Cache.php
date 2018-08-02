@@ -1,36 +1,17 @@
 <?php
 namespace Hook\Cache;
 
-use Redis;
-
-class Cache extends Redis
+class Cache
 {
-    public $redis;
-
     public static $instance = [];
 
-    public function __construct(string $dbNode = 'master')
+    public static function getInstance(string $node = 'master', string $key = 'default'): self
     {
-        $config = APP_CONFIG['redis'][$dbNode];
-        $this->redis = new Redis();
-        $this->redis->connect($config['host'], $config['port'], $config['timeout'], $config['reserved'], $config['interval']);
-        if (! empty($config['auth'])) {
-            $this->redis->auth($config['auth']);
+        $class = get_called_class();
+        if (isset(self::$instance[$class][$node][$key])) {
+            return self::$instance[$class][$node][$key];
         }
-        $this->redis->select($config['dbindex']);
-    }
-
-    public function __destruct()
-    {
-        //
-    }
-
-    public static function getInstance(string $dbNode = 'master', string $key = 'default'): self
-    {
-        if (isset(self::$instance[$dbNode][$key])) {
-            return self::$instance[$dbNode][$key];
-        }
-        return self::$instance[$dbNode][$key] = new self($dbNode);
+        return self::$instance[$class][$node][$key] = new $class($node);
     }
 
     public static function &static($name, $defaultValue = null, $reset = false) {

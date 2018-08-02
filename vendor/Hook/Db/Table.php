@@ -1,8 +1,8 @@
 <?php
 namespace Hook\Db;
 
-use Redis, PDO;
-use \Hook\Validate\Validate, \Hook\Cache\Cache;
+use Redis;
+use \Hook\Validate\Validate;
 
 class Table
 {
@@ -14,13 +14,13 @@ class Table
     public function __construct(string $table)
     {
         $this->table = $table;
-        $redis = Cache::getInstance()->redis;
+        $redis = RedisConnect::getInstance()->redis;
         $redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_PHP);
         $redis->setOption(Redis::OPT_PREFIX, APP_CONFIG['application']['name'] . ':table:');
         if ($redis->exists($this->table)) {
             $this->data = $redis->hGetAll($this->table);
         } else {
-            $data = Db::getInstance()->fetchAll('DESC ' . $this->table);
+            $data = PdoConnect::getInstance()->fetchAll('DESC ' . $this->table);
             $this->data = array_combine(array_column($data, 'Field'), $data);
             $redis->hMset($this->table, $this->data);
         }
@@ -29,7 +29,7 @@ class Table
     public function read(array $param = [])
     {
         $sql = 'SELECT ';
-        $param += ['selectExpr' => null, 'COLUMN' => ['id'], 'WHERE' => null, 'GROUP' => null, 'ORDER' => null, 'OFFSET' => null, 'LIMIT' => null, 'CALLBACK' => 'fetchAll', 'TYPE' => PDO::FETCH_ASSOC];
+        $param += ['selectExpr' => null, 'COLUMN' => ['id'], 'WHERE' => null, 'GROUP' => null, 'ORDER' => null, 'OFFSET' => null, 'LIMIT' => null, 'CALLBACK' => 'fetchAll', 'TYPE' => \PDO::FETCH_ASSOC];
 
         //查询表达式
         if (is_array($param['selectExpr']) && !empty($param['selectExpr'])) {
@@ -95,7 +95,7 @@ class Table
 
         //var_dump($sql, $parameters);
         //动态调用DB方法
-        return Db::getInstance()->{$param['CALLBACK']}($sql, $parameters, (int) $param['TYPE']);
+        return PdoConnect::getInstance()->{$param['CALLBACK']}($sql, $parameters, (int) $param['TYPE']);
     }
 
     public function desc():array

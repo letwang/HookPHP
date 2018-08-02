@@ -1,6 +1,6 @@
 <?php
 use Yaf\Session;
-use Hook\Http\Header, Hook\Db\Db;
+use Hook\Http\Header, Hook\Db\PdoConnect;
 
 class LoginController extends InitController
 {
@@ -23,7 +23,7 @@ class LoginController extends InitController
         $pass = $this->getRequest()->getPost('pass');
         $referer = $this->getRequest()->getPost('referer', '/');
         
-        $login = Db::getInstance()->fetch(
+        $login = PdoConnect::getInstance()->fetch(
             Hook\Sql\Login::SQL_LOGIN,
             [$user, $this->pass($user, $pass)]
         );

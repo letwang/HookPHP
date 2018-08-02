@@ -1,31 +1,22 @@
 <?php
 namespace Hook\Db;
 
-use PDO;
+use Hook\Cache\Cache;
 
-class Db extends PDO
+class PdoConnect extends Cache
 {
-    public static $instance = [];
+    public $pdo;
 
-    public function __construct(string $dbNode = 'master')
+    public function __construct(string $node = 'master')
     {
-        $config = APP_CONFIG['mysql'][$dbNode];
-        $dsn = 'mysql:host='.$config['host'].';port='.$config['port'];
-        $dsn .= ';dbname='.$config['dbname'].';charset='.$config['charset'];
-        parent::__construct($dsn, $config['username'], $config['passwd'], $config['options']);
-    }
-
-    public function __destruct()
-    {
-        //
-    }
-
-    public static function getInstance(string $dbNode = 'master', string $key = 'default'): self
-    {
-        if (isset(self::$instance[$dbNode][$key])) {
-            return self::$instance[$dbNode][$key];
-        }
-        return self::$instance[$dbNode][$key] = new self($dbNode);
+        $dsn = 'mysql:host='.APP_CONFIG['mysql'][$node]['host'].';port='.APP_CONFIG['mysql'][$node]['port'];
+        $dsn .= ';dbname='.APP_CONFIG['mysql'][$node]['dbname'].';charset='.APP_CONFIG['mysql'][$node]['charset'];
+        $this->pdo = new \PDO(
+            $dsn,
+            APP_CONFIG['mysql'][$node]['username'],
+            APP_CONFIG['mysql'][$node]['passwd'],
+            APP_CONFIG['mysql'][$node]['options']
+        );
     }
 
     /**
@@ -37,10 +28,8 @@ class Db extends PDO
      */
     public function fetchAll(string $statement, array $parameters = [], int $type = \PDO::FETCH_ASSOC): array
     {
-        $rs = $this->_query($statement, $parameters);
+        $rs = $this->query($statement, $parameters);
         $results = $rs->fetchAll($type);
-        $rs->closeCursor();
-        $rs = null;
         
         return $results;
     }
@@ -48,10 +37,8 @@ class Db extends PDO
     //@return mixed[array|object|false]
     public function fetch(string $statement, array $parameters = [], int $type = \PDO::FETCH_ASSOC)
     {
-        $rs = $this->_query($statement, $parameters);
+        $rs = $this->query($statement, $parameters);
         $results = $rs->fetch($type);
-        $rs->closeCursor();
-        $rs = null;
         
         return $results;
     }
@@ -59,10 +46,8 @@ class Db extends PDO
     //@return mixed[string|false]
     public function fetchColumn(string $statement, array $parameters = [], int $column = 0)
     {
-        $rs = $this->_query($statement, $parameters);
+        $rs = $this->query($statement, $parameters);
         $results = $rs->fetchColumn($column);
-        $rs->closeCursor();
-        $rs = null;
         
         return $results;
     }
@@ -70,24 +55,24 @@ class Db extends PDO
     public function insert(string $statement, array $parameters = []): array
     {
         return [
-            'rowCount' => $this->_query($statement, $parameters)->rowCount(),
-            'lastInsertId' => $this->lastInsertId()
+            'rowCount' => $this->query($statement, $parameters)->rowCount(),
+            'lastInsertId' => $this->pdo->lastInsertId()
         ];
     }
 
     public function update(string $statement, array $parameters = []): int
     {
-        return $this->_query($statement, $parameters)->rowCount();
+        return $this->query($statement, $parameters)->rowCount();
     }
 
     public function delete(string $statement, array $parameters = []): int
     {
-        return $this->_query($statement, $parameters)->rowCount();
+        return $this->query($statement, $parameters)->rowCount();
     }
 
-    private function _query(string $statement, array $parameters = []): \PDOStatement
+    public function query(string $statement, array $parameters = []): \PDOStatement
     {
-        $rs = $this->prepare($statement);
+        $rs = $this->pdo->prepare($statement);
         foreach ($parameters as $index => $value) {
             switch (1) {
                 case is_int($value):

@@ -1,6 +1,6 @@
 <?php
 namespace Hook\Hook;
-use Hook\Db\Db;
+use Hook\Db\PdoConnect;
 
 class Hook
 {
@@ -17,7 +17,7 @@ class Hook
     public static function run($name, $args = null)
     {
         $html = '';
-        $hookModule = Db::getInstance()->fetchAll(
+        $hookModule = PdoConnect::getInstance()->fetchAll(
             \Hook\Sql\Module::SQL_GET_MODULES_FOR_HOOK,
             [$name]
         );
