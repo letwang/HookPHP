@@ -1,6 +1,7 @@
 <?php
 namespace Hook\Hook;
 use Hook\Db\PdoConnect;
+use Hook\Cache\Cache;
 
 class Hook
 {
@@ -14,15 +15,22 @@ class Hook
         //
     }
 
-    public static function run($name, $args = null)
+    public static function run($key, $args = null)
     {
+        $hookModule = &Cache::static(__METHOD__);
+        if (!$hookModule) {
+            $hookModule = PdoConnect::getInstance()->fetchAll(
+                \Hook\Sql\Module::SQL_GET_MODULES_FOR_HOOK, [], \PDO::FETCH_COLUMN | \PDO::FETCH_GROUP
+            );
+        }
+
+        if (!isset($hookModule[$key])) {
+            return false;
+        }
+
         $html = '';
-        $hookModule = PdoConnect::getInstance()->fetchAll(
-            \Hook\Sql\Module::SQL_GET_MODULES_FOR_HOOK,
-            [$name]
-        );
-        foreach ($hookModule as $data) {
-            $html .= call_user_func(array(Module::getInstance($data['module'])->module, 'hook'.$data['hook']), $args);
+        foreach ($hookModule[$key] as $module) {
+            $html .= call_user_func(array(Module::getInstance($module)->module, 'hook'.$key), $args);
         }
         return $html;
     }
