@@ -3,15 +3,14 @@ namespace Hook\Cache;
 
 class Cache
 {
-    public static $instance = [];
-
-    public static function getInstance(string $node = 'master', string $key = 'default'): self
+    public static function getInstance(string $name = 'master', string $key = 'default'): self
     {
         $class = get_called_class();
-        if (isset(self::$instance[$class][$node][$key])) {
-            return self::$instance[$class][$node][$key];
+        $instance = &self::static($class);
+        if (isset($instance[$name][$key])) {
+            return $instance[$name][$key];
         }
-        return self::$instance[$class][$node][$key] = new $class($node);
+        return $instance[$name][$key] = new $class($name);
     }
 
     public static function &static($name, $defaultValue = null, $reset = false) {

@@ -44,6 +44,7 @@ session.save_path = "tcp://127.0.0.1:6379?weight=1&auth=123456&database=0, tcp:/
 [yaf]
 yaf.use_namespace = 1
 yaf.use_spl_autoload = 1
+yaf.library = /home/你的项目绝对路径/HookPHP/vendor/
 ```
 ## Nginx规则
 ```

@@ -22,18 +22,8 @@ class Hook
             [$name]
         );
         foreach ($hookModule as $data) {
-            $html .= call_user_func(array(self::getModuleInstance($data['module']), 'hook'.$data['hook']), $args);
+            $html .= call_user_func(array(Module::getInstance($data['module'])->module, 'hook'.$data['hook']), $args);
         }
         return $html;
-    }
-
-    public static function getModuleInstance($module)
-    {
-        static $instance = null;
-        if (isset($instance[$module])) {
-            return $instance[$module];
-        }
-        require APP_PATH.'/hooks/'.$module.'/'.$module.'.php';
-        return $instance[$module] = new $module;
     }
 }
