@@ -55,32 +55,9 @@ class Validate
         return sprintf('%u', crc32($url));
     }
 
-    public static function mb_substr(&$str, $length, $encoding = 'utf-8')
+    public static function mbSubstr(&$str, $length, $encoding = 'utf-8')
     {
         return isset($str) ? mb_substr($str, 0, $length, $encoding) . ($length < mb_strlen($str, $encoding) ? '...' : '') : '';
-    }
-
-    public static function strip_tags($str, $decode = false, $space = false)
-    {
-        $pattern = [
-            '@<script[^>]*?>.*?</script>@si' => '', // Strip out javascript
-            '@<[\/\!]*?[^<>]*?>@si' => '', // Strip out HTML tags
-            '@<style[^>]*?>.*?</style>@siU' => '', // Strip style tags properly
-            '@<![\s\S]*?--[ \t\n\r]*>@' => ''
-        ]; // Strip multi-line comments including CDATA
-        
-        if ($decode === true) {
-            $str = htmlspecialchars_decode($str, ENT_QUOTES | ENT_HTML401);
-        }
-        
-        if ($space === true) {
-            $pattern['@\s\s+@'] = ' '; // Strip continuous blank spaces
-        }
-        
-        $count = 0;
-        $str = preg_replace(array_keys($pattern), array_values($pattern), $str, - 1, $count);
-        
-        return $count === 0 ? $str : self::strip_tags($str);
     }
 
     public static function url(&$url, $default = false, $flags = null)

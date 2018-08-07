@@ -7,15 +7,15 @@ class PdoConnect extends Cache
 {
     public $pdo;
 
-    public function __construct(string $node = 'master')
+    public function __construct(string $name = 'master')
     {
-        $dsn = 'mysql:host='.APP_CONFIG['mysql'][$node]['host'].';port='.APP_CONFIG['mysql'][$node]['port'];
-        $dsn .= ';dbname='.APP_CONFIG['mysql'][$node]['dbname'].';charset='.APP_CONFIG['mysql'][$node]['charset'];
+        $dsn = 'mysql:host='.APP_CONFIG['mysql'][$name]['host'].';port='.APP_CONFIG['mysql'][$name]['port'];
+        $dsn .= ';dbname='.APP_CONFIG['mysql'][$name]['dbname'].';charset='.APP_CONFIG['mysql'][$name]['charset'];
         $this->pdo = new \PDO(
             $dsn,
-            APP_CONFIG['mysql'][$node]['username'],
-            APP_CONFIG['mysql'][$node]['passwd'],
-            APP_CONFIG['mysql'][$node]['options']
+            APP_CONFIG['mysql'][$name]['username'],
+            APP_CONFIG['mysql'][$name]['passwd'],
+            APP_CONFIG['mysql'][$name]['options']
         );
     }
 

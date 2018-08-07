@@ -3,7 +3,7 @@ namespace Hook\Cache;
 
 class Cache
 {
-    public static function getInstance(string $name = 'master', string $key = 'default'): self
+    public static function getInstance(string $name = 'master', string $key = 'default'): object
     {
         $class = get_called_class();
         $instance = &self::static($class);
@@ -13,7 +13,8 @@ class Cache
         return $instance[$name][$key] = new $class($name);
     }
 
-    public static function &static($name, $defaultValue = null, $reset = false) {
+    public static function &static(string $name, $defaultValue = null, bool $reset = false)
+    {
         static $data = [], $default = [];
         if (isset($data[$name]) || array_key_exists($name, $data)) {
             if ($reset) {
@@ -34,7 +35,8 @@ class Cache
         return $data;
     }
 
-    public static function staticReset($name = null) {
+    public static function staticReset(string $name = null): void
+    {
         self::static($name, null, true);
     }
 }

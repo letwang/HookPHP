@@ -5,21 +5,7 @@ use Hook\Db\PdoConnect;
 
 class Process
 {
-
-    /**
-     * 根据SQL读取大数据；充分运用PDO:fetchAll后2个参数，一键实现复杂功能
-     *
-     * @param array $param
-     *            数据源：带分页的SQL和占位符传递的值
-     * @param int $style
-     *            PDO:fetch_style
-     * @param mixed $argument
-     *            PDO:fetch_argument
-     * @param array $args
-     *            PDO:ctor_args
-     * @return array
-     */
-    public static function read(array $param = [], $style = \PDO::FETCH_ASSOC, $argument = null, array $args = [])
+    public static function read(array $param = [], int $style = \PDO::FETCH_ASSOC, $argument = null, array $args = [])
     {
         if (! isset($param['sql']) || ! isset($param['placeholder']) || ! is_array($param['placeholder'])) {
             return false;
@@ -30,35 +16,19 @@ class Process
         
         $stmt = PdoConnect::getInstance()->query(sprintf($param['sql'], $offset * $rows, $rows), $param['placeholder']);
         
-        $data = [];
         $num = func_num_args();
         while ($stmt->rowCount() > 0) {
             if ($num <= 2) {
-                $data[] = $stmt->fetchAll($style);
+                yield $stmt->fetchAll($style);
             } else {
-                $data[] = $stmt->fetchAll($style, $argument, $args);
+                yield $stmt->fetchAll($style, $argument, $args);
             }
             
             $offset ++;
             $stmt = PdoConnect::getInstance()->query(sprintf($param['sql'], $offset * $rows, $rows), $param['placeholder']);
-            
-            usleep(100);
         }
-        
-        return $data;
     }
 
-    /**
-     * 根据数据源智能读取大数据并下载为CSV文件
-     *
-     * @param string $file
-     *            需要下载的文件名称
-     * @param array $fields
-     *            CSV文件所要显示的列名称
-     * @param array $param
-     *            数据源：PHP二维数组｜带分页的SQL和占位符传递的值
-     * @return 下载CSV文件
-     */
     public static function exportToCsv($file, array $fields, array $param)
     {
         header('Content-Type: application/csv');
@@ -87,13 +57,6 @@ class Process
         fclose($handle);
     }
 
-    /**
-     * 智能去除文件BOM
-     *
-     * @param
-     *            resource &$handle 文件句柄
-     * @return 当前文件所在的指针位置
-     */
     public static function skipFileBOM(&$handle)
     {
         rewind($handle);
@@ -124,13 +87,6 @@ class Process
         return $offset;
     }
 
-    /**
-     * 智能处理文件编码导致的乱码问题
-     *
-     * @param
-     *            resource &$handle 文件句柄
-     * @return 当前文件编码的类型
-     */
     public static function convertFileEncoding(&$handle)
     {
         $offset = self::skipFileBOM($handle);
@@ -148,14 +104,6 @@ class Process
         return $encoding;
     }
 
-    /**
-     * 表格模板
-     *
-     * @param array $keys            
-     * @param array $rows            
-     * @param string $title            
-     * @return string
-     */
     public static function template1(array $keys, array $rows, $title)
     {
         $str = '<table width="100%" border="1" cellpadding="1" cellspacing="1">
@@ -177,13 +125,6 @@ class Process
         return $str;
     }
 
-    /**
-     * Code模板
-     *
-     * @param array $rows            
-     * @param string $title            
-     * @return string
-     */
     public static function template2(array $rows, $title)
     {
         $str = '<h2>' . $title . '</h2><pre><div><ol>';
