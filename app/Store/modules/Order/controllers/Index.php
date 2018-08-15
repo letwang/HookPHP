@@ -9,11 +9,11 @@ class IndexController extends InitController
 
     public function indexAction()
     {
-        $table = new \Hook\Db\Table('hp_acl_resource');
-       // var_dump($table->desc());
-       // exit();
+        $table = new Hook\Db\Table('hp_acl_resource');
         $this->_view->assign(
-            ['test' => 'Order']
+            [
+                'resource' => $table->desc()
+            ]
         );
     }
 }

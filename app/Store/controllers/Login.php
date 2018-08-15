@@ -29,7 +29,7 @@ class LoginController extends InitController
         );
         
         if ($login) {
-            Session::getInstance()->offsetSet(self::SESSIONNAME, $login);
+            Session::getInstance()->set(self::SESSIONNAME, $login);
             Header::redirect($referer);
             return true;
         }

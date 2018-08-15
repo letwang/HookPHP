@@ -14,6 +14,8 @@ class GlobalPlugin extends Plugin_Abstract
     public function routerShutdown(Request_Abstract $request, Response_Abstract $response)
     {
         Hook::run('routerShutdown', ['request' => $request, 'response' => $response]);
+
+        //Auth
         $referer = $request->getServer('REQUEST_URI', APP_CONFIG['HTTP_URI']);
         
         if (Session::getInstance()->has(LoginController::SESSIONNAME) === false) {
@@ -31,6 +33,11 @@ class GlobalPlugin extends Plugin_Abstract
             
             Header::redirect($referer);
             return false;
+        }
+
+        //CSRF
+        if (false === Session::getInstance()->has('securityToken')) {
+            Session::getInstance()->set('securityToken', md5(uniqid(rand(), true)));
         }
     }
 

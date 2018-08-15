@@ -1,0 +1,26 @@
+<?php
+use Hook\Form\Form;
+
+require APP_PATH.'/layout/head.phtml';
+?>
+
+<link href="css/login.css" rel="stylesheet" />
+<title><?php echo $this->title;?></title>
+<meta name="description" content="<?php echo $this->description;?>" />
+<meta name="keywords" content="<?php echo $this->keywords;?>" />
+</head>
+<body>
+	<?php
+	echo Form::form('acl', '/acl');
+	echo '<fieldset><legend>Resource</legend>';
+	echo Form::label('应用', 'app').Form::input('app');
+	echo Form::label('模块', 'module').Form::input('module');
+	echo Form::label('控制', 'controller').Form::input('controller');
+	echo Form::label('动作', 'action').Form::input('action');
+	echo Form::label('状态', 'status').Form::select('status', [['id' => 1, 'text' => '启用'], ['id' => 0, 'text' => '禁用']], 1);
+	echo Form::label('资源名称', 'name').Form::input('name');
+	echo '</fieldset>';
+	echo Form::submit();
+	?>
+	</form>
+<?php require APP_PATH.'/layout/foot.phtml';?>
