@@ -66,16 +66,24 @@ class ObjectModel
 
             //主表
             unset($this->field[0]['id']);
+            $keys = '';
+            foreach ($this->field[0] as $key => $value) {
+                $keys .= '`'.$key.'`=:'.$key.',';
+            }
             $rowCount = PdoConnect::getInstance()->update(
-                'UPDATE `'.$this->table.'` SET `'.join('`=?,`', array_keys($this->field[0])).'`=? WHERE `id`='.$id,
-                array_values($this->field[0])
+                'UPDATE `'.$this->table.'` SET '.substr($keys, 0, -1).'=? WHERE `id`='.$id,
+                $this->field[0]
             );
 
             //语言表
             unset($this->field[1]['id'], $this->field[1]['lang_id'], $this->field[1][$this->foreign]);
+            $keys = '';
+            foreach ($this->field[0] as $key => $value) {
+                $keys .= '`'.$key.'`=:'.$key.',';
+            }
             PdoConnect::getInstance()->update(
-                'UPDATE `'.$this->table.'_lang` SET `'.join('`=?,`', array_keys($this->field[1])).'`=? WHERE `'.$this->foreign.'`='.$id.' AND `lang_id`='.$this->langId,
-                array_values($this->field[1])
+                'UPDATE `'.$this->table.'_lang` SET '.substr($keys, 0, -1).'=? WHERE `'.$this->foreign.'`='.$id.' AND `lang_id`='.$this->langId,
+                $this->field[1]
             );
 
             PdoConnect::getInstance()->pdo->commit();
