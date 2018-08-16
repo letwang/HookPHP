@@ -71,7 +71,7 @@ class ObjectModel
                 $keys .= '`'.$key.'`=:'.$key.',';
             }
             $rowCount = PdoConnect::getInstance()->update(
-                'UPDATE `'.$this->table.'` SET '.substr($keys, 0, -1).'=? WHERE `id`='.$id,
+                'UPDATE `'.$this->table.'` SET '.substr($keys, 0, -1).' WHERE `id`='.$id,
                 $this->field[0]
             );
 
@@ -82,7 +82,7 @@ class ObjectModel
                 $keys .= '`'.$key.'`=:'.$key.',';
             }
             PdoConnect::getInstance()->update(
-                'UPDATE `'.$this->table.'_lang` SET '.substr($keys, 0, -1).'=? WHERE `'.$this->foreign.'`='.$id.' AND `lang_id`='.$this->langId,
+                'UPDATE `'.$this->table.'_lang` SET '.substr($keys, 0, -1).' WHERE `'.$this->foreign.'`='.$id.' AND `lang_id`='.$this->langId,
                 $this->field[1]
             );
 
