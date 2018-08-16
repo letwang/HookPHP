@@ -26,54 +26,55 @@ class PdoConnect extends Cache
      * PDO::FETCH_GROUP 返回 以第一列为KEY，其余列为二数组VALUE的 数据结构【如果KEY重复，则其值自动加入二维数组中】
      * PDO::FETCH_OBJ 返回对象结构
      */
-    public function fetchAll(string $statement, array $parameters = [], int $type = \PDO::FETCH_ASSOC): array
+    public function fetchAll(string $statement, array $parameter = [], int $type = \PDO::FETCH_ASSOC): array
     {
-        $rs = $this->query($statement, $parameters);
+        $rs = $this->query($statement, $parameter);
         $results = $rs->fetchAll($type);
         
         return $results;
     }
 
     //@return mixed[array|object|false]
-    public function fetch(string $statement, array $parameters = [], int $type = \PDO::FETCH_ASSOC)
+    public function fetch(string $statement, array $parameter = [], int $type = \PDO::FETCH_ASSOC)
     {
-        $rs = $this->query($statement, $parameters);
+        $rs = $this->query($statement, $parameter);
         $results = $rs->fetch($type);
         
         return $results;
     }
 
     //@return mixed[string|false]
-    public function fetchColumn(string $statement, array $parameters = [], int $column = 0)
+    public function fetchColumn(string $statement, array $parameter = [], int $column = 0)
     {
-        $rs = $this->query($statement, $parameters);
+        $rs = $this->query($statement, $parameter);
         $results = $rs->fetchColumn($column);
         
         return $results;
     }
 
-    public function insert(string $statement, array $parameters = []): array
+    public function insert(string $statement, array $parameter = []): array
     {
         return [
-            'rowCount' => $this->query($statement, $parameters)->rowCount(),
+            'rowCount' => $this->query($statement, $parameter)->rowCount(),
             'lastInsertId' => $this->pdo->lastInsertId()
         ];
     }
 
-    public function update(string $statement, array $parameters = []): int
+    public function update(string $statement, array $parameter = []): int
     {
-        return $this->query($statement, $parameters)->rowCount();
+        return $this->query($statement, $parameter)->rowCount();
     }
 
-    public function delete(string $statement, array $parameters = []): int
+    public function delete(string $statement, array $parameter = []): int
     {
-        return $this->query($statement, $parameters)->rowCount();
+        return $this->query($statement, $parameter)->rowCount();
     }
 
-    public function query(string $statement, array $parameters = []): \PDOStatement
+    public function query(string $statement, array $parameter = []): \PDOStatement
     {
         $rs = $this->pdo->prepare($statement);
-        foreach ($parameters as $index => $value) {
+        $flag = isset($parameter[0]);
+        foreach ($parameter as $key => $value) {
             switch (1) {
                 case is_int($value):
                     $type = \PDO::PARAM_INT;
@@ -88,7 +89,7 @@ class PdoConnect extends Cache
                     $type = \PDO::PARAM_STR;
                     break;
             }
-            $rs->bindValue($index + 1, $value, $type);
+            $rs->bindValue($flag ? ($key + 1) : $key, $value, $type);
         }
 
         $rs->execute();

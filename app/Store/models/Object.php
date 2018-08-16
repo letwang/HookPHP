@@ -1,81 +1,94 @@
 <?php
-use Hook\Db\PdoConnect;
-use Hook\Db\Table;
+use Hook\Db\{PdoConnect,Table};
+use Yaf\Session;
 
 class ObjectModel
 {
-    public $fields = [];
-    public $fieldsLang = [];
-    public $definition = [];
+    public $table = '';
+    public $foreign = '';
+    public $validate = [];
+
+    public $langId = 0;
+    public $field = [[], []];
+    public $data = [[], []];
 
     public function __construct()
     {
-        foreach ($this->definition['fields'] as $field => $filter) {
+        $this->langId = Session::getInstance()->get('user')['lang_id'];
+        $this->field = [
+            ['id' => NULL, 'date_add' => time(), 'date_upd' => time()],
+            ['id' => NULL, 'date_add' => time(), 'date_upd' => time(), 'lang_id' => $this->langId, $this->foreign => 0]
+        ];
+        foreach ($this->validate as $field => $filter) {
             $result = filter_input($filter['type'], $field, $filter['filter'], $filter['options']);
             if (!$result) {
                 throw new \InvalidArgumentException('Field '.$field.' '.($filter['error'] ?? 'error.'));
             }
-            $this->fields[$field] = $result;
-        }
 
-        foreach ($this->definition['fieldsLang'] as $field => $filter) {
-            $result = filter_input($filter['type'], $field, $filter['filter'], $filter['options']);
-            if (!$result) {
-                throw new \InvalidArgumentException('Field '.$field.' '.($filter['error'] ?? 'error.'));
-            }
-            $this->fieldsLang[$field] = $result;
+            $type = isset($filter['lang']);
+            $this->field[$type][$field] = $this->data[$type][$field] = $result;
         }
     }
 
-    public function add()
+    public function add(): int
     {
-        $table = new Table($this->definition['table']);
-        $field = array_keys($table->desc());
+        try {
+            PdoConnect::getInstance()->pdo->beginTransaction();
 
-        $param = [
-            ':id' => NULL,
-            ':date_add' => time(),
-            ':date_upd' => time(),
-        ];
-        foreach ($this->fields as $key => $value) {
-            $param[':'.$key] = $value;
+            //主表
+            $keys = array_keys($this->field[0]);
+            $result = PdoConnect::getInstance()->insert(
+                'INSERT INTO `'.$this->table.'`(`'.join('`,`', $keys).'`)VALUES(:'.join(',:', $keys).');',
+                $this->field[0]
+            );
+
+            //语言表
+            $keys = array_keys($this->field[1]);
+            $this->field[1][$this->foreign] = $result['lastInsertId'];
+            PdoConnect::getInstance()->insert(
+                'INSERT INTO `'.$this->table.'_lang`(`'.join('`,`', $keys).'`)VALUES(:'.join(',:', $keys).');',
+                $this->field[1]
+            );
+
+            PdoConnect::getInstance()->pdo->commit();
+            return (int) $result['lastInsertId'];
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+            PdoConnect::getInstance()->pdo->rollBack();
         }
-
-        $resource = PdoConnect::getInstance()->insert(
-            'INSERT INTO `'.$this->definition['table'].'` (`'.join('`,`', $field).'`) VALUES (:'.join(',:', $field).');',
-            $param
-        );
-        if ($resource['lastInsertId'] <= 0) {
-            return false;
-        }
-
-        $table = new Table($this->definition['table'].'_lang');
-        $field = array_keys($table->desc());
-
-        $param = [
-            ':id' => NULL,
-            ':lang_id' => 1,
-            ':resource_id' => $resource['lastInsertId'],
-            ':date_add' => time(),
-            ':date_upd' => time(),
-        ];
-        foreach ($this->fieldsLang as $key => $value) {
-            $param[':'.$key] = $value;
-        }
-        $result = PdoConnect::getInstance()->insert(
-            'INSERT INTO `'.$this->definition['table'].'_lang`(`'.join('`,`', $field).'`) VALUES (:'.join(',:', $field).');',
-            $param
-        );
-        return $result;
+        return [];
     }
 
-    public function update()
+    public function update(int $id): bool
     {
-        //
+        try {
+            PdoConnect::getInstance()->pdo->beginTransaction();
+
+            //主表
+            unset($this->field[0]['id']);
+            $rowCount = PdoConnect::getInstance()->update(
+                'UPDATE `'.$this->table.'` SET `'.join('`=?,`', array_keys($this->field[0])).'`=? WHERE `id`='.$id,
+                array_values($this->field[0])
+            );
+
+            //语言表
+            unset($this->field[1]['id'], $this->field[1]['lang_id'], $this->field[1][$this->foreign]);
+            PdoConnect::getInstance()->update(
+                'UPDATE `'.$this->table.'_lang` SET `'.join('`=?,`', array_keys($this->field[1])).'`=? WHERE `'.$this->foreign.'`='.$id.' AND `lang_id`='.$this->langId,
+                array_values($this->field[1])
+            );
+
+            PdoConnect::getInstance()->pdo->commit();
+            return $rowCount > 0;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+            PdoConnect::getInstance()->pdo->rollBack();
+        }
+        return 0;
     }
 
-    public function delete()
+    public function delete(int $id): bool
     {
-        //
+        return PdoConnect::getInstance()->delete('DELETE FROM `'.$this->table.'` WHERE `id`=?', [$id]) > 0;
     }
 }

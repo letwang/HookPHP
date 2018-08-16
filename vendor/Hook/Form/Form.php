@@ -18,19 +18,34 @@ class Form
         return $form;
     }
 
-    public static function submit(string $type = 'submit', string $value = 'Submit'): string
+    public static function submit(string $type = 'submit', string $value = 'Submit', string $parameters = ''): string
     {
-        return '<input type="'.$type.'" value="'.$value.'" />';
+        $field = '<input type="'.$type.'" value="'.$value.'"';
+        if (!empty($parameters)) {
+            $field .= ' '.$parameters;
+        }
+        $field .= ' />';
+        return $field;
+    }
+
+    public static function button(string $type = 'submit', string $value = 'Submit', string $parameters = ''): string
+    {
+        $field = '<button type="'.$type.'"';
+        if (!empty($parameters)) {
+            $field .= ' '.$parameters;
+        }
+        $field .= '>'.$value.'</button>';
+        return $field;
     }
 
     public static function label(string $text, string $for, string $parameters = ''): string
     {
-        return '<label for="'.$for.'" '.$parameters.'>'.$text.'</label>';
+        return '<label for="form_'.$for.'" '.$parameters.'>'.$text.'</label>';
     }
 
     public static function input(string $name, string $value = '', string $parameters = '', string $type = 'text'): string
     {
-        $field = '<input type="'.$type.'" name="'.$name.'" value="'.$value.'"';
+        $field = '<input type="'.$type.'" name="'.$name.'" id="form_'.$name.'" value="'.$value.'"';
         if (!empty($parameters)) {
             $field .= ' '.$parameters;
         }

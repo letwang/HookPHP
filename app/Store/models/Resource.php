@@ -1,52 +1,32 @@
 <?php
 class ResourceModel extends ObjectModel
 {
-    public $definition = [
-        'table' => 'hp_acl_resource',
-        'primary' => 'id',
-        'fields' => [
-            'app' => [
-                'type' => INPUT_POST,
-                'filter' => FILTER_VALIDATE_REGEXP,
-                'options' => [
-                    'options' => ['regexp' => '/^[[:alpha:]]*$/']
-                ]
-            ],
-            'module' => [
-                'type' => INPUT_POST,
-                'filter' => FILTER_VALIDATE_REGEXP,
-                'options' => [
-                    'options' => ['regexp' => '/^[[:alpha:]]*$/']
-                ]
-            ],
-            'controller' => [
-                'type' => INPUT_POST,
-                'filter' => FILTER_VALIDATE_REGEXP,
-                'options' => [
-                    'options' => ['regexp' => '/^[[:alpha:]]*$/']
-                ]
-            ],
-            'action' => [
-                'type' => INPUT_POST,
-                'filter' => FILTER_VALIDATE_REGEXP,
-                'options' => [
-                    'options' => ['regexp' => '/^[[:alpha:]]*$/']
-                ]
-            ],
-            'status' => [
-                'type' => INPUT_POST,
-                'filter' => FILTER_VALIDATE_INT,
-                'options' => ['options' => ['min_range' => 0, 'max_range' => 1]],
-            ]
+    public $table = 'hp_acl_resource';
+    public $foreign = 'resource_id';
+    public $validate = [
+        'app' => [
+            'type' => INPUT_POST, 'filter' => FILTER_VALIDATE_REGEXP,
+            'options' => ['options' => ['regexp' => '/^[[:alpha:]]*$/']]
         ],
-        'fieldsLang' => [
-            'name' => [
-                'type' => INPUT_POST,
-                'filter' => FILTER_VALIDATE_REGEXP,
-                'options' => [
-                    'options' => ['regexp' => '/^[[:alpha:]]*$/u']
-                ]
-            ]
+        'module' => [
+            'type' => INPUT_POST, 'filter' => FILTER_VALIDATE_REGEXP,
+            'options' => ['options' => ['regexp' => '/^[[:alpha:]]*$/']]
+        ],
+        'controller' => [
+            'type' => INPUT_POST, 'filter' => FILTER_VALIDATE_REGEXP,
+            'options' => ['options' => ['regexp' => '/^[[:alpha:]]*$/']]
+        ],
+        'action' => [
+            'type' => INPUT_POST, 'filter' => FILTER_VALIDATE_REGEXP,
+            'options' => ['options' => ['regexp' => '/^[[:alpha:]]*$/']]
+        ],
+        'status' => [
+            'type' => INPUT_POST, 'filter' => FILTER_VALIDATE_INT,
+            'options' => ['options' => ['min_range' => 0, 'max_range' => 1]],
+        ],
+        'name' => [
+            'type' => INPUT_POST, 'filter' => FILTER_VALIDATE_REGEXP, 'lang' => true,
+            'options' => ['options' => ['regexp' => '/^[[:alpha:]]*$/u']]
         ]
     ];
 
@@ -55,18 +35,18 @@ class ResourceModel extends ObjectModel
         parent::__construct();
     }
 
-    public function add()
+    public function add(): int
     {
         return parent::add();
     }
 
-    public function update()
+    public function update(int $id): bool
     {
-        return parent::update();
+        return parent::update($id);
     }
 
-    public function delete()
+    public function delete(int $id): bool
     {
-        return parent::delete();
+        return parent::delete($id);
     }
 }

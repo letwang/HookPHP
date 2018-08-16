@@ -18,7 +18,7 @@ class GlobalPlugin extends Plugin_Abstract
         //Auth
         $referer = $request->getServer('REQUEST_URI', APP_CONFIG['HTTP_URI']);
         
-        if (Session::getInstance()->has(LoginController::SESSIONNAME) === false) {
+        if (Session::getInstance()->has('user') === false) {
             if ($request->controller === 'Login') {
                 // static
             } else {

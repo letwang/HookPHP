@@ -10,17 +10,26 @@ require APP_PATH.'/layout/head.phtml';
 <meta name="keywords" content="<?php echo $this->keywords;?>" />
 </head>
 <body>
-	<?php
-	echo Form::form('acl', '/acl');
-	echo '<fieldset><legend>Resource</legend>';
-	echo Form::label('应用', 'app').Form::input('app');
-	echo Form::label('模块', 'module').Form::input('module');
-	echo Form::label('控制', 'controller').Form::input('controller');
-	echo Form::label('动作', 'action').Form::input('action');
-	echo Form::label('状态', 'status').Form::select('status', [['id' => 1, 'text' => '启用'], ['id' => 0, 'text' => '禁用']], 1);
-	echo Form::label('资源名称', 'name').Form::input('name');
-	echo '</fieldset>';
-	echo Form::submit();
-	?>
+<div class="container">
+	<?php echo Form::form('acl', '/acl', 'post', '');?>
+	<div class="form-group">
+	<?php echo Form::label('应用', 'app').Form::input('app', '', 'required class="form-control" placeholder="应用"');?>
+	</div>
+	<div class="form-group">
+	<?php echo Form::label('模块', 'module').Form::input('module', '', 'required class="form-control"');?>
+	</div>
+	<div class="form-group">
+	<?php echo Form::label('控制', 'controller').Form::input('controller', '', 'required class="form-control"');?>
+	</div>
+	<div class="form-group">
+	<?php echo Form::label('动作', 'action').Form::input('action', '', 'required class="form-control"');?>
+	</div>
+	<div class="form-group">
+	<?php echo Form::label('状态', 'status').Form::select('status', [['id' => 1, 'text' => '启用'], ['id' => 0, 'text' => '禁用']], 1, 'required class="form-control"');?>
+	</div>
+	<div class="form-group">
+	<?php echo Form::label('资源名称', 'name').Form::input('name', '', 'required class="form-control"');?>
+	</div>
+	<?php echo Form::button('submit', 'Submit', 'class="btn btn-primary"');?>
 	</form>
 <?php require APP_PATH.'/layout/foot.phtml';?>

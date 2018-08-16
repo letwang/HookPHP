@@ -4,9 +4,6 @@ use Hook\Http\Header, Hook\Db\PdoConnect;
 
 class LoginController extends InitController
 {
-
-    const SESSIONNAME = 'api_user_session';
-
     public function init()
     {
         parent::init();
@@ -29,7 +26,7 @@ class LoginController extends InitController
         );
         
         if ($login) {
-            Session::getInstance()->set(self::SESSIONNAME, $login);
+            Session::getInstance()->set('user', $login);
             Header::redirect($referer);
             return true;
         }
@@ -41,7 +38,7 @@ class LoginController extends InitController
 
     public function outAction()
     {
-        Session::getInstance()->del(self::SESSIONNAME);
+        Session::getInstance()->del('user');
         Header::redirect('/');
         return true;
     }
