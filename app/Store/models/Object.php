@@ -78,7 +78,7 @@ class ObjectModel
             //语言表
             unset($this->field[1]['id'], $this->field[1]['lang_id'], $this->field[1][$this->foreign]);
             $keys = '';
-            foreach ($this->field[0] as $key => $value) {
+            foreach ($this->field[1] as $key => $value) {
                 $keys .= '`'.$key.'`=:'.$key.',';
             }
             PdoConnect::getInstance()->update(
