@@ -56,7 +56,7 @@ class ObjectModel
             throw new Exception($e->getMessage());
             PdoConnect::getInstance()->pdo->rollBack();
         }
-        return [];
+        return 0;
     }
 
     public function update(int $id): bool
@@ -92,7 +92,7 @@ class ObjectModel
             throw new Exception($e->getMessage());
             PdoConnect::getInstance()->pdo->rollBack();
         }
-        return 0;
+        return false;
     }
 
     public function delete(int $id): bool
