@@ -2,7 +2,6 @@
 use Yaf\{Plugin_Abstract, Request_Abstract, Response_Abstract, Session};
 use Hook\Http\Header;
 use Hook\Hook\Hook;
-use Hook\Crypt\Rijndael;
 
 class GlobalPlugin extends Plugin_Abstract
 {
@@ -27,7 +26,13 @@ class GlobalPlugin extends Plugin_Abstract
             }
             return false;
         }
-        
+
+        //Session Hijack
+        $security = Session::getInstance()->get('user')['security'];
+        if ($security['ip'] !== $request->getServer('REMOTE_ADDR') || $security['agent'] !== $request->getServer('HTTP_USER_AGENT')) {
+            throw new Exception('Session Hijack');
+        }
+
         if ($request->controller === 'Login') {
             $referer = str_replace('login/?referer=', '', $referer, $count);
             $referer = $count ? $referer : '/';
