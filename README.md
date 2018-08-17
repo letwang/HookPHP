@@ -26,15 +26,15 @@
 + ✅支持：FILTER Validate
 + ✅支持：ACL业务CRUD 抽象model CRUD
 + ✅支持：Form组件
-+ ✅待办：form [lable for] [input id]
++ ✅支持：同页面批量渲染Form动态生成控件ID
 + 📌待办：field data 重复
 + 📌待办：filter 正则 长度
 + 📌待办：前后端长度验证统一 手动？ 自动
 + 📌待办：多语言翻译
 + 📌待办：YAC Zend OPCache I18n初始化
 + 📌待办：报错提示统一
-+ ✅待办：解决CSRF 解决XSS 解决Session Hijack 解决SQL Injection
-+ ✅待办：密码加密
++ ✅支持：无CSRF 无XSS 无Session Hijack 无SQL Injection
++ ✅支持：用户密码传输 OpenSSL AES-256-CBC加密/解密
 + 📌待办：用户 管理员 分表
 + 📌待办：seaslog 日志
 + 📌待办：列表页面 model
