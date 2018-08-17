@@ -33,7 +33,7 @@
 + 📌待办：多语言翻译
 + 📌待办：YAC Zend OPCache I18n初始化
 + 📌待办：报错提示统一
-+ 📌待办：CSRF 动态token生效 session反劫持
++ ✅待办：解决CSRF 解决XSS 解决Session Hijack 解决SQL Injection
 + 📌待办：密码加密
 + 📌待办：用户 管理员 分表
 + 📌待办：seaslog 日志
