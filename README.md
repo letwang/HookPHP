@@ -8,6 +8,26 @@
 # 理念
 配置即产出。
 
+# 路线图
++ ⏰ form [lable for] [input id]
++ ⏰ field data 重复
++ ⏰ filter 正则 长度
++ ⏰ 前后端长度验证统一 手动？ 自动
++ ⏰ 多语言翻译
++ ⏰ YAC Zend OPCache I18n初始化
++ ⏰ 报错提示统一
++ ⏰ CSRF 动态token生效 session反劫持
++ ⏰ 密码加密
++ ⏰ 用户 管理员 分表
++ ⏰ seaslog 日志
++ ⏰ 列表页面 model
++ ⏰ 套bootstrap模板(app web ipad)
++ ⏰ 基础菜单 基础功能CRUD 同步CACHE
++ ⏰ 微信 QQ 微博 短信...注册 登陆 推出
++ ⏰ 邀请注册 分享 收集大数据 社工分析
++ ⏰ 开放API平台 QPS CACHE
+
+
 # 特点
 1.基于 PHP C 扩展：YAF
 
