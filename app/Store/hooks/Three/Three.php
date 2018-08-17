@@ -3,16 +3,16 @@ class Three
 {
     public function hookDisplayTop($args)
     {
-        return '这是Three模块，显示在Top<br />';
+        return '';
     }
 
     public function hookDisplayHead($args)
     {
-        return '这是Three模块，显示在Head<br />';
+        return '';
     }
 
     public function hookDisplayFoot($args)
     {
-        return '这是Three模块，显示在Foot<br />';
+        return '';
     }
 }

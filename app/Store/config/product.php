@@ -92,6 +92,11 @@ return [
             'driverOptions' => []
         ]
     ],
+    'openssl' => [
+        'iv' => '1234567812345678',
+        'method' => 'AES-256-CBC',
+        'password' => '`BUhe67(*&{",;?`',
+    ],
     'HTTP_SERVER' => 'http://www.svn.com',
     'HTTP_URI' => '/'
 ];

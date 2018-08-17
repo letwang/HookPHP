@@ -16,6 +16,8 @@ class Bootstrap extends Bootstrap_Abstract
         }
 
         if (!$request->isGet()) {
+            //CSRF
+            $security = Session::getInstance()->get('user')['security'];
             $dispatcher->setDefaultAction($request->getMethod());
         }
 

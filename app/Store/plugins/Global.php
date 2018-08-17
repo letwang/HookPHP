@@ -1,7 +1,8 @@
 <?php
 use Yaf\{Plugin_Abstract, Request_Abstract, Response_Abstract, Session};
 use Hook\Http\Header;
-use \Hook\Hook\Hook;
+use Hook\Hook\Hook;
+use Hook\Crypt\Rijndael;
 
 class GlobalPlugin extends Plugin_Abstract
 {
@@ -33,11 +34,6 @@ class GlobalPlugin extends Plugin_Abstract
             
             Header::redirect($referer);
             return false;
-        }
-
-        //CSRF
-        if (false === Session::getInstance()->has('securityToken')) {
-            Session::getInstance()->set('securityToken', md5(uniqid(rand(), true)));
         }
     }
 

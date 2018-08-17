@@ -26,6 +26,12 @@ class LoginController extends InitController
         );
         
         if ($login) {
+            $login['security'] = [
+                'ip' => $this->getRequest()->getServer('REMOTE_ADDR'),
+                'token' => md5(uniqid(mt_rand(), true)),
+                'agent' => $this->getRequest()->getServer('HTTP_USER_AGENT'),
+                'time' => time()
+            ];
             Session::getInstance()->set('user', $login);
             Header::redirect($referer);
             return true;
