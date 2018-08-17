@@ -4,9 +4,11 @@ use Yaf\Session;
 
 class Form
 {
+    static $key;
     public static function form(string $name, string $action, string $method = 'post', string $parameters = ''): string
     {
-        $form = '<form name="'.$name.'" action="'.$action.'" method="'.$method.'"';
+        self::$key = $name;
+        $form = '<form id="'.self::$key.'" name="'.$name.'" action="'.$action.'" method="'.$method.'"';
         if (!empty($parameters)) {
             $form .= ' '.$parameters;
         }
@@ -18,9 +20,9 @@ class Form
         return $form;
     }
 
-    public static function submit(string $type = 'submit', string $value = 'Submit', string $parameters = ''): string
+    public static function submit(string $name, string $type = 'submit', string $value = 'Submit', string $parameters = ''): string
     {
-        $field = '<input type="'.$type.'" value="'.$value.'"';
+        $field = '<input id="'.self::$key.'_'.$name.'" name="'.$name.'" type="'.$type.'" value="'.$value.'"';
         if (!empty($parameters)) {
             $field .= ' '.$parameters;
         }
@@ -28,9 +30,9 @@ class Form
         return $field;
     }
 
-    public static function button(string $type = 'submit', string $value = 'Submit', string $parameters = ''): string
+    public static function button(string $name, string $type = 'submit', string $value = 'Submit', string $parameters = ''): string
     {
-        $field = '<button type="'.$type.'"';
+        $field = '<button id="'.self::$key.'_'.$name.'" name="'.$name.'" type="'.$type.'"';
         if (!empty($parameters)) {
             $field .= ' '.$parameters;
         }
@@ -38,14 +40,14 @@ class Form
         return $field;
     }
 
-    public static function label(string $text, string $for, string $parameters = ''): string
+    public static function label(string $name, string $for, string $text, string $parameters = ''): string
     {
-        return '<label for="form_'.$for.'" '.$parameters.'>'.$text.'</label>';
+        return '<label id="'.self::$key.'_'.$name.'" name="'.$name.'" for="'.self::$key.'_'.$for.'" '.$parameters.'>'.$text.'</label>';
     }
 
     public static function input(string $name, string $value = '', string $parameters = '', string $type = 'text'): string
     {
-        $field = '<input type="'.$type.'" name="'.$name.'" id="form_'.$name.'" value="'.$value.'"';
+        $field = '<input type="'.$type.'" id="'.self::$key.'_'.$name.'" name="'.$name.'" id="form_'.$name.'" value="'.$value.'"';
         if (!empty($parameters)) {
             $field .= ' '.$parameters;
         }
@@ -60,7 +62,7 @@ class Form
 
     public static function checked(string $name, string $type, string $value = '', bool $checked = false, string $parameters = ''): string
     {
-        $field = '<input type="'.$type.'" name="'.$name.'"';
+        $field = '<input type="'.$type.'" id="'.self::$key.'_'.$name.'" name="'.$name.'"';
         if (!empty($value)) {
             $field .= ' value="'.$value.'"';
         }
@@ -87,7 +89,7 @@ class Form
 
     public static function textarea(string $name, int $width, int $height, string $text = '', string $parameters = ''): string
     {
-        $field = '<textarea name="'.$name.'" cols="'.$width.'" rows="'.$height.'"';
+        $field = '<textarea id="'.self::$key.'_'.$name.'" name="'.$name.'" cols="'.$width.'" rows="'.$height.'"';
         if (!empty($parameters)) {
             $field .= ' '.$parameters;
         }
@@ -97,7 +99,7 @@ class Form
 
     public static function hidden(string $name, string $value = '', string $parameters = ''): string
     {
-        $field = '<input type="hidden" name="'.$name.'" value="'.$value.'"';
+        $field = '<input type="hidden" id="'.self::$key.'_'.$name.'" name="'.$name.'" value="'.$value.'"';
         if (!empty($parameters)) {
             $field .= ' '.$parameters;
         }
@@ -114,7 +116,7 @@ class Form
     {
         $field = '<select';
         if (!strstr($parameters, 'id=')) {
-            $field .= ' id="select_'.$name.'"';
+            $field .= ' id="'.self::$key.'_'.$name.'"';
         }
         $field .= ' name="'.$name.'"';
         if (!empty($parameters)) {
