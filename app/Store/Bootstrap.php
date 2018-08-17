@@ -10,15 +10,18 @@ class Bootstrap extends Bootstrap_Abstract
         $dispatcher->registerPlugin(new GlobalPlugin());
 
         $request = $dispatcher->getRequest();
-
-        if ($request->isXmlHttpRequest()) {
-            $dispatcher->autoRender(false);
-        }
-
         if (!$request->isGet()) {
             //CSRF
             $security = Session::getInstance()->get('user')['security'];
+            if ($security !== $request->getPost('token')) {
+                throw new Exception('CSRF');
+            }
+            
             $dispatcher->setDefaultAction($request->getMethod());
+        }
+
+        if ($request->isXmlHttpRequest()) {
+            $dispatcher->autoRender(false);
         }
 
         //Loader::getInstance()->registerLocalNamespace('Hook');
