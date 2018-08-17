@@ -9,40 +9,40 @@
 配置即产出。
 
 # 路线图
-✅诞生：初始化YAF框架，基于PHP5 OOP，含 8年常用类库、SQL建模、外键约束
-✅引入：Bootstrap，解决多终端自适应显示问题
-✅支持：用户登录模块
-✅支持：目录安全访问
-✅支持：业务SQL集中管控
-✅支持：多语言ACL权限表设计
-✅支持：映射数据库表结构为内存缓存
-✅支持：单表CRUD操作模型
-✅支持：PHP7+规范+重构
-✅支持：Mysql主从、Redis集群、MongoDB分片
-✅支持：模块组件化、事件触发机制
-✅支持：多应用配置域名同时运行
-✅引入：composer:mongodb
-✅支持：YAF全局库、本地库
-✅支持：FILTER Validate
-✅支持：ACL业务CRUD 抽象model CRUD
-✅支持：Form组件
-📌待办：form [lable for] [input id]
-📌待办：field data 重复
-📌待办：filter 正则 长度
-📌待办：前后端长度验证统一 手动？ 自动
-📌待办：多语言翻译
-📌待办：YAC Zend OPCache I18n初始化
-📌待办：报错提示统一
-📌待办：CSRF 动态token生效 session反劫持
-📌待办：密码加密
-📌待办：用户 管理员 分表
-📌待办：seaslog 日志
-📌待办：列表页面 model
-📌待办：套bootstrap模板(app web ipad)
-📌待办：基础菜单 基础功能CRUD 同步CACHE
-📌待办：微信 QQ 微博 短信...注册 登陆 推出
-📌待办：邀请注册 分享 收集大数据 社工分析
-📌待办：开放API平台 QPS CACHE
++ ✅诞生：初始化YAF框架，基于PHP5 OOP，含 8年常用类库、SQL建模、外键约束
++ ✅引入：Bootstrap，解决多终端自适应显示问题
++ ✅支持：用户登录模块
++ ✅支持：目录安全访问
++ ✅支持：业务SQL集中管控
++ ✅支持：多语言ACL权限表设计
++ ✅支持：映射数据库表结构为内存缓存
++ ✅支持：单表CRUD操作模型
++ ✅支持：PHP7+规范+重构
++ ✅支持：Mysql主从、Redis集群、MongoDB分片
++ ✅支持：模块组件化、事件触发机制
++ ✅支持：多应用配置域名同时运行
++ ✅引入：composer:mongodb
++ ✅支持：YAF全局库、本地库
++ ✅支持：FILTER Validate
++ ✅支持：ACL业务CRUD 抽象model CRUD
++ ✅支持：Form组件
++ 📌待办：form [lable for] [input id]
++ 📌待办：field data 重复
++ 📌待办：filter 正则 长度
++ 📌待办：前后端长度验证统一 手动？ 自动
++ 📌待办：多语言翻译
++ 📌待办：YAC Zend OPCache I18n初始化
++ 📌待办：报错提示统一
++ 📌待办：CSRF 动态token生效 session反劫持
++ 📌待办：密码加密
++ 📌待办：用户 管理员 分表
++ 📌待办：seaslog 日志
++ 📌待办：列表页面 model
++ 📌待办：套bootstrap模板(app web ipad)
++ 📌待办：基础菜单 基础功能CRUD 同步CACHE
++ 📌待办：微信 QQ 微博 短信...注册 登陆 推出
++ 📌待办：邀请注册 分享 收集大数据 社工分析
++ 📌待办：开放API平台 QPS CACHE
 
 
 # 特点
