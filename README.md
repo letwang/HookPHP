@@ -27,6 +27,7 @@
 + ✅支持：ACL业务CRUD 抽象model CRUD
 + ✅支持：Form组件
 + ✅支持：同页面批量渲染Form动态生成控件ID
++ ✅支持：业务配置数据随服务器启动常驻内存
 + 📌待办：field data 重复
 + 📌待办：filter 正则 长度
 + 📌待办：前后端长度验证统一 手动？ 自动
@@ -63,6 +64,7 @@
 + http://php.net/manual/zh/ref.pdo-mysql.php
 + http://nginx.org/
 + http://pecl.php.net/package/yaf
++ http://pecl.php.net/package/yaconf
 + http://pecl.php.net/package/redis
 + http://pecl.php.net/package/mongodb
 + http://pecl.php.net/package/sphinx
@@ -78,7 +80,12 @@
 session.save_handler = redis
 session.save_path = "tcp://127.0.0.1:6379?weight=1&auth=123456&database=0, tcp://127.0.0.1:6379?weight=2&auth=123456&database=0"
 
+[yaconf]
+extension=yaconf
+yaconf.directory = /home/你的项目绝对路径/HookPHP/conf/
+
 [yaf]
+extension=yaf
 yaf.use_namespace = 1
 yaf.use_spl_autoload = 1
 yaf.library = /home/你的项目绝对路径/HookPHP/vendor/

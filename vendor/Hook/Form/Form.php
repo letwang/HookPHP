@@ -15,7 +15,7 @@ class Form
         $form .= '>';
 
         if ($method == 'post') {
-            $form .= self::hidden('securityToken', Session::getInstance()->get('securityToken'));
+            $form .= self::hidden('token', Session::getInstance()->get('user')['security']['token']);
         }
         return $form;
     }
@@ -40,14 +40,14 @@ class Form
         return $field;
     }
 
-    public static function label(string $name, string $for, string $text, string $parameters = ''): string
+    public static function label(string $for, string $text, string $parameters = ''): string
     {
-        return '<label id="'.self::$key.'_'.$name.'" name="'.$name.'" for="'.self::$key.'_'.$for.'" '.$parameters.'>'.$text.'</label>';
+        return '<label id="'.self::$key.'_'.$for.'_label" for="'.self::$key.'_'.$for.'" '.$parameters.'>'.$text.'</label>';
     }
 
     public static function input(string $name, string $value = '', string $parameters = '', string $type = 'text'): string
     {
-        $field = '<input type="'.$type.'" id="'.self::$key.'_'.$name.'" name="'.$name.'" id="form_'.$name.'" value="'.$value.'"';
+        $field = '<input type="'.$type.'" id="'.self::$key.'_'.$name.'" name="'.$name.'" value="'.$value.'"';
         if (!empty($parameters)) {
             $field .= ' '.$parameters;
         }

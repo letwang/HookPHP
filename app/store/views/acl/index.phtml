@@ -1,0 +1,36 @@
+<?php
+use Hook\Form\Form;
+
+require APP_PATH.'/layout/head.phtml';
+?>
+
+<link href="css/login.css" rel="stylesheet" />
+<title><?php echo $this->title;?></title>
+<meta name="description" content="<?php echo $this->description;?>" />
+<meta name="keywords" content="<?php echo $this->keywords;?>" />
+</head>
+<body>
+<div class="container">
+	<?php echo Form::form('acl', '/acl', 'post', '');?>
+	<div class="form-group">
+	<?php echo Form::label('app', '应用').Form::input('app', '', 'required class="form-control" placeholder="应用"');?>
+	</div>
+	<div class="form-group">
+	<?php echo Form::label('module', '模块').Form::input('module', '', 'required class="form-control"');?>
+	</div>
+	<div class="form-group">
+	<?php echo Form::label('controller', '控制').Form::input('controller', '', 'required class="form-control"');?>
+	</div>
+	<div class="form-group">
+	<?php echo Form::label('action', '动作').Form::input('action', '', 'required class="form-control"');?>
+	</div>
+	<div class="form-group">
+	<?php echo Form::label('status', '状态').Form::select('status', [['id' => 1, 'text' => '启用'], ['id' => 0, 'text' => '禁用']], 1, 'required class="form-control"');?>
+	</div>
+	<div class="form-group">
+	<?php echo Form::label('name', '资源名称').Form::input('name', '', 'required class="form-control"');?>
+	</div>
+	<?php echo Form::button('submit', 'submit', 'Submit', 'class="btn btn-primary"');?>
+	</form>
+</div>
+<?php require APP_PATH.'/layout/foot.phtml';?>

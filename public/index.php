@@ -1,9 +1,8 @@
 <?php
-define('APP_PUBLIC', getcwd());
 chdir(dirname(__DIR__));
 define('APP_ROOT', getcwd());
-define('APP_PATH', APP_ROOT . '/app/Store');
-define('APP_CONFIG', require APP_PATH . '/config/'.(YAF\ENVIRON).'.php');
+define('APP_PATH', APP_ROOT . '/app/store');
+define('APP_CONFIG', Yaconf::get('store_'.YAF\ENVIRON));
 
 require APP_ROOT.'/vendor/autoload.php';
 

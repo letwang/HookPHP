@@ -12,8 +12,8 @@ class Bootstrap extends Bootstrap_Abstract
         $request = $dispatcher->getRequest();
         if (!$request->isGet()) {
             //CSRF
-            $security = Session::getInstance()->get('user')['security'];
-            if ($security !== $request->getPost('token')) {
+            $token = Session::getInstance()->get('user')['security']['token'];
+            if ($token !== $request->getPost('token')) {
                 throw new Exception('CSRF');
             }
             

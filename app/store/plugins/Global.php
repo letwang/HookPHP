@@ -16,7 +16,7 @@ class GlobalPlugin extends Plugin_Abstract
         Hook::run('routerShutdown', ['request' => $request, 'response' => $response]);
 
         //Auth
-        $referer = $request->getServer('REQUEST_URI', APP_CONFIG['HTTP_URI']);
+        $referer = $request->getServer('REQUEST_URI', APP_CONFIG['http']['uri']);
         
         if (Session::getInstance()->has('user') === false) {
             if ($request->controller === 'Login') {
