@@ -94,7 +94,7 @@ yaf.library = /home/你的项目绝对路径/HookPHP/vendor/
 ```
 server {
 	listen 80;
-	root /home/test/workspace/HookPHP/public/;
+	root /home/你的项目绝对路径/HookPHP/public/;
 	index index.html index.htm index.php;
 	autoindex on;autoindex_exact_size off;autoindex_localtime on;
 	error_log /var/log/nginx/www.svn.com-error.log error;access_log /var/log/nginx/www.svn.com-access.log combined;
