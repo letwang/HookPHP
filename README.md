@@ -27,12 +27,10 @@
 + ✅支持：ACL业务CRUD 抽象model CRUD
 + ✅支持：Form组件
 + ✅支持：同页面批量渲染Form动态生成控件ID
-+ ✅支持：业务配置数据随服务器启动常驻内存
-+ 📌待办：field data 重复
-+ 📌待办：filter 正则 长度
++ ✅支持：业务配置数据、常用正则随服务器启动常驻内存
++ 📌支持：filter全量支持正则验证
 + 📌待办：前后端长度验证统一 手动？ 自动
-+ 📌待办：多语言翻译
-+ 📌待办：YAC Zend OPCache I18n初始化
++ 📌待办：I18n初始化 多语言翻译
 + 📌待办：报错提示统一
 + ✅支持：无CSRF 无XSS 无Session Hijack 无SQL Injection
 + ✅支持：用户密码传输 OpenSSL AES-256-CBC加密/解密
@@ -60,9 +58,10 @@
 5.支持行业主流特性：`读写分离`、`负载均衡`...
 
 # 依赖
++ http://nginx.org/
 + http://php.net/
 + http://php.net/manual/zh/ref.pdo-mysql.php
-+ http://nginx.org/
++ http://pecl.php.net/package/yar
 + http://pecl.php.net/package/yaf
 + http://pecl.php.net/package/yaconf
 + http://pecl.php.net/package/redis
@@ -71,6 +70,7 @@
 + http://pecl.php.net/package/swoole
 + http://pecl.php.net/package/seaslog
 + http://pecl.php.net/package/lua
++ https://github.com/longxinH/xhprof
 
 # 配置
 ## composer.phar install
@@ -79,16 +79,21 @@
 [Session]
 session.save_handler = redis
 session.save_path = "tcp://127.0.0.1:6379?weight=1&auth=123456&database=0, tcp://127.0.0.1:6379?weight=2&auth=123456&database=0"
-
-[yaconf]
-extension=yaconf
-yaconf.directory = /home/你的项目绝对路径/HookPHP/conf/
-
+[seaslog]
+extension=seaslog
+[yar]
+extension=yar
 [yaf]
 extension=yaf
 yaf.use_namespace = 1
 yaf.use_spl_autoload = 1
-yaf.library = /home/你的项目绝对路径/HookPHP/vendor/
+yaf.library = /home/letwang/workspace/HookPHP/vendor/
+[yaconf]
+extension=yaconf
+yaconf.directory = /home/letwang/workspace/HookPHP/conf/
+[xhprof]
+extension=xhprof
+xhprof.output_dir = '/var/log/xhprof'
 ```
 ## Nginx规则
 ```

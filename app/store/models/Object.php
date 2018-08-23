@@ -10,7 +10,6 @@ class ObjectModel
 
     public $langId = 0;
     public $field = [[], []];
-    public $data = [[], []];
 
     public function __construct()
     {
@@ -21,12 +20,11 @@ class ObjectModel
         ];
         foreach ($this->validate as $field => $filter) {
             $result = filter_input($filter['type'], $field, $filter['filter'], $filter['options']);
-            if (!$result) {
+            if ($result === false || $result === null) {
                 throw new \InvalidArgumentException('Field '.$field.' '.($filter['error'] ?? 'error.'));
             }
 
-            $type = isset($filter['lang']);
-            $this->field[$type][$field] = $this->data[$type][$field] = $result;
+            $this->field[isset($filter['lang'])][$field] = $result;
         }
     }
 

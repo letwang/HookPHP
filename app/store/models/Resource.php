@@ -6,27 +6,27 @@ class ResourceModel extends ObjectModel
     public $validate = [
         'app' => [
             'type' => INPUT_POST, 'filter' => FILTER_VALIDATE_REGEXP,
-            'options' => ['options' => ['regexp' => '/^[[:alpha:]]*$/']]
+            'options' => ['options' => ['regexp' => '/^[[:alpha:]]{1,16}$/']]
         ],
         'module' => [
             'type' => INPUT_POST, 'filter' => FILTER_VALIDATE_REGEXP,
-            'options' => ['options' => ['regexp' => '/^[[:alpha:]]*$/']]
+            'options' => ['options' => ['regexp' => '/^[[:alpha:]]{1,16}$/']]
         ],
         'controller' => [
             'type' => INPUT_POST, 'filter' => FILTER_VALIDATE_REGEXP,
-            'options' => ['options' => ['regexp' => '/^[[:alpha:]]*$/']]
+            'options' => ['options' => ['regexp' => '/^[[:alpha:]]{1,16}$/']]
         ],
         'action' => [
             'type' => INPUT_POST, 'filter' => FILTER_VALIDATE_REGEXP,
-            'options' => ['options' => ['regexp' => '/^[[:alpha:]]*$/']]
+            'options' => ['options' => ['regexp' => '/^[[:alpha:]]{1,16}$/']]
         ],
         'status' => [
-            'type' => INPUT_POST, 'filter' => FILTER_VALIDATE_INT,
-            'options' => ['options' => ['min_range' => 0, 'max_range' => 1]],
+            'type' => INPUT_POST, 'filter' => FILTER_VALIDATE_REGEXP,
+            'options' => ['options' => ['regexp' => '/^[0-1]$/']]
         ],
         'name' => [
             'type' => INPUT_POST, 'filter' => FILTER_VALIDATE_REGEXP, 'lang' => true,
-            'options' => ['options' => ['regexp' => '/^[[:alpha:]]*$/u']]
+            'options' => ['options' => ['regexp' => '/^[[:alpha:]]{1,32}$/u']]
         ]
     ];
 

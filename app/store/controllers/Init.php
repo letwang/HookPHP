@@ -21,7 +21,7 @@ class InitController extends Controller_Abstract
         }
         foreach ($this->definition[$this->_request->action] as $field => $filter) {
             $result = filter_input($filter['type'], $field, $filter['filter'], $filter['options']);
-            if (!$result) {
+            if ($result === false || $result === null) {
                 throw new \InvalidArgumentException('Field '.$field.' '.($filter['error'] ?? 'error.'));
             }
 
