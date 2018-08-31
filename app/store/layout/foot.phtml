@@ -15,6 +15,15 @@
     });
   }, false);
 })();
+<?php
+echo 'var config = {regexp:{';
+$data = [];
+foreach (APP_CONFIG['regexp']['core'] as $key => $value) {
+    $data[] = $key.':/'.$value.'/';
+}
+echo join(',', $data).'}};';
+?>
+
 </script>
 <script src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>

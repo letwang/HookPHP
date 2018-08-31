@@ -28,7 +28,7 @@
 + ✅支持：Form组件
 + ✅支持：同页面批量渲染Form动态生成控件ID
 + ✅支持：业务配置数据、常用正则随服务器启动常驻内存
-+ 📌支持：filter全量支持正则验证
++ ✅支持：前后端正则验证规则统一
 + 📌待办：前后端长度验证统一 手动？ 自动
 + 📌待办：I18n初始化 多语言翻译
 + 📌待办：报错提示统一
@@ -43,7 +43,6 @@
 + 📌待办：邀请注册 分享 收集大数据 社工分析
 + 📌待办：开放API平台 QPS CACHE
 
-
 # 特点
 1.基于 PHP C 扩展：YAF
 
@@ -57,45 +56,88 @@
 
 5.支持行业主流特性：`读写分离`、`负载均衡`...
 
-# 依赖
-+ http://nginx.org/
-+ http://php.net/
-+ http://php.net/manual/zh/ref.pdo-mysql.php
-+ http://pecl.php.net/package/yar
-+ http://pecl.php.net/package/yaf
-+ http://pecl.php.net/package/yaconf
-+ http://pecl.php.net/package/redis
-+ http://pecl.php.net/package/mongodb
-+ http://pecl.php.net/package/sphinx
-+ http://pecl.php.net/package/swoole
-+ http://pecl.php.net/package/seaslog
-+ http://pecl.php.net/package/lua
-+ https://github.com/longxinH/xhprof
-
-# 配置
-## composer.phar install
-## php.ini
+# 环境
+```
+sudo apt-get install php7.2-common php7.2-cli php7.2-bcmath php7.2-dev php7.2-xml php7.2-mbstring php7.2-mysql  php7.2-fpm php7.2-gd php7.2-zip php7.2-curl php7.2-intl php7.2-json
+```
+## session
 ```
 [Session]
 session.save_handler = redis
 session.save_path = "tcp://127.0.0.1:6379?weight=1&auth=123456&database=0, tcp://127.0.0.1:6379?weight=2&auth=123456&database=0"
+```
+## redis
+```
+sudo pecl install redis
+
+[redis]
+extension=redis
+```
+## mongodb
+```
+sudo pecl install mongodb
+
+[mongodb]
+extension=mongodb
+```
+## seaslog
+```
+sudo pecl install seaslog
+
 [seaslog]
 extension=seaslog
+```
+## yar
+```
+sudo pecl install yar
+
 [yar]
 extension=yar
+```
+## yaf
+```
+sudo pecl install yaf
+
 [yaf]
 extension=yaf
 yaf.use_namespace = 1
 yaf.use_spl_autoload = 1
 yaf.library = /home/letwang/workspace/HookPHP/vendor/
+```
+## yaconf
+```
+sudo pecl install yaconf
+
 [yaconf]
 extension=yaconf
 yaconf.directory = /home/letwang/workspace/HookPHP/conf/
+```
+## xhprof
+```
+git clone https://github.com/longxinH/xhprof.git ./xhprof
+cd xhprof/extension/
+phpize7.2
+./configure --with-php-config=php-config7.2
+make && sudo make install
+sudo apt-get install graphviz-dev
+
 [xhprof]
 extension=xhprof
 xhprof.output_dir = '/var/log/xhprof'
 ```
-## Nginx规则
+## swoole
+```
+sudo pecl install swoole
+
+[swoole]
+extension=swoole
+```
+# vendor
+```
+composer.phar install
+```
+
+# Nginx规则
 ```
 server {
 	listen 80;
@@ -114,6 +156,7 @@ server {
 	 }
 }
 ```
+
 # 账户
 ```
 admin@hookphp.com
