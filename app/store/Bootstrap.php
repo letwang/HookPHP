@@ -1,5 +1,5 @@
 <?php
-use Yaf\{Session, Dispatcher, Bootstrap_Abstract, Loader};
+use Yaf\{Session, Dispatcher, Bootstrap_Abstract};
 
 class Bootstrap extends Bootstrap_Abstract
 {
@@ -20,10 +20,15 @@ class Bootstrap extends Bootstrap_Abstract
             $dispatcher->setDefaultAction($request->getMethod());
         }
 
-        if ($request->isXmlHttpRequest()) {
+        if ($request->isXmlHttpRequest() || $request->isCli()) {
             $dispatcher->autoRender(false);
         }
 
         //Loader::getInstance()->registerLocalNamespace('Hook');
     }
+}
+
+function l(string $key, $langId = null)
+{
+    return Yaconf::get(APP_NAME.'_lang_'.($langId ?? Session::getInstance()->get('user')['lang_id']).'.'.$key, $key);
 }

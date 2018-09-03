@@ -21,7 +21,7 @@ class ObjectModel
         foreach ($this->validate as $field => $filter) {
             $result = filter_input($filter['type'], $field, $filter['filter'], $filter['options']);
             if ($result === false || $result === null) {
-                throw new \InvalidArgumentException('Field '.$field.' '.($filter['error'] ?? 'error.'));
+                throw new \InvalidArgumentException(l(get_called_class().'.'.$field.'.validate.error'));
             }
 
             $this->field[isset($filter['lang'])][$field] = $result;
@@ -33,14 +33,14 @@ class ObjectModel
         try {
             PdoConnect::getInstance()->pdo->beginTransaction();
 
-            //主表
+            //master
             $keys = array_keys($this->field[0]);
             $result = PdoConnect::getInstance()->insert(
                 'INSERT INTO `'.$this->table.'`(`'.join('`,`', $keys).'`)VALUES(:'.join(',:', $keys).');',
                 $this->field[0]
             );
 
-            //语言表
+            //lang
             $keys = array_keys($this->field[1]);
             $this->field[1][$this->foreign] = $result['lastInsertId'];
             PdoConnect::getInstance()->insert(
@@ -62,7 +62,7 @@ class ObjectModel
         try {
             PdoConnect::getInstance()->pdo->beginTransaction();
 
-            //主表
+            //master
             unset($this->field[0]['id']);
             $keys = '';
             foreach ($this->field[0] as $key => $value) {
@@ -73,7 +73,7 @@ class ObjectModel
                 $this->field[0]
             );
 
-            //语言表
+            //lang
             unset($this->field[1]['id'], $this->field[1]['lang_id'], $this->field[1][$this->foreign]);
             $keys = '';
             foreach ($this->field[1] as $key => $value) {

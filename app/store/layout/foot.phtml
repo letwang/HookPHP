@@ -16,12 +16,11 @@
   }, false);
 })();
 <?php
-echo 'var config = {regexp:{';
 $data = [];
 foreach (APP_CONFIG['regexp']['core'] as $key => $value) {
     $data[] = $key.':/'.$value.'/';
 }
-echo join(',', $data).'}};';
+echo 'var config = {regexp:{',join(',', $data),'}};';
 ?>
 
 </script>

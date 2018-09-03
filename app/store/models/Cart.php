@@ -6,8 +6,7 @@ class CartModel extends ObjectModel
         'id' => [
             'type' => INPUT_GET,
             'filter' => FILTER_VALIDATE_INT,
-            'options' => ['options' => ['min_range' => 1, 'max_range' => 10]],
-            'error' => '不能为空!'
+            'options' => ['options' => ['min_range' => 1, 'max_range' => 10]]
         ],
         'title' => [
             'type' => INPUT_GET,

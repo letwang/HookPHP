@@ -6,24 +6,24 @@ use \Hook\Validate\Validate;
 
 class Table
 {
-
     public $table;
+    public $field;
+
     public $operator = ['>' => '>', '>=' => '>=', '<' => '<', '<=' => '<=', '!=' => '!=', 'LIKE' => 'LIKE', 'NOT LIKE' => 'NOT LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
     public $selectExpr = ['DISTINCT', 'DISTINCTROW', 'SQL_CACHE', 'SQL_NO_CACHE', 'SQL_CALC_FOUND_ROWS'];
 
     public function __construct(string $table)
     {
-        $this->table = $table;
         $redis = RedisConnect::getInstance()->redis;
         $redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_PHP);
         $redis->setOption(Redis::OPT_PREFIX, APP_CONFIG['application']['name'] . ':table:');
-        if ($redis->exists($this->table)) {
-            $this->data = $redis->hGetAll($this->table);
-        } else {
+
+        $this->table = $table;
+        if (!$redis->exists($this->table)) {
             $data = PdoConnect::getInstance()->fetchAll('DESC ' . $this->table);
-            $this->data = array_combine(array_column($data, 'Field'), $data);
-            $redis->hMset($this->table, $this->data);
+            $redis->hMset($this->table, array_combine(array_column($data, 'Field'), $data));
         }
+        $this->field = $redis->hGetAll($this->table);
     }
 
     public function read(array $param = [])
@@ -86,33 +86,23 @@ class Table
 
         //sql字段名注入检查
         preg_match_all('/`(\w+)`/', $sql, $matches);
-        $whiteField = $this->data + [$this->table => ['Field' => $this->table]];
+        $whiteField = $this->field + [$this->table => ['Field' => $this->table]];
         foreach ($matches[1] as $field) {
             if (!isset($whiteField[$field])) {
                 throw new \Exception('db hack~');
             }
         }
 
-        //var_dump($sql, $parameters);
         //动态调用DB方法
         return PdoConnect::getInstance()->{$param['CALLBACK']}($sql, $parameters, (int) $param['TYPE']);
     }
 
-    public function desc():array
-    {
-        return $this->data;
-    }
-
-    public function exist(string $column):bool
-    {
-        return isset($this->data[$column]);
-    }
-
     public function validate(string $column, $needle = null):array
     {
-        $type = $this->data[$column]['Type'];
+        $type = $this->field[$column]['Type'];
         $unsigned = strpos($type, 'unsigned');
         $data = ['min' => null, 'max' => null];
+        $callback = function ($value) {return strlen($value);};
         switch (1) {
             case strpos($type, 'tinyint') === 0:
                 $data = ['min' => -128, 'max' => 127];
@@ -159,40 +149,33 @@ class Table
                 return $data;
                 break;
             case strpos($type, 'char') !== false:
-                $needle = mb_strlen($needle);
-                $data = ['min' => 0, 'max' => (int) preg_replace(['/var/', '/char/', '/\(/', '/\)/'], '', $type), 'length' => $needle];
+                $func = function ($value) {return mb_strlen($value);};
+                $data = ['min' => 0, 'max' => (int) preg_replace(['/var/', '/char/', '/\(/', '/\)/'], '', $type)];
                 break;
             case strpos($type, 'binary') !== false:
-                $needle = strlen($needle);
-                $data = ['min' => 0, 'max' => (int) preg_replace(['/var/', '/binary/', '/\(/', '/\)/'], '', $type), 'length' => $needle];
+                $data = ['min' => 0, 'max' => (int) preg_replace(['/var/', '/binary/', '/\(/', '/\)/'], '', $type)];
                 break;
             case strpos($type, 'tinytext') === 0 || strpos($type, 'tinyblob') === 0:
-                $needle = strlen($needle);
-                $data = ['min' => 0, 'max' => 255, 'length' => $needle];//255B
+                $data = ['min' => 0, 'max' => 255];//255B
                 break;
             case strpos($type, 'text') === 0 || strpos($type, 'blob') === 0:
-                $needle = strlen($needle);
-                $data = ['min' => 0, 'max' => 65535, 'length' => $needle];//64K
+                $data = ['min' => 0, 'max' => 65535];//64K
                 break;
             case strpos($type, 'mediumtext') === 0 || strpos($type, 'mediumblob') === 0:
-                $needle = strlen($needle);
-                $data = ['min' => 0, 'max' => 16777215, 'length' => $needle];//16M
+                $data = ['min' => 0, 'max' => 16777215];//16M
                 break;
             case strpos($type, 'longtext') === 0 || strpos($type, 'longblob') === 0:
-                $needle = strlen($needle);
-                $data = ['min' => 0, 'max' => 4294967295, 'length' => $needle];//4G
+                $data = ['min' => 0, 'max' => 4294967295];//4G
                 break;
         }
         
         if ($needle !== null) {
-            $data['validate'] = $needle >= $data['min'] && $needle <= $data['max'];
+            $data += [
+                'length' => $callback($needle),
+                'validate' => $needle >= $data['min'] && $needle <= $data['max'],
+            ];
         }
         
         return $data;
-    }
-
-    public function default(string $column):?string
-    {
-        return $this->data[$column]['Default'];
     }
 }

@@ -4,135 +4,125 @@ use Yaf\Session;
 
 class Form
 {
-    static $key;
-    public static function form(string $name, string $action, string $method = 'post', string $parameters = ''): string
+    public static $key;
+    public static function form(string $name, string $action, string $method = 'post', string $param = ''): string
     {
         self::$key = $name;
-        $form = '<form id="'.self::$key.'" name="'.$name.'" action="'.$action.'" method="'.$method.'"';
-        if (!empty($parameters)) {
-            $form .= ' '.$parameters;
+        $form = '<form id="'.$name.'" name="'.$name.'" action="'.$action.'" method="'.$method.'"';
+        if (!empty($param)) {
+            $form .= ' '.$param;
         }
         $form .= '>';
 
-        if ($method == 'post') {
+        if ($method !== 'get') {
             $form .= self::hidden('token', Session::getInstance()->get('user')['security']['token']);
         }
         return $form;
     }
 
-    public static function submit(string $name, string $type = 'submit', string $value = 'Submit', string $parameters = ''): string
+    public static function label(string $name, string $param = ''): string
     {
-        $field = '<input id="'.self::$key.'_'.$name.'" name="'.$name.'" type="'.$type.'" value="'.$value.'"';
-        if (!empty($parameters)) {
-            $field .= ' '.$parameters;
+        return '<label id="'.self::$key.'.'.$name.'.label" for="'.self::$key.'.'.$name.'" '.$param.'>'.l(self::$key.'.'.$name).'</label>';
+    }
+
+    public static function input(string $name, string $value = '', string $param = '', string $type = 'text'): string
+    {
+        $field = '<input type="'.$type.'" id="'.self::$key.'.'.$name.'" name="'.$name.'" value="'.$value.'" placeholder="'.l(self::$key.'.'.$name).'"';
+        if (!empty($param)) {
+            $field .= ' '.$param;
         }
         $field .= ' />';
         return $field;
     }
 
-    public static function button(string $name, string $type = 'submit', string $value = 'Submit', string $parameters = ''): string
+    public static function hidden(string $name, string $value = '', string $param = ''): string
     {
-        $field = '<button id="'.self::$key.'_'.$name.'" name="'.$name.'" type="'.$type.'"';
-        if (!empty($parameters)) {
-            $field .= ' '.$parameters;
+        return self::input($name, $value, $param, 'hidden');
+    }
+
+    public static function password(string $name, string $value = '', string $param = ''): string
+    {
+        return self::input($name, $value, $param, 'password');
+    }
+
+    public static function file(string $name, string $param = ''): string
+    {
+        return self::input($name, '', $param, 'file');
+    }
+
+    public static function submit(string $name, string $param = '', string $type = 'submit'): string
+    {
+        return self::input($name, l(self::$key.'.'.$name), $param, $type);
+    }
+
+    public static function button(string $name, string $param = '', string $type = 'submit'): string
+    {
+        $field = '<button id="'.self::$key.'.'.$name.'" name="'.$name.'" type="'.$type.'"';
+        if (!empty($param)) {
+            $field .= ' '.$param;
         }
-        $field .= '>'.$value.'</button>';
+        $field .= '>'.l(self::$key.'.'.$name).'</button>';
         return $field;
     }
 
-    public static function label(string $for, string $text, string $parameters = ''): string
+    public static function checked(string $name, string $value, bool $default = false, string $param = '', string $type = 'checkbox'): string
     {
-        return '<label id="'.self::$key.'_'.$for.'_label" for="'.self::$key.'_'.$for.'" '.$parameters.'>'.$text.'</label>';
-    }
-
-    public static function input(string $name, string $value = '', string $parameters = '', string $type = 'text'): string
-    {
-        $field = '<input type="'.$type.'" id="'.self::$key.'_'.$name.'" name="'.$name.'" value="'.$value.'"';
-        if (!empty($parameters)) {
-            $field .= ' '.$parameters;
-        }
-        $field .= ' />';
-        return $field;
-    }
-
-    public static function password(string $name, string $value = '', string $parameters = 'maxlength="40"'): string
-    {
-        return self::input($name, $value, $parameters, 'password');
-    }
-
-    public static function checked(string $name, string $type, string $value = '', bool $checked = false, string $parameters = ''): string
-    {
-        $field = '<input type="'.$type.'" id="'.self::$key.'_'.$name.'" name="'.$name.'"';
+        $field = '<input type="'.$type.'" id="'.self::$key.'.'.$name.'" name="'.$name.'"';
         if (!empty($value)) {
             $field .= ' value="'.$value.'"';
         }
-        if ($checked === true) {
+        if ($default === true) {
             $field .= ' checked="checked"';
         }
-        if (!empty($parameters)) {
-            $field .= ' '.$parameters;
+        if (!empty($param)) {
+            $field .= ' '.$param;
         }
         $field .= ' />';
 
         return $field;
     }
 
-    public static function checkbox(string $name, string $value = '', bool $checked = false, string $parameters = ''): string
+    public static function checkbox(string $name, string $value, bool $default = false, string $param = ''): string
     {
-        return self::checked($name, 'checkbox', $value, $checked, $parameters);
+        return self::checked($name, $value, $default, $param, 'checkbox');
     }
 
-    public static function radio(string $name, string $value = '', bool $checked = false, string $parameters = ''): string
+    public static function radio(string $name, string $value, bool $default = false, string $param = ''): string
     {
-        return self::checked($name, 'radio', $value, $checked, $parameters);
+        return self::checked($name, $value, $default, $param, 'radio');
     }
 
-    public static function textarea(string $name, int $width, int $height, string $text = '', string $parameters = ''): string
-    {
-        $field = '<textarea id="'.self::$key.'_'.$name.'" name="'.$name.'" cols="'.$width.'" rows="'.$height.'"';
-        if (!empty($parameters)) {
-            $field .= ' '.$parameters;
-        }
-        $field .= '>'.$text.'</textarea>';
-        return $field;
-    }
-
-    public static function hidden(string $name, string $value = '', string $parameters = ''): string
-    {
-        $field = '<input type="hidden" id="'.self::$key.'_'.$name.'" name="'.$name.'" value="'.$value.'"';
-        if (!empty($parameters)) {
-            $field .= ' '.$parameters;
-        }
-        $field .= ' />';
-        return $field;
-    }
-
-    public static function file(string $name, string $parameters = 'size="50"'): string
-    {
-        return self::input($name, '', $parameters, 'file');
-    }
-
-    public static function select(string $name, array $values, string $default = '', string $parameters = ''): string
+    public static function select(string $name, array $value, string $default = '', string $param = ''): string
     {
         $field = '<select';
-        if (!strstr($parameters, 'id=')) {
-            $field .= ' id="'.self::$key.'_'.$name.'"';
+        if (!strstr($param, 'id=')) {
+            $field .= ' id="'.self::$key.'.'.$name.'"';
         }
         $field .= ' name="'.$name.'"';
-        if (!empty($parameters)) {
-            $field .= ' '.$parameters;
+        if (!empty($param)) {
+            $field .= ' '.$param;
         }
         $field .= '>'."\n";
 
-        foreach ($values as $value) {
-            $field .= '  <option value="'.$value['id'].'"';
-            if ($default == $value['id']) {
+        foreach ($value as $id) {
+            $field .= '  <option value="'.$id.'"';
+            if ($default === $id) {
                 $field .= ' selected="selected"';
             }
-            $field .= '>'.$value['text'].'</option>'."\n";
+            $field .= '>'.l(self::$key.'.'.$name.'_'.$id).'</option>'."\n";
         }
 
         $field .= '</select>'."\n";
+        return $field;
+    }
+
+    public static function textarea(string $name, string $value = '', string $param = ''): string
+    {
+        $field = '<textarea id="'.self::$key.'.'.$name.'" name="'.$name.'"';
+        if (!empty($param)) {
+            $field .= ' '.$param;
+        }
+        $field .= '>'.$value.'</textarea>';
         return $field;
     }
 }

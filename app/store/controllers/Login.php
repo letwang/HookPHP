@@ -37,9 +37,7 @@ class LoginController extends InitController
             return true;
         }
         
-        $this->_view->error = [
-            '登录失败！'
-        ];
+        $this->_view->error = [l('login.fail')];
     }
 
     public function outAction()
