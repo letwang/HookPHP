@@ -1,6 +1,5 @@
 <?php
 use Hook\Db\{PdoConnect,Table};
-use Yaf\Session;
 
 class ObjectModel
 {
@@ -13,7 +12,7 @@ class ObjectModel
 
     public function __construct()
     {
-        $this->langId = Session::getInstance()->get('user')['lang_id'];
+        $this->langId = $_SESSION[APP_NAME]['lang_id'];
         $this->field = [
             ['id' => NULL, 'date_add' => time(), 'date_upd' => time()],
             ['id' => NULL, 'date_add' => time(), 'date_upd' => time(), 'lang_id' => $this->langId, $this->foreign => 0]

@@ -307,7 +307,26 @@ CREATE TABLE IF NOT EXISTS `hp_user` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 INSERT INTO `hp_user` (`id`, `lang_id`, `user`, `pass`, `email`, `phone`, `lastname`, `firstname`, `status`, `date_add`, `date_upd`) VALUES
-(1, 1, 'admin@hookphp.com', '6abedafaed3f1d50eb07a087d5a93d15de821702dbb4c4fcc136cb69ae05f9a6', '', '', 'bobstephen', '', 1, 1493439330, 1493439330);
+(1, 1, 'admin@hookphp.com', '$argon2i$v=19$m=1024,t=2,p=2$YzVaU2NIeXlHRzczZUE2MA$0Z+xCvbloKAoA1i6klWq/g2evo0NrnO+zG0MnVYhPa0', '', '', 'bobstephen', '', 1, 1493439330, 1493439330);
+
+CREATE TABLE IF NOT EXISTS `hp_manager` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `lang_id` int(10) unsigned DEFAULT NULL,
+  `user` char(64) NOT NULL,
+  `pass` char(64) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+  `email` char(64) NOT NULL DEFAULT '',
+  `phone` char(16) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
+  `lastname` char(16) NOT NULL DEFAULT '',
+  `firstname` char(16) NOT NULL DEFAULT '',
+  `status` tinyint(3) unsigned NOT NULL DEFAULT '1',
+  `date_add` int(10) unsigned NOT NULL,
+  `date_upd` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `lang_id` (`lang_id`) USING BTREE
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+INSERT INTO `hp_manager` (`id`, `lang_id`, `user`, `pass`, `email`, `phone`, `lastname`, `firstname`, `status`, `date_add`, `date_upd`) VALUES
+(1, 1, 'admin@hookphp.com', '$argon2i$v=19$m=1024,t=2,p=2$YzVaU2NIeXlHRzczZUE2MA$0Z+xCvbloKAoA1i6klWq/g2evo0NrnO+zG0MnVYhPa0', '', '', 'bobstephen', '', 1, 1493439330, 1493439330);
 
 CREATE TABLE IF NOT EXISTS `hp_user_browser` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,

@@ -1,5 +1,5 @@
 <?php
-use Yaf\{Plugin_Abstract, Request_Abstract, Response_Abstract, Session};
+use Yaf\{Plugin_Abstract, Request_Abstract, Response_Abstract};
 use Hook\Http\Header;
 use Hook\Hook\Hook;
 
@@ -14,32 +14,6 @@ class GlobalPlugin extends Plugin_Abstract
     public function routerShutdown(Request_Abstract $request, Response_Abstract $response)
     {
         Hook::run('routerShutdown', ['request' => $request, 'response' => $response]);
-
-        //Auth
-        $referer = $request->getServer('REQUEST_URI', APP_CONFIG['http']['uri']);
-        
-        if (Session::getInstance()->has('user') === false) {
-            if ($request->controller === 'Login') {
-                // static
-            } else {
-                Header::redirect('login/?referer=' . $referer);
-            }
-            return false;
-        }
-
-        //Session Hijack
-        $security = Session::getInstance()->get('user')['security'];
-        if ($security['ip'] !== $request->getServer('REMOTE_ADDR') || $security['agent'] !== $request->getServer('HTTP_USER_AGENT')) {
-            throw new Exception('Session Hijack');
-        }
-
-        if ($request->controller === 'Login') {
-            $referer = str_replace('login/?referer=', '', $referer, $count);
-            $referer = $count ? $referer : '/';
-            
-            Header::redirect($referer);
-            return false;
-        }
     }
 
     public function dispatchLoopStartup(Request_Abstract $request, Response_Abstract $response)

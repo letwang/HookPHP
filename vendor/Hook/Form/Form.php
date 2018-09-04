@@ -1,6 +1,5 @@
 <?php
 namespace Hook\Form;
-use Yaf\Session;
 
 class Form
 {
@@ -15,7 +14,7 @@ class Form
         $form .= '>';
 
         if ($method !== 'get') {
-            $form .= self::hidden('token', Session::getInstance()->get('user')['security']['token']);
+            $form .= self::hidden('token', $_SESSION[APP_NAME]['security']['token']);
         }
         return $form;
     }

@@ -33,8 +33,8 @@
 + ✅支持：多语言翻译常驻内存
 + ✅支持：无CSRF 无XSS 无Session Hijack 无SQL Injection
 + ✅支持：用户密码传输 OpenSSL AES-256-CBC加密/解密
-+ 📌待办：用户 管理员 分表
-+ 📌待办：seaslog 日志
++ ✅支持：用户 管理员 分表
++ ✅支持：seaslog 日志
 + 📌待办：列表页面 model
 + 📌待办：套bootstrap模板(app web ipad)
 + 📌待办：基础菜单 基础功能CRUD 同步CACHE
@@ -43,12 +43,12 @@
 + 📌待办：开放API平台 QPS CACHE
 
 # 特点
-1.基于 PHP C 扩展：YAF
-2.能用 C 扩展解决的，坚决不用Composer
-3.追求极客，使用行业技术栈最新特性
-3.一款自带DB的框架，业务SQL集中化管理
-4.集成行业通用功能：`用户管理`、`资源管理`、`角色管理`、`权限管理`、`配置管理`、`翻译管理`、`SEO管理`、`多菜单管理`、`多语言管理`、`多模块管理`、`多模板管理`、`多终端管理`、`多平台管理`...
-5.支持行业主流特性：`读写分离`、`负载均衡`...
++ 基于 PHP C 扩展：YAF
++ 能用 C 扩展解决的，坚决不用Composer
++ 追求极客，使用行业技术栈最新特性
++ 一款自带DB的框架，业务SQL集中化管理
++ 集成行业通用功能：`用户管理`、`资源管理`、`角色管理`、`权限管理`、`配置管理`、`翻译管理`、`SEO管理`、`多菜单管理`、`多语言管理`、`多模块管理`、`多模板管理`、`多终端管理`、`多平台管理`...
++ 支持行业主流特性：`读写分离`、`负载均衡`...
 
 # 环境
 ```
@@ -80,6 +80,12 @@ sudo pecl install seaslog
 
 [seaslog]
 extension=seaslog
+seaslog.throw_exception=0
+seaslog.trace_exception=1
+seaslog.trace_notice=1
+seaslog.trace_warning=1
+seaslog.default_basepath='/home/letwang/workspace/HookPHP/log'
+seaslog.default_template = '%T | %L | %P | %Q | %t | %M | %H | %D | %R | %m | %I | %F | %U | %u | %C'
 ```
 ## yar
 ```

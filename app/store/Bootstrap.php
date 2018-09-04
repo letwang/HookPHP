@@ -1,26 +1,20 @@
 <?php
-use Yaf\{Session, Dispatcher, Bootstrap_Abstract};
+use Yaf\{Dispatcher, Bootstrap_Abstract};
 
 class Bootstrap extends Bootstrap_Abstract
 {
     public function _init(Dispatcher $dispatcher)
     {
-        Session::getInstance()->start();
+        session_start();
 
         $dispatcher->registerPlugin(new GlobalPlugin());
 
         $request = $dispatcher->getRequest();
         if (!$request->isGet()) {
-            //CSRF
-            $token = Session::getInstance()->get('user')['security']['token'];
-            if ($token !== $request->getPost('token')) {
-                throw new Exception('CSRF');
-            }
-            
             $dispatcher->setDefaultAction($request->getMethod());
         }
 
-        if ($request->isXmlHttpRequest() || $request->isCli()) {
+        if ($request->isXmlHttpRequest()) {
             $dispatcher->autoRender(false);
         }
 
@@ -30,5 +24,6 @@ class Bootstrap extends Bootstrap_Abstract
 
 function l(string $key, $langId = null)
 {
-    return Yaconf::get(APP_NAME.'_lang_'.($langId ?? Session::getInstance()->get('user')['lang_id']).'.'.$key, $key);
+    $langId = $langId ?? $_SESSION[APP_NAME]['lang_id'] ?? 1;
+    return Yaconf::get(APP_NAME.'_lang_'.$langId.'.'.$key, $key);
 }

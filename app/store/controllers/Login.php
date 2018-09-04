@@ -1,6 +1,5 @@
 <?php
-use Yaf\Session;
-use Hook\Http\Header, Hook\Db\PdoConnect;
+use Hook\Http\Header, Hook\Db\PdoConnect, Hook\Crypt\PassWord;
 
 class LoginController extends InitController
 {
@@ -11,7 +10,7 @@ class LoginController extends InitController
 
     public function indexAction()
     {
-        $this->_view->referer = $this->getRequest()->getQuery('referer', '/');
+        $this->_view->referer = $this->getRequest()->getParam('referer', '/');
     }
 
     public function postAction()
@@ -22,17 +21,21 @@ class LoginController extends InitController
         
         $login = PdoConnect::getInstance()->fetch(
             Hook\Sql\Login::SQL_LOGIN,
-            [$user, $this->pass($user, $pass)]
+            [$user, $user, $user]
         );
         
-        if ($login) {
+        if ($login && PassWord::verify($user.$pass, $login['pass'])) {
             $login['security'] = [
                 'ip' => $this->getRequest()->getServer('REMOTE_ADDR'),
                 'token' => md5(uniqid(mt_rand(), true)),
                 'agent' => $this->getRequest()->getServer('HTTP_USER_AGENT'),
                 'time' => time()
             ];
-            Session::getInstance()->set('user', $login);
+
+            $_SESSION = [];
+            $_SESSION[APP_NAME] = $login;
+            session_regenerate_id(true);
+
             Header::redirect($referer);
             return true;
         }
@@ -42,13 +45,9 @@ class LoginController extends InitController
 
     public function outAction()
     {
-        Session::getInstance()->del('user');
-        Header::redirect('/');
-        return true;
-    }
+        unset($_SESSION[APP_NAME]);
+        session_regenerate_id(true);
 
-    public static function pass($user, $pass)
-    {
-        return strrev(md5(strrev(md5($pass . $user . $pass) . md5($pass . $pass . $user))) . md5(md5($pass . $user . $pass) . md5($pass . $pass . $user)));
+        return !$this->forward('index');
     }
 }

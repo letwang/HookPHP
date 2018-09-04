@@ -4,6 +4,6 @@ composer.lock
 .project
 .settings/
 
-vendor/autoload.php
-vendor/mongodb
-vendor/composer
+log/
+vendor/
+!vendor/Hook

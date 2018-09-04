@@ -12,7 +12,7 @@ class IndexController extends InitController
     public function indexAction()
     {
         $this->_view->assign(
-            ['test' => 'Index']
+            ['test' => 'Login Out']
        );
     }
 
