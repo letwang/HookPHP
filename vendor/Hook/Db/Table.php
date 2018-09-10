@@ -14,16 +14,14 @@ class Table
 
     public function __construct(string $table)
     {
+        $key = 'table:'.$table;
         $redis = RedisConnect::getInstance()->redis;
-        $redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_PHP);
-        $redis->setOption(Redis::OPT_PREFIX, APP_CONFIG['application']['name'] . ':table:');
-
-        $this->table = $table;
-        if (!$redis->exists($this->table)) {
-            $data = PdoConnect::getInstance()->fetchAll('DESC ' . $this->table);
-            $redis->hMset($this->table, array_combine(array_column($data, 'Field'), $data));
+        if (!$redis->exists($key)) {
+            $data = PdoConnect::getInstance()->fetchAll('DESC ' . $table);
+            $redis->hMset($key, array_combine(array_column($data, 'Field'), $data));
         }
-        $this->field = $redis->hGetAll($this->table);
+        $this->table = $table;
+        $this->field = $redis->hGetAll($key);
     }
 
     public function read(array $param = [])

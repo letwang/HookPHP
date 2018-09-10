@@ -80,8 +80,6 @@ sudo pecl install seaslog
 
 [seaslog]
 extension=seaslog
-seaslog.throw_exception=0
-seaslog.trace_exception=1
 seaslog.trace_notice=1
 seaslog.trace_warning=1
 seaslog.default_basepath='/home/letwang/workspace/HookPHP/log'

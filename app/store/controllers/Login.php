@@ -1,13 +1,8 @@
 <?php
 use Hook\Http\Header, Hook\Db\PdoConnect, Hook\Crypt\PassWord;
 
-class LoginController extends InitController
+class LoginController extends BaseController
 {
-    public function init()
-    {
-        parent::init();
-    }
-
     public function indexAction()
     {
         $this->_view->referer = $this->getRequest()->getParam('referer', '/');

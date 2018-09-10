@@ -1,13 +1,13 @@
 <?php
-use Yaf\Controller_Abstract;
-
-class InitController extends Controller_Abstract
+class BaseController extends Yaf\Controller_Abstract
 {
     public $result = [];
     public $definition = [];
 
     public function init()
     {
+        $this->_view->assign(['title' => l('application.title'), 'keywords' => l('application.keywords'), 'description' => l('application.description')]);
+
         if (!isset($_SESSION[APP_NAME])) {
             if ($this->_request->controller !== 'Login') {
                 $this->forward('Login', 'index', ['referer' => $this->_request->getServer('REQUEST_URI', APP_CONFIG['http']['uri'])]);
@@ -22,8 +22,6 @@ class InitController extends Controller_Abstract
         if (!$this->_request->isGet() && $_SESSION[APP_NAME]['security']['token'] !== $this->_request->getPost('token')) {
             throw new Exception(l('security.csrf'));
         }
-
-        $this->_view->assign(['title' => l('application.title'), 'keywords' => l('application.keywords'), 'description' => l('application.description')]);
 
         if (!isset($this->definition[$this->_request->action])) {
             return false;

@@ -1,6 +1,7 @@
 <?php
 namespace Hook\Db;
 
+use Redis;
 use Hook\Cache\Cache;
 
 class RedisConnect extends Cache
@@ -21,5 +22,8 @@ class RedisConnect extends Cache
             $this->redis->auth(APP_CONFIG['redis'][$name]['auth']);
         }
         $this->redis->select(APP_CONFIG['redis'][$name]['dbindex']);
+
+        $this->redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_PHP);
+        $this->redis->setOption(Redis::OPT_PREFIX, APP_CONFIG['application']['name'].':');
     }
 }

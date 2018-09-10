@@ -1,12 +1,6 @@
 <?php
-class IndexController extends InitController
+class IndexController extends BaseController
 {
-
-    public function init()
-    {
-        parent::init();
-    }
-
     public function indexAction()
     {
         $table = new \Hook\Db\Table('hp_acl_resource');

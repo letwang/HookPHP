@@ -257,7 +257,23 @@ CREATE TABLE IF NOT EXISTS `hp_menu` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 INSERT INTO `hp_menu` (`id`, `parent`, `status`, `position`, `class`, `icon`, `date_add`, `date_upd`) VALUES
-(1, NULL, 1, 0, 'adminOrder', 'order', 1493439330, 1493439330);
+(1, 16, 1, 0, 'AdminAclGroup', 'order', 1493439330, 1493439330),
+(2, 16, 1, 0, 'AdminAclResource', 'order', 1493439330, 1493439330),
+(3, 16, 1, 0, 'AdminAclRole', 'order', 1493439330, 1493439330),
+(4, 16, 1, 0, 'AdminAclUser', 'order', 1493439330, 1493439330),
+(5, NULL, 1, 0, 'AdminConfig', 'order', 1493439330, 1493439330),
+(6, NULL, 1, 0, 'AdminHook', 'order', 1493439330, 1493439330),
+(7, NULL, 1, 0, 'AdminLang', 'order', 1493439330, 1493439330),
+(8, NULL, 1, 0, 'AdminManager', 'order', 1493439330, 1493439330),
+(9, NULL, 1, 0, 'AdminMenu', 'order', 1493439330, 1493439330),
+(10, NULL, 1, 0, 'AdminModule', 'order', 1493439330, 1493439330),
+(11, NULL, 1, 0, 'AdminTranslation', 'order', 1493439330, 1493439330),
+(12, NULL, 1, 0, 'AdminUser', 'order', 1493439330, 1493439330),
+(13, 12, 1, 0, 'AdminUserBrowser', 'order', 1493439330, 1493439330),
+(14, 12, 1, 0, 'AdminUserGuest', 'order', 1493439330, 1493439330),
+(15, 12, 1, 0, 'AdminUserSystem', 'order', 1493439330, 1493439330),
+(16, NULL, 1, 0, 'AdminAcl', 'order', 1493439330, 1493439330),
+(17, NULL, 1, 0, 'AdminTheme', 'order', 1493439330, 1493439330);
 
 CREATE TABLE IF NOT EXISTS `hp_menu_lang` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -272,7 +288,23 @@ CREATE TABLE IF NOT EXISTS `hp_menu_lang` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 INSERT INTO `hp_menu_lang` (`id`, `menu_id`, `lang_id`, `name`, `date_add`, `date_upd`) VALUES
-(1, 1, 1, '订单', 1493439330, 1493439330);
+(1, 1, 1, '用户组', 1493439330, 1493439330),
+(2, 2, 1, '资源', 1493439330, 1493439330),
+(3, 3, 1, '角色', 1493439330, 1493439330),
+(4, 4, 1, '用户', 1493439330, 1493439330),
+(5, 5, 1, '配置', 1493439330, 1493439330),
+(6, 6, 1, '组件', 1493439330, 1493439330),
+(7, 7, 1, '语言', 1493439330, 1493439330),
+(8, 8, 1, '管理员', 1493439330, 1493439330),
+(9, 9, 1, '菜单', 1493439330, 1493439330),
+(10, 10, 1, '模块', 1493439330, 1493439330),
+(11, 11, 1, '翻译', 1493439330, 1493439330),
+(12, 12, 1, '用户', 1493439330, 1493439330),
+(13, 13, 1, '浏览器', 1493439330, 1493439330),
+(14, 14, 1, '访客', 1493439330, 1493439330),
+(15, 15, 1, '系统', 1493439330, 1493439330),
+(16, 16, 1, '权限', 1493439330, 1493439330),
+(17, 17, 1, '模板', 1493439330, 1493439330);
 
 CREATE TABLE IF NOT EXISTS `hp_module` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -294,7 +326,7 @@ CREATE TABLE IF NOT EXISTS `hp_user` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `lang_id` int(10) unsigned DEFAULT NULL,
   `user` char(64) NOT NULL,
-  `pass` char(64) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+  `pass` char(95) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   `email` char(64) NOT NULL DEFAULT '',
   `phone` char(16) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
   `lastname` char(16) NOT NULL DEFAULT '',
@@ -307,13 +339,13 @@ CREATE TABLE IF NOT EXISTS `hp_user` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 INSERT INTO `hp_user` (`id`, `lang_id`, `user`, `pass`, `email`, `phone`, `lastname`, `firstname`, `status`, `date_add`, `date_upd`) VALUES
-(1, 1, 'admin@hookphp.com', '$argon2i$v=19$m=1024,t=2,p=2$YzVaU2NIeXlHRzczZUE2MA$0Z+xCvbloKAoA1i6klWq/g2evo0NrnO+zG0MnVYhPa0', '', '', 'bobstephen', '', 1, 1493439330, 1493439330);
+(1, 1, 'test@hotmail.com', '$argon2i$v=19$m=1024,t=2,p=2$c2NtWmdCb255NGZZUFBOLw$Hoi3pZx1vlPKT6nwtcu9/zyAppezbxKAOW2u1EmtxqA', '', '', 'bobstephen', '', 1, 1493439330, 1493439330);
 
 CREATE TABLE IF NOT EXISTS `hp_manager` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `lang_id` int(10) unsigned DEFAULT NULL,
   `user` char(64) NOT NULL,
-  `pass` char(64) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+  `pass` char(95) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   `email` char(64) NOT NULL DEFAULT '',
   `phone` char(16) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
   `lastname` char(16) NOT NULL DEFAULT '',
@@ -326,7 +358,7 @@ CREATE TABLE IF NOT EXISTS `hp_manager` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 INSERT INTO `hp_manager` (`id`, `lang_id`, `user`, `pass`, `email`, `phone`, `lastname`, `firstname`, `status`, `date_add`, `date_upd`) VALUES
-(1, 1, 'admin@hookphp.com', '$argon2i$v=19$m=1024,t=2,p=2$YzVaU2NIeXlHRzczZUE2MA$0Z+xCvbloKAoA1i6klWq/g2evo0NrnO+zG0MnVYhPa0', '', '', 'bobstephen', '', 1, 1493439330, 1493439330);
+(1, 1, 'admin@hookphp.com', '$argon2i$v=19$m=1024,t=2,p=2$c2NtWmdCb255NGZZUFBOLw$Hoi3pZx1vlPKT6nwtcu9/zyAppezbxKAOW2u1EmtxqA', '', '', 'bobstephen', '', 1, 1493439330, 1493439330);
 
 CREATE TABLE IF NOT EXISTS `hp_user_browser` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,

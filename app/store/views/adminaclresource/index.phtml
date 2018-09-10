@@ -11,7 +11,7 @@ require APP_PATH.'/layout/head.phtml';
 </head>
 <body>
 <div class="container">
-	<?php echo Form::form('acl', '/acl', 'post', 'class="needs-validation" novalidate');?>
+	<?php echo Form::form('acl', '/adminaclresource', 'post', 'class="needs-validation" novalidate');?>
 	<div class="form-group">
 	<?php echo Form::label('app').Form::input('app', '', 'required class="form-control"');?>
 	<div class="invalid-feedback"><?php echo l('tips.required')?></div>

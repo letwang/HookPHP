@@ -1,5 +1,5 @@
 <?php
-class ResourceModel extends ObjectModel
+class AdminAclResourceModel extends ObjectModel
 {
     public $table = 'hp_acl_resource';
     public $foreign = 'resource_id';
