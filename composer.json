@@ -1,6 +1,7 @@
 {
     "require": {
         "php": ">=7.2",
-        "mongodb/mongodb": "^1.4"
+        "mongodb/mongodb": "^1.4",
+        "symfony/process": "^4.1"
     }
 }

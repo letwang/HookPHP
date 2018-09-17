@@ -7,4 +7,6 @@ composer.lock
 log/
 vendor/composer
 vendor/mongodb
+vendor/symfony
 vendor/autoload.php
+*.jar

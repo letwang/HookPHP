@@ -34,11 +34,11 @@
 + ✅支持：无CSRF 无XSS 无Session Hijack 无SQL Injection
 + ✅支持：用户密码传输 OpenSSL AES-256-CBC加密/解密
 + ✅支持：用户 管理员 分表
-+ ✅支持：seaslog 日志
-+ 📌待办：列表页面 model
-+ 📌待办：套bootstrap模板(app web ipad)
-+ 📌待办：基础菜单 基础功能CRUD 同步CACHE
-+ 📌待办：微信 QQ 微博 短信...注册 登陆 推出
++ ✅支持：日志收集
++ ✅支持：任意文档内容抽取
++ 📌待办：安装Looper模板
++ 📌待办：基础功能CRUD
++ 📌待办：微信 QQ 微博 短信...注册 登陆 退出
 + 📌待办：邀请注册 分享 收集大数据 社工分析
 + 📌待办：开放API平台 QPS CACHE
 
@@ -82,7 +82,7 @@ sudo pecl install seaslog
 extension=seaslog
 seaslog.trace_notice=1
 seaslog.trace_warning=1
-seaslog.default_basepath='/home/letwang/workspace/HookPHP/log'
+seaslog.default_basepath='/home/你的项目绝对路径/HookPHP/log'
 seaslog.default_template = '%T | %L | %P | %Q | %t | %M | %H | %D | %R | %m | %I | %F | %U | %u | %C'
 ```
 ## yar
@@ -100,7 +100,7 @@ sudo pecl install yaf
 extension=yaf
 yaf.use_namespace = 1
 yaf.use_spl_autoload = 1
-yaf.library = /home/letwang/workspace/HookPHP/vendor/
+yaf.library = /home/你的项目绝对路径/HookPHP/vendor/
 ```
 ## yaconf
 ```
@@ -108,7 +108,7 @@ sudo pecl install yaconf
 
 [yaconf]
 extension=yaconf
-yaconf.directory = /home/letwang/workspace/HookPHP/conf/
+yaconf.directory = /home/你的项目绝对路径/HookPHP/conf/
 ```
 ## xhprof
 ```
@@ -133,6 +133,7 @@ extension=swoole
 # vendor
 ```
 composer.phar install
+wget -P /home/你的项目绝对路径/HookPHP/vendor/Hook/Tika http://mirrors.hust.edu.cn/apache/tika/tika-app-1.18.jar
 php public/index.php
 ```
 
