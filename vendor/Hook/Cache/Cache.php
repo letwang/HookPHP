@@ -3,7 +3,7 @@ namespace Hook\Cache;
 
 class Cache
 {
-    public static function getInstance(string $name = 'master', string $key = 'default'): self
+    public static function getInstance(string $name = 'default', string $key = 'default'): self
     {
         $class = get_called_class();
         $instance = &self::static($class);

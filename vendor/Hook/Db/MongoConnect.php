@@ -7,7 +7,7 @@ class MongoConnect extends Cache
 {
     public $mongo;
     
-    public function __construct(string $name = 'master')
+    public function __construct(string $name = 'default')
     {
         $this->mongo = new \MongoDB\Client(
             APP_CONFIG['mongo'][$name]['uri'],

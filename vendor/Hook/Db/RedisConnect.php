@@ -8,7 +8,7 @@ class RedisConnect extends Cache
 {
     public $redis;
     
-    public function __construct(string $name = 'master')
+    public function __construct(string $name = 'default')
     {
         $this->redis = new \Redis();
         $this->redis->connect(
@@ -21,7 +21,6 @@ class RedisConnect extends Cache
         if (! empty(APP_CONFIG['redis'][$name]['auth'])) {
             $this->redis->auth(APP_CONFIG['redis'][$name]['auth']);
         }
-        $this->redis->select(APP_CONFIG['redis'][$name]['dbindex']);
 
         $this->redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_PHP);
         $this->redis->setOption(Redis::OPT_PREFIX, APP_CONFIG['application']['name'].':');

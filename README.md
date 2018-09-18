@@ -34,8 +34,9 @@
 + ✅支持：无CSRF 无XSS 无Session Hijack 无SQL Injection
 + ✅支持：用户密码传输 OpenSSL AES-256-CBC加密/解密
 + ✅支持：用户 管理员 分表
-+ ✅支持：日志收集
-+ ✅支持：任意文档内容抽取
++ ✅支持：SeasLog收集日志
++ ✅支持：Tika抽取任意文档内容
++ ✅支持：业务分库 DB分离：ProxySQL、RedisProxy、MongoSharding
 + 📌待办：安装Looper模板
 + 📌待办：基础功能CRUD
 + 📌待办：微信 QQ 微博 短信...注册 登陆 退出
@@ -43,6 +44,7 @@
 + 📌待办：开放API平台 QPS CACHE
 
 # 特点
++ 极客：PHP7.3+MySql8.0+Mongo4.0+Redis4.0
 + 基于 PHP C 扩展：YAF
 + 能用 C 扩展解决的，坚决不用Composer
 + 追求极客，使用行业技术栈最新特性
