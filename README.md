@@ -134,6 +134,7 @@ extension=swoole
 ```
 composer.phar install
 wget -P /home/你的项目绝对路径/HookPHP/vendor/Hook/Tika http://mirrors.hust.edu.cn/apache/tika/tika-app-1.19.jar
+wget -P /home/sphinx http://sphinxsearch.com/files/sphinx-3.0.3-facc3fb-linux-amd64.tar.gz
 php public/index.php
 ```
 
