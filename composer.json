@@ -2,6 +2,7 @@
     "require": {
         "php": ">=7.2",
         "mongodb/mongodb": "^1.4",
-        "symfony/process": "^4.1"
+        "symfony/process": "^4.1",
+        "phpmailer/phpmailer": "~6.0"
     }
 }
