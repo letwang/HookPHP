@@ -85,12 +85,12 @@ seaslog.trace_warning=1
 seaslog.default_basepath='/home/你的项目绝对路径/HookPHP/log'
 seaslog.default_template = '%T | %L | %P | %Q | %t | %M | %H | %D | %R | %m | %I | %F | %U | %u | %C'
 ```
-## yar
+## amqp
 ```
-sudo pecl install yar
+sudo pecl install amqp
 
-[yar]
-extension=yar
+[amqp]
+extension=amqp
 ```
 ## yaf
 ```
@@ -133,7 +133,7 @@ extension=swoole
 # vendor
 ```
 composer.phar install
-wget -P /home/你的项目绝对路径/HookPHP/vendor/Hook/Tika http://mirrors.hust.edu.cn/apache/tika/tika-app-1.18.jar
+wget -P /home/你的项目绝对路径/HookPHP/vendor/Hook/Tika http://mirrors.hust.edu.cn/apache/tika/tika-app-1.19.jar
 php public/index.php
 ```
 
