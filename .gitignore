@@ -8,5 +8,6 @@ log/
 vendor/composer
 vendor/mongodb
 vendor/symfony
+vendor/phpmailer
 vendor/autoload.php
 *.jar
