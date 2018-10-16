@@ -95,8 +95,12 @@ server {
 ```
 ## [MySQL 8.0.12][10]
 [10]: https://dev.mysql.com/downloads/mysql/
+## [ProxySQL 1.4.12][15]
+[15]: https://proxysql.com/
 ## [Redis 5.0][1]
 [1]: https://redis.io/download
+## [RedisProxy][16]
+[16]: https://github.com/twitter/twemproxy
 ```
 sudo pecl install redis
 
@@ -111,6 +115,8 @@ sudo pecl install mongodb
 [mongodb]
 extension=mongodb
 ```
+## [MongoDB Sharded Cluster][17]
+[17]: https://docs.mongodb.com/manual/core/sharded-cluster-components/
 ## [RabbitMQ 3.7.8][4]
 [4]: http://www.rabbitmq.com/
 ## [AMQP 1.9.3][5]
