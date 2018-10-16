@@ -8,91 +8,21 @@
 # 理念
 配置即产出。
 
-# 路线图
-+ ✅诞生：初始化YAF框架，基于PHP5 OOP，含 8年常用类库、SQL建模、外键约束
-+ ✅引入：Bootstrap，解决多终端自适应显示问题
-+ ✅支持：用户登录模块
-+ ✅支持：目录安全访问
-+ ✅支持：业务SQL集中管控
-+ ✅支持：多语言ACL权限表设计
-+ ✅支持：映射数据库表结构为内存缓存
-+ ✅支持：单表CRUD操作模型
-+ ✅支持：PHP7+规范+重构
-+ ✅支持：Mysql主从、Redis集群、MongoDB分片
-+ ✅支持：模块组件化、事件触发机制
-+ ✅支持：多应用配置域名同时运行
-+ ✅引入：composer:mongodb
-+ ✅支持：YAF全局库、本地库
-+ ✅支持：FILTER Validate
-+ ✅支持：ACL业务CRUD 抽象model CRUD
-+ ✅支持：Form组件
-+ ✅支持：同页面批量渲染Form动态生成控件ID
-+ ✅支持：业务配置数据常驻内存
-+ ✅支持：前后端正则验证常驻内存
-+ ✅支持：表字段大小范围常驻内存
-+ ✅支持：多语言翻译常驻内存
-+ ✅支持：无CSRF 无XSS 无Session Hijack 无SQL Injection
-+ ✅支持：用户密码传输 OpenSSL AES-256-CBC加密/解密
-+ ✅支持：用户 管理员 分表
-+ ✅支持：SeasLog收集日志
-+ ✅支持：Tika抽取任意文档内容
-+ ✅支持：业务分库 DB分离：ProxySQL、RedisProxy、MongoSharding
-+ 📌待办：安装Looper模板
-+ 📌待办：基础功能CRUD
-+ 📌待办：微信 QQ 微博 短信...注册 登陆 退出
-+ 📌待办：邀请注册 分享 收集大数据 社工分析
-+ 📌待办：开放API平台 QPS CACHE
-
 # 特点
-+ 追求极客：PHP7.3+C系扩展+MySql8.0+Mongo4.0+Redis4.0+Sphinx4.0
++ 追求极客，行业主流解决方案最新版
 + 能用 C 扩展解决的，坚决不用Composer
 + 一款自带DB的框架，业务SQL集中化管理
 + 集成行业通用功能：`用户管理`、`资源管理`、`角色管理`、`权限管理`、`配置管理`、`翻译管理`、`SEO管理`、`多菜单管理`、`多语言管理`、`多模块管理`、`多模板管理`、`多终端管理`、`多平台管理`...
 + 支持行业主流特性：`微服务`、`多线程`、`多进程`、`常驻内存`、`主从分离`、`负载均衡`...
 
 # 环境
+## [PHP 7.3]
 ```
-sudo apt-get install php7.2-common php7.2-cli php7.2-bcmath php7.2-dev php7.2-xml php7.2-mbstring php7.2-mysql  php7.2-fpm php7.2-gd php7.2-zip php7.2-curl php7.2-intl php7.2-json
+sudo apt-get install php7.3-common php7.3-cli php7.3-bcmath php7.3-dev php7.3-xml php7.3-opcache php7.3-mbstring php7.3-mysql php7.3-fpm php7.3-gd php7.3-zip php7.3-curl php7.3-intl php7.3-json
 ```
-## session
-```
-[Session]
-session.save_handler = redis
-session.save_path = "tcp://127.0.0.1:6379?weight=1&auth=123456&database=0, tcp://127.0.0.1:6379?weight=2&auth=123456&database=0"
-```
-## redis
-```
-sudo pecl install redis
-
-[redis]
-extension=redis
-```
-## mongodb
-```
-sudo pecl install mongodb
-
-[mongodb]
-extension=mongodb
-```
-## seaslog
-```
-sudo pecl install seaslog
-
-[seaslog]
-extension=seaslog
-seaslog.trace_notice=1
-seaslog.trace_warning=1
-seaslog.default_basepath='/home/你的项目绝对路径/HookPHP/log'
-seaslog.default_template = '%T | %L | %P | %Q | %t | %M | %H | %D | %R | %m | %I | %F | %U | %u | %C'
-```
-## amqp
-```
-sudo pecl install amqp
-
-[amqp]
-extension=amqp
-```
-## yaf
+### [C Extensions]
+#### [Yaf 3.0.7][6]
+[6]: http://php.net/yaf
 ```
 sudo pecl install yaf
 
@@ -100,22 +30,36 @@ sudo pecl install yaf
 extension=yaf
 yaf.use_namespace = 1
 yaf.use_spl_autoload = 1
-yaf.library = /home/你的项目绝对路径/HookPHP/vendor/
+yaf.library = /home/letwang/workspace/HookPHP/vendor/
 ```
-## yaconf
+#### [Yaconf 1.0.7][7]
+[7]: http://php.net/yaconf
 ```
 sudo pecl install yaconf
 
 [yaconf]
 extension=yaconf
-yaconf.directory = /home/你的项目绝对路径/HookPHP/conf/
+yaconf.directory = /home/letwang/workspace/HookPHP/conf/
 ```
-## xhprof
+#### [SeasLog 1.8.6][3]
+[3]: http://php.net/manual/zh/book.seaslog.php
+```
+sudo pecl install seaslog
+
+[seaslog]
+extension=seaslog
+seaslog.trace_notice=1
+seaslog.trace_warning=1
+seaslog.default_basepath='/home/letwang/workspace/HookPHP/log'
+seaslog.default_template = '%T | %L | %P | %Q | %t | %M | %H | %D | %R | %m | %I | %F | %U | %u | %C'
+```
+#### [Xhprof][8]
+[8]: http://php.net/xhprof
 ```
 git clone https://github.com/longxinH/xhprof.git ./xhprof
 cd xhprof/extension/
-phpize7.2
-./configure --with-php-config=php-config7.2
+phpize7.3
+./configure --with-php-config=php-config7.3
 make && sudo make install
 sudo apt-get install graphviz-dev
 
@@ -123,26 +67,18 @@ sudo apt-get install graphviz-dev
 extension=xhprof
 xhprof.output_dir = '/var/log/xhprof'
 ```
-## swoole
+### [php.ini]
 ```
-sudo pecl install swoole
-
-[swoole]
-extension=swoole
+[Session]
+session.save_handler = redis
+session.save_path = "tcp://127.0.0.1:6379?weight=1&auth=123456&database=0, tcp://127.0.0.1:6379?weight=2&auth=123456&database=0"
 ```
-# vendor
-```
-composer.phar install
-wget -P /home/你的项目绝对路径/HookPHP/vendor/Hook/Tika http://mirrors.hust.edu.cn/apache/tika/tika-app-1.19.jar
-wget -P /home/sphinx http://sphinxsearch.com/files/sphinx-3.0.3-facc3fb-linux-amd64.tar.gz
-php public/index.php
-```
-
-# Nginx规则
+## [Nginx 1.15.5][11]
+[11]: https://nginx.org/en/download.html
 ```
 server {
 	listen 80;
-	root /home/你的项目绝对路径/HookPHP/public/;
+	root /home/letwang/workspace/HookPHP/public/;
 	index index.html index.htm index.php;
 	autoindex on;autoindex_exact_size off;autoindex_localtime on;
 	error_log /var/log/nginx/www.svn.com-error.log error;access_log /var/log/nginx/www.svn.com-access.log combined;
@@ -157,8 +93,68 @@ server {
 	 }
 }
 ```
+## [MySQL 8.0.12][10]
+[10]: https://dev.mysql.com/downloads/mysql/
+## [Redis 5.0][1]
+[1]: https://redis.io/download
+```
+sudo pecl install redis
 
-# 账户
+[redis]
+extension=redis
+```
+## [MongoDB 4.2][2]
+[2]: https://docs.mongodb.com/manual/administration/install-on-linux/
+```
+sudo pecl install mongodb
+
+[mongodb]
+extension=mongodb
+```
+## [RabbitMQ 3.7.8][4]
+[4]: http://www.rabbitmq.com/
+## [AMQP 1.9.3][5]
+[5]: http://www.php.net/manual/pl/book.amqp.php
+```
+sudo pecl install amqp
+
+[amqp]
+extension=amqp
+```
+## [Sphinx 3.0.3][9]
+[9]: http://sphinxsearch.com/downloads/
+```
+wget -P /home/sphinx http://sphinxsearch.com/files/sphinx-3.0.3-facc3fb-linux-amd64.tar.gz
+```
+## [Varnish 6.1.0][12]
+[12]: https://varnish-cache.org/
+```
+sudo pecl install varnish
+
+[varnish]
+extension=varnish
+```
+## [Composer][13]
+[13]: https://www.phpcomposer.com/
+```
+curl -sS https://getcomposer.org/installer | php
+sudo mv composer.phar /usr/local/bin/composer
+```
+
+## [Tika][14]
+[14]: https://tika.apache.org/
+```
+wget -P /home/letwang/workspace/HookPHP/vendor/Hook/Tika http://mirrors.hust.edu.cn/apache/tika/tika-app-1.19.1.jar
+```
+
+## [Vendor]
+```
+cd ~/workspace/HookPHP/
+composer.phar install
+php public/index.php
+```
+
+# 体验
 ```
 admin@hookphp.com
 12345678

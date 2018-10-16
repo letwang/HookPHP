@@ -3,7 +3,7 @@ namespace Hook\Tika;
 
 class Tika {
     private static function run($option, $fileName){
-        $process = new \Symfony\Component\Process\Process('java -jar tika-app-1.19.jar '.$option.' "'.$fileName.'"');
+        $process = new \Symfony\Component\Process\Process('java -jar tika-app-1.19.1.jar '.$option.' "'.$fileName.'"');
         $process->setWorkingDirectory(__DIR__);
         $process->run();
 
