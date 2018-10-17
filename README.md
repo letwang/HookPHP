@@ -168,8 +168,12 @@ composer.phar install
 php public/index.php
 ```
 
-# 体验
+# 账号
 ```
 admin@hookphp.com
 12345678
 ```
+# 演示
+![截图1][1]
+
+[1]: https://github.com/letwang/HookPHP/tree/master/public/assets/demo_1.png

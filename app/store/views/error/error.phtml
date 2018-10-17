@@ -1,11 +1,27 @@
-<?php require APP_PATH.'/layout/head.phtml';?>
-
+<?php require APP_PATH.'/layout/top.phtml';?>
 <title><?php echo $this->title;?></title>
 <meta name="description" content="<?php echo $this->description;?>" />
 <meta name="keywords" content="<?php echo $this->keywords;?>" />
 </head>
 <body>
-	<div class="container">
-		<div class="error"><?php echo "Error Msg:" . $this->exception->getMessage();?></div>
-	</div>
+<div class="app">
+  <?php require APP_PATH.'/layout/head.phtml';?>
+  <?php require APP_PATH.'/layout/left.phtml';?>
+  <main class="app-main">
+    <div class="wrapper">
+      <section class="empty-state">
+        <div class="empty-state-container">
+          <div class="state-figure">
+            <img class="img-fluid" src="assets/images/illustration/img-2.png" style="max-width: 320px"> </div>
+          <h3 class="state-header"> Page Not found! </h3>
+          <p class="state-description lead text-muted"> <?php echo "Error Msg:" . $this->exception->getMessage();?> </p>
+          <div class="state-action">
+            <a href="/" class="btn btn-lg btn-light">
+              <i class="fa fa-angle-right"></i> Go Back</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
 <?php require APP_PATH.'/layout/foot.phtml';?>

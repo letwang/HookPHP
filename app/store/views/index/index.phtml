@@ -1,10 +1,25 @@
-<?php require APP_PATH.'/layout/head.phtml';?>
-
-<link href="css/login.css" rel="stylesheet" />
+<?php require APP_PATH.'/layout/top.phtml';?>
 <title><?php echo $this->title;?></title>
 <meta name="description" content="<?php echo $this->description;?>" />
 <meta name="keywords" content="<?php echo $this->keywords;?>" />
 </head>
 <body>
-	<h1><a href="login/out/"><?php echo $this->test;?></a></h1>
+<div class="app">
+  <?php require APP_PATH.'/layout/head.phtml';?>
+  <?php require APP_PATH.'/layout/left.phtml';?>
+  <main class="app-main">
+    <div class="wrapper">
+      <div class="page">
+        <div class="page-inner">
+          <header class="page-title-bar">
+            <!-- page title stuff goes here -->
+          </header>
+          <div class="page-section">
+            <!-- page content goes here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
 <?php require APP_PATH.'/layout/foot.phtml';?>
