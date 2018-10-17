@@ -174,6 +174,4 @@ admin@hookphp.com
 12345678
 ```
 # 演示
-![截图1][1]
-
-[1]: https://github.com/letwang/HookPHP/tree/master/public/assets/demo_1.png
+![截图1](https://github.com/letwang/HookPHP/blob/master/public/assets/demo_1.png?raw=true)
