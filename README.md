@@ -67,6 +67,14 @@ sudo apt-get install graphviz-dev
 extension=xhprof
 xhprof.output_dir = '/var/log/xhprof'
 ```
+#### [Rar][18]
+[18]: http://php.net/rar
+```
+sudo pecl install rar
+
+[rar]
+extension=rar
+```
 ### [php.ini]
 ```
 [Session]
