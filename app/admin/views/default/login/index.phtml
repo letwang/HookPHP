@@ -1,0 +1,24 @@
+<?php require APP_PATH.'/views/'.THEME_NAME.'/top.phtml';?>
+
+<link href="css/login.css" rel="stylesheet" />
+<title><?php echo $this->title;?></title>
+<meta name="description" content="<?php echo $this->description;?>" />
+<meta name="keywords" content="<?php echo $this->keywords;?>" />
+</head>
+<body class="text-center">
+	<div class="container">
+		<form class="form-signin" role="form" method="post" action="login">
+		    <img class="mb-4" src="assets/images/brand.png" />
+			<h2 class="form-signin-heading">Please sign in</h2>
+			<input type="email" name="user" class="form-control" placeholder="Email address" required autofocus>
+			<br />
+			<input type="password" name="pass" class="form-control" placeholder="Password" required>
+			<div class="checkbox">
+				<label><input type="checkbox" name="remember" value="1"> Remember me</label>
+			</div>
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+			<p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
+			<input type="hidden" name="referer" value="<?php echo $this->referer;?>" />
+		</form>
+	</div>
+<?php require APP_PATH.'/views/'.THEME_NAME.'/bottom.phtml';?>
