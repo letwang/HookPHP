@@ -4,7 +4,7 @@ class IndexController extends BaseController
     public function indexAction()
     {
         $this->_view->assign(
-            ['test' => 'Login Out']
+            ['test' => 'Index']
        );
     }
 

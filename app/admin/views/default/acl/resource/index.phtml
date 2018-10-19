@@ -1,7 +1,7 @@
 <?php
 use Hook\Form\Form;
 
-require APP_PATH.'/views/'.THEME_NAME.'/top.phtml';
+require APP_ROOT.'/views/'.APP_THEME.'/top.phtml';
 ?>
 
 <link href="css/login.css" rel="stylesheet" />
@@ -39,4 +39,4 @@ require APP_PATH.'/views/'.THEME_NAME.'/top.phtml';
 	<?php echo Form::submit('submit', 'class="btn btn-primary"');?>
 	</form>
 </div>
-<?php require APP_PATH.'/views/'.THEME_NAME.'/bottom.phtml';?>
+<?php require APP_ROOT.'/views/'.APP_THEME.'/bottom.phtml';?>

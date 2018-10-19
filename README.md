@@ -81,18 +81,60 @@ extension=rar
 session.save_handler = redis
 session.save_path = "tcp://127.0.0.1:6379?weight=1&auth=123456&database=0, tcp://127.0.0.1:6379?weight=2&auth=123456&database=0"
 ```
+### [hosts]
+```
+sudo vim /etc/hosts
+
+127.0.0.1 www.admin.com
+127.0.0.1 www.erp.com
+127.0.0.1 www.paas.com
+```
 ## [Nginx 1.15.5][11]
 [11]: https://nginx.org/en/download.html
 ```
 server {
 	listen 80;
 	root /home/letwang/workspace/HookPHP/public/;
-	index index.html index.htm index.php;
+	index index.html index.htm index.php admin.php;
 	autoindex on;autoindex_exact_size off;autoindex_localtime on;
-	error_log /var/log/nginx/www.svn.com-error.log error;access_log /var/log/nginx/www.svn.com-access.log combined;
-	server_name www.svn.com;
+	error_log /var/log/nginx/www.admin.com-error.log error;access_log /var/log/nginx/www.admin.com-access.log combined;
+	server_name www.admin.com;
 
-	if (!-e $request_filename) {rewrite ^/(.*)  /index.php?$1 last;}
+	if (!-e $request_filename) {rewrite ^/(.*)  /admin.php?$1 last;}
+
+	location ~ \.php$ {
+	       fastcgi_pass   127.0.0.1:9000;
+	       fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+	       include        fastcgi_params;
+	 }
+}
+
+server {
+	listen 80;
+	root /home/letwang/workspace/HookPHP/public/;
+	index index.html index.htm index.php erp.php;
+	autoindex on;autoindex_exact_size off;autoindex_localtime on;
+	error_log /var/log/nginx/www.erp.com-error.log error;access_log /var/log/nginx/www.erp.com-access.log combined;
+	server_name www.erp.com;
+
+	if (!-e $request_filename) {rewrite ^/(.*)  /erp.php?$1 last;}
+
+	location ~ \.php$ {
+	       fastcgi_pass   127.0.0.1:9000;
+	       fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+	       include        fastcgi_params;
+	 }
+}
+
+server {
+	listen 80;
+	root /home/letwang/workspace/HookPHP/public/;
+	index index.html index.htm index.php paas.php;
+	autoindex on;autoindex_exact_size off;autoindex_localtime on;
+	error_log /var/log/nginx/www.paas.com-error.log error;access_log /var/log/nginx/www.paas.com-access.log combined;
+	server_name www.paas.com;
+
+	if (!-e $request_filename) {rewrite ^/(.*)  /paas.php?$1 last;}
 
 	location ~ \.php$ {
 	       fastcgi_pass   127.0.0.1:9000;
@@ -161,15 +203,22 @@ sudo mv composer.phar /usr/local/bin/composer
 wget -P /home/letwang/workspace/HookPHP/vendor/Hook/Tika http://mirrors.hust.edu.cn/apache/tika/tika-app-1.19.1.jar
 ```
 
-## [Vendor]
+## [安装]
 ```
 cd ~/workspace/HookPHP/
-composer.phar install
-php public/index.php
-```
 
-# 账号
+composer.phar install
+
+php app/admin/bin/install.php
+php app/erp/bin/install.php
+php app/paas/bin/install.php
 ```
+# 访问
+```
+http://www.admin.com/
+http://www.erp.com/
+http://www.paas.com/
+
 admin@hookphp.com
 12345678
 ```

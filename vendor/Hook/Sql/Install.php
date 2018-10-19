@@ -339,7 +339,7 @@ CREATE TABLE IF NOT EXISTS `hp_user` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 INSERT INTO `hp_user` (`id`, `lang_id`, `user`, `pass`, `email`, `phone`, `lastname`, `firstname`, `status`, `date_add`, `date_upd`) VALUES
-(1, 1, 'test@hotmail.com', '$argon2i$v=19$m=1024,t=2,p=2$c2NtWmdCb255NGZZUFBOLw$Hoi3pZx1vlPKT6nwtcu9/zyAppezbxKAOW2u1EmtxqA', '', '', 'bobstephen', '', 1, 1493439330, 1493439330);
+(1, 1, 'test@hotmail.com', '\$argon2i\$v=19\$m=1024,t=2,p=2\$c2NtWmdCb255NGZZUFBOLw\$Hoi3pZx1vlPKT6nwtcu9/zyAppezbxKAOW2u1EmtxqA', '', '', 'bobstephen', '', 1, 1493439330, 1493439330);
 
 CREATE TABLE IF NOT EXISTS `hp_manager` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -358,7 +358,7 @@ CREATE TABLE IF NOT EXISTS `hp_manager` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 INSERT INTO `hp_manager` (`id`, `lang_id`, `user`, `pass`, `email`, `phone`, `lastname`, `firstname`, `status`, `date_add`, `date_upd`) VALUES
-(1, 1, 'admin@hookphp.com', '$argon2i$v=19$m=1024,t=2,p=2$c2NtWmdCb255NGZZUFBOLw$Hoi3pZx1vlPKT6nwtcu9/zyAppezbxKAOW2u1EmtxqA', '', '', 'bobstephen', '', 1, 1493439330, 1493439330);
+(1, 1, 'admin@hookphp.com', '\$argon2i\$v=19\$m=1024,t=2,p=2\$c2NtWmdCb255NGZZUFBOLw\$Hoi3pZx1vlPKT6nwtcu9/zyAppezbxKAOW2u1EmtxqA', '', '', 'bobstephen', '', 1, 1493439330, 1493439330);
 
 CREATE TABLE IF NOT EXISTS `hp_user_browser` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
