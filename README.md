@@ -220,4 +220,4 @@ admin@hookphp.com
 12345678
 ```
 # 演示
-![截图1](https://github.com/letwang/HookPHP/blob/master/public/assets/demo_1.png?raw=true)
+![截图1](https://github.com/letwang/HookPHP/blob/master/public/admin/assets/demo_1.png?raw=true)
