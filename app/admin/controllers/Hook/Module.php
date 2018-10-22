@@ -1,5 +1,5 @@
 <?php
-class Hook_ModuleController extends BaseController
+class Hook_ModuleController extends AbstractController
 {
     public function indexAction()
     {

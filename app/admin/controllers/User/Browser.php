@@ -1,5 +1,5 @@
 <?php
-class User_BrowserController extends BaseController
+class User_BrowserController extends AbstractController
 {
     public function indexAction()
     {

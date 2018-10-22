@@ -1,5 +1,5 @@
 <?php
-class Acl_RoleController extends BaseController
+class Acl_RoleController extends AbstractController
 {
     public function indexAction()
     {

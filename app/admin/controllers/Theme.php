@@ -1,5 +1,5 @@
 <?php
-class ThemeController extends BaseController
+class ThemeController extends AbstractController
 {
     public function indexAction()
     {

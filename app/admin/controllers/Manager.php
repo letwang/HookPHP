@@ -1,5 +1,5 @@
 <?php
-class ManagerController extends BaseController
+class ManagerController extends AbstractController
 {
     public function indexAction()
     {

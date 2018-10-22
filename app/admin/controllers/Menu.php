@@ -1,5 +1,5 @@
 <?php
-class MenuController extends BaseController
+class MenuController extends AbstractController
 {
     public function indexAction()
     {

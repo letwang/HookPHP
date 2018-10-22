@@ -1,7 +1,7 @@
 <?php
 use Hook\Http\Header, Hook\Db\PdoConnect, Hook\Crypt\PassWord;
 
-class LoginController extends BaseController
+class LoginController extends AbstractController
 {
     public function indexAction()
     {

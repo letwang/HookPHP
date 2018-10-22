@@ -1,5 +1,5 @@
 <?php
-class LangController extends BaseController
+class LangController extends AbstractController
 {
     public function indexAction()
     {

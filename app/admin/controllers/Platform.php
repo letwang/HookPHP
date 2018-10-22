@@ -1,5 +1,5 @@
 <?php
-class PlatformController extends BaseController
+class PlatformController extends AbstractController
 {
     public function indexAction()
     {

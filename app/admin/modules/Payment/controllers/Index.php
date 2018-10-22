@@ -1,5 +1,5 @@
 <?php
-class IndexController extends BaseController
+class IndexController extends AbstractController
 {
     public function indexAction()
     {

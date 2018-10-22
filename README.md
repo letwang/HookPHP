@@ -94,13 +94,12 @@ sudo vim /etc/hosts
 ```
 server {
 	listen 80;
-	root /home/letwang/workspace/HookPHP/public/;
-	index index.html index.htm index.php admin.php;
-	autoindex on;autoindex_exact_size off;autoindex_localtime on;
+	root /home/letwang/workspace/HookPHP/public/admin/;
+	index index.html index.htm index.php;
 	error_log /var/log/nginx/www.admin.com-error.log error;access_log /var/log/nginx/www.admin.com-access.log combined;
 	server_name www.admin.com;
 
-	if (!-e $request_filename) {rewrite ^/(.*)  /admin.php?$1 last;}
+	if (!-e $request_filename) {rewrite ^/(.*)  /index.php?$1 last;}
 
 	location ~ \.php$ {
 	       fastcgi_pass   127.0.0.1:9000;
@@ -111,13 +110,12 @@ server {
 
 server {
 	listen 80;
-	root /home/letwang/workspace/HookPHP/public/;
-	index index.html index.htm index.php erp.php;
-	autoindex on;autoindex_exact_size off;autoindex_localtime on;
+	root /home/letwang/workspace/HookPHP/public/erp/;
+	index index.html index.htm index.php;
 	error_log /var/log/nginx/www.erp.com-error.log error;access_log /var/log/nginx/www.erp.com-access.log combined;
 	server_name www.erp.com;
 
-	if (!-e $request_filename) {rewrite ^/(.*)  /erp.php?$1 last;}
+	if (!-e $request_filename) {rewrite ^/(.*)  /index.php?$1 last;}
 
 	location ~ \.php$ {
 	       fastcgi_pass   127.0.0.1:9000;
@@ -128,13 +126,12 @@ server {
 
 server {
 	listen 80;
-	root /home/letwang/workspace/HookPHP/public/;
-	index index.html index.htm index.php paas.php;
-	autoindex on;autoindex_exact_size off;autoindex_localtime on;
+	root /home/letwang/workspace/HookPHP/public/paas/;
+	index index.html index.htm index.php;
 	error_log /var/log/nginx/www.paas.com-error.log error;access_log /var/log/nginx/www.paas.com-access.log combined;
 	server_name www.paas.com;
 
-	if (!-e $request_filename) {rewrite ^/(.*)  /paas.php?$1 last;}
+	if (!-e $request_filename) {rewrite ^/(.*)  /index.php?$1 last;}
 
 	location ~ \.php$ {
 	       fastcgi_pass   127.0.0.1:9000;

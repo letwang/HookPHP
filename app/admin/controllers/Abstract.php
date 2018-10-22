@@ -1,5 +1,5 @@
 <?php
-class BaseController extends Yaf\Controller_Abstract
+abstract class AbstractController extends Yaf\Controller_Abstract
 {
     public $result = [];
     public $definition = [];

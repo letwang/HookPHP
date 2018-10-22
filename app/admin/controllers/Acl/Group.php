@@ -1,5 +1,5 @@
 <?php
-class Acl_GroupController extends BaseController
+class Acl_GroupController extends AbstractController
 {
     public function indexAction()
     {

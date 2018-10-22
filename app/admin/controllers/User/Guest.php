@@ -1,5 +1,5 @@
 <?php
-class User_GuestController extends BaseController
+class User_GuestController extends AbstractController
 {
     public function indexAction()
     {

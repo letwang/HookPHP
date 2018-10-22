@@ -1,5 +1,5 @@
 <?php
-class Acl_ResourceController extends BaseController
+class Acl_ResourceController extends AbstractController
 {
     public function indexAction()
     {
