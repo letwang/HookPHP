@@ -1,8 +1,4 @@
 <?php
-use Hook\Db\PdoConnect;
-use Hook\Sql\Menu;
-use Hook\Data\ArrayUtils;
-
 abstract class AbstractController extends Yaf\Controller_Abstract
 {
     public $result = [];
@@ -33,11 +29,7 @@ abstract class AbstractController extends Yaf\Controller_Abstract
             throw new Exception(l('security.csrf'));
         }
 
-        $utils = new ArrayUtils();
-        $utils->idKey = 'id';
-        $utils->parentIdKey = 'parent';
-
-        $this->_view->assign(['menus' => $utils->classify(PdoConnect::getInstance()->fetchAll(Menu::SQL_GET_MENUS))]);
+        $this->_view->assign(['menus' => MenuModel::getAll()]);
 
         if (!isset($this->definition[$this->_request->action])) {
             return false;
