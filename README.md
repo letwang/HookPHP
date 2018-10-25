@@ -41,6 +41,14 @@ sudo pecl install yaconf
 extension=yaconf
 yaconf.directory = /home/letwang/workspace/HookPHP/conf/
 ```
+#### [gRPC 1.16.0][19]
+[19]: https://grpc.io/docs/quickstart/php.html
+```
+sudo pecl install grpc
+
+[grpc]
+extension=grpc
+```
 #### [SeasLog 1.8.6][3]
 [3]: http://php.net/manual/zh/book.seaslog.php
 ```
@@ -203,6 +211,7 @@ wget -P /home/letwang/workspace/HookPHP/vendor/Hook/Tika http://mirrors.hust.edu
 ## [安装]
 ```
 cd ~/workspace/HookPHP/
+sudo chmod 777 -R ./log
 
 composer.phar install
 

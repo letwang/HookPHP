@@ -7,7 +7,7 @@ class Bootstrap extends Bootstrap_Abstract
     {
         session_start();
 
-        $dispatcher->registerPlugin(new GlobalPlugin());
+        $dispatcher->registerPlugin(new HookPlugin());
 
         $request = $dispatcher->getRequest();
         if (!$request->isGet()) {

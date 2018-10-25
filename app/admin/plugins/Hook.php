@@ -2,7 +2,7 @@
 use Yaf\{Plugin_Abstract, Request_Abstract, Response_Abstract};
 use Hook\Hook\Hook;
 
-class GlobalPlugin extends Plugin_Abstract
+class HookPlugin extends Plugin_Abstract
 {
     public function routerStartup(Request_Abstract $request, Response_Abstract $response)
     {
