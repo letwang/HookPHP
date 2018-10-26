@@ -12,7 +12,6 @@ class MenuModel extends ObjectModel
 
     public function __construct()
     {
-        $this->validate = [];
         parent::__construct();
     }
 
@@ -46,7 +45,7 @@ class MenuModel extends ObjectModel
         return parent::update($id);
     }
 
-    public function delete(int $id): bool
+    public static function delete(int $id): int
     {
         return parent::delete($id);
     }
