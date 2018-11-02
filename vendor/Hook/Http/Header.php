@@ -108,9 +108,9 @@ class Header
         readfile($file);
     }
 
-    public static function setCharset($charset = 'utf-8')
+    public static function setCharset(string $contentType = 'application/json', string $charset = 'utf-8')
     {
-        header('Content-Type: text/html; charset=' . $charset);
+        header('Content-Type: '.$contentType.'; charset=' . $charset);
     }
 
     public static function setPageCache($etag, $expire = 3600)
@@ -134,9 +134,9 @@ class Header
         header('Pragma: no-cache');
     }
 
-    public static function setStatus($code)
+    public static function setStatus(int $status)
     {
-        header($_SERVER['SERVER_PROTOCOL'] . ' ' . $code . ' ' . self::$httpResponseCode[$code]);
+        header($_SERVER['SERVER_PROTOCOL'] . ' ' . $status. ' ' . self::$httpResponseCode[$status]);
     }
 
     public static function setCrossDomain($allow)
@@ -149,11 +149,6 @@ class Header
         foreach ($cookie as $name => $data) {
             header('Set-Cookie: ' . $name . '=' . rawurlencode(current((array) $data)) . '; Domain=.' . (isset($data['domain']) ? $data['domain'] : $_SERVER['HTTP_HOST']) . '; Max-Age=' . (isset($data['age']) ? (int) $data['age'] : 3600) . '; Path=' . (isset($data['path']) ? $data['path'] : '/') . (empty($data['secure']) ? '' : '; Secure') . (empty($data['http']) ? '' : '; HttpOnly') . '', false);
         }
-    }
-
-    public static function encrypt($account)
-    {
-        return md5(gzdeflate(base64_encode(md5(gzdeflate(base64_encode(md5($account))))))) . '+' . md5(gzdeflate($account));
     }
 
     public static function validate($account, $msg = 'Welcome to here, Pls enter the authentication key as the login.')

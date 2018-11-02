@@ -1,4 +1,6 @@
 <?php
+use Hook\Http\Header;
+
 abstract class AbstractController extends Yaf\Controller_Abstract
 {
     public $result = [];
@@ -42,5 +44,12 @@ abstract class AbstractController extends Yaf\Controller_Abstract
 
             $this->result[$field] = $result;
         }
+    }
+
+    public function send($data = [], int $status = 200, int $code = 10000, string $msg = '')
+    {
+        Header::setCharset();
+        Header::setStatus($status);
+        echo json_encode(['id' => mt_rand(), 'code' => $code, 'msg' => $msg, 'data' => $data]);
     }
 }
