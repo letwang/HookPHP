@@ -1,7 +1,7 @@
 <?php
 use Hook\Db\{PdoConnect,Table};
 
-class ObjectModel
+abstract class AbstractModel
 {
     public $table = '';
     public $foreign = '';

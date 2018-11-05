@@ -18,4 +18,28 @@
         <?php require APP_ROOT.'/views/'.APP_THEME.'/foot.phtml';?>
     </main>
 </div>
+<script type="text/javascript">advanceDataTables.init('/api/config/v1/', [
+    { data: 'id', className: 'col-checker align-middle', orderable: false, searchable: false },
+    { data: { _: 'app_id', sort: 'app_id', search: 'app_id' }, className: 'align-middle' },
+    { data: 'date_add', className: 'align-middle' },
+    { data: 'date_upd', className: 'align-middle' },
+    { data: 'name', className: 'align-middle' },
+    { data: 'value', className: 'align-middle' },
+    { data: 'id', className: 'align-middle text-right', orderable: false, searchable: false }
+], {
+    targets: 0,
+    render: function render(data, type, row, meta) {
+      return '<div class="custom-control custom-control-nolabel custom-checkbox">\n<input type="checkbox" class="custom-control-input" name="selectedRow[]" id="p' + row.id + '" value="' + row.id + '">\n<label class="custom-control-label" for="p' + row.id + '"></label>\n</div>';
+    }
+  }, {
+    targets: 1,
+    render: function render(data, type, row, meta) {
+      return '<a href="#' + row.id + '" class="tile tile-img mr-1">\n</a>\n<a href="#' + row.id + '">' + row.name + '</a>';
+    }
+  }, {
+    targets: 6,
+    render: function render(data, type, row, meta) {
+      return '<a class="btn btn-sm btn-secondary" href="#' + data + '"><i class="fa fa-pencil-alt"></i></a>\n<a class="btn btn-sm btn-secondary" href="#' + data + '"><i class="far fa-trash-alt"></i></a>';
+    }
+  });</script>
 <?php require APP_ROOT.'/views/'.APP_THEME.'/bottom.phtml';?>

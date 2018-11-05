@@ -1,5 +1,7 @@
 <?php
-class AclResourceModel extends ObjectModel
+namespace Acl;
+
+class ResourceModel extends \AbstractModel
 {
     public $table = 'hp_acl_resource';
     public $foreign = 'resource_id';

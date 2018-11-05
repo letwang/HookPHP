@@ -1,11 +1,10 @@
 <?php
-use Hook\Db\RedisConnect;
-use Hook\Db\PdoConnect;
+use Hook\Db\{RedisConnect, PdoConnect, Table};
 use Hook\Sql\Menu;
 use Hook\Cache\Cache;
 use Hook\Data\ArrayUtils;
 
-class MenuModel extends ObjectModel
+class MenuModel extends AbstractModel
 {
     public $table = 'hp_menu';
     public $foreign = 'menu_id';
@@ -15,7 +14,7 @@ class MenuModel extends ObjectModel
         parent::__construct();
     }
 
-    public static function getAll(): array
+    public static function classify(): array
     {
         $data = &Cache::static(__METHOD__);
         if ($data !== null) {
@@ -33,6 +32,12 @@ class MenuModel extends ObjectModel
         }
         $data = $redis->get($key);
         return $data;
+    }
+
+    public function all(): array
+    {
+        $data = new Table($this->table);
+        return $data->read(['COLUMN' => '*']);
     }
 
     public function add(): int

@@ -1,10 +1,10 @@
 <?php
-class ConfigController extends AbstractController
+class MenuController extends AbstractController
 {
     public function init()
     {
         parent::init();
-        $this->model = new ConfigModel();
+        $this->model = new MenuModel();
     }
 
     public function GETAction()

@@ -19,6 +19,7 @@
 			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
 			<p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
 			<input type="hidden" name="referer" value="<?php echo $this->referer;?>" />
+			<input type="hidden" name="token" value="<?php echo md5(uniqid(mt_rand(), true));?>" />
 		</form>
 	</div>
 <?php require APP_ROOT.'/views/'.APP_THEME.'/bottom.phtml';?>

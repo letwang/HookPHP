@@ -11,8 +11,8 @@ abstract class AbstractController extends Yaf\Controller_Abstract
     {
         if ($this->_request->module === 'Api') {
             Dispatcher::getInstance()->autoRender(false);
-            $this->_request->setParam('version', $this->_request->action);
-            $this->_request->action = $this->_request->method;
+            $this->_request->setParam('version', $this->_request->action)->setActionName($this->_request->method);
+            return false;
         }
 
         $viewPath = '';
@@ -38,7 +38,7 @@ abstract class AbstractController extends Yaf\Controller_Abstract
             throw new Exception(l('security.csrf'));
         }
 
-        $this->_view->assign(['menus' => MenuModel::getAll()]);
+        $this->_view->assign(['menus' => MenuModel::classify()]);
 
         if (!isset($this->definition[$this->_request->action])) {
             return false;

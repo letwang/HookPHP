@@ -9,6 +9,11 @@ class Bootstrap extends Bootstrap_Abstract
 
         $dispatcher->registerPlugin(new HookPlugin());
 
+        $request = $dispatcher->getRequest();
+        if (!$request->isGet()) {
+            $dispatcher->setDefaultAction($request->getMethod());
+        }
+
         //Loader::getInstance()->registerLocalNamespace('Hook');
     }
 }

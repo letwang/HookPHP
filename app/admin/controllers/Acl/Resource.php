@@ -8,7 +8,7 @@ class Acl_ResourceController extends AbstractController
 
     public function postAction()
     {
-        $resource = new AdminAclResourceModel();
+        $resource = new Acl\ResourceModel();
         $resource->add();
     }
 }
