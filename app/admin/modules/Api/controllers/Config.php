@@ -3,9 +3,24 @@ use Hook\Db\Table;
 
 class ConfigController extends AbstractController
 {
-    public function indexAction()
+    public function GETAction()
     {
         $data = new Table('hp_config');
-        exit($this->send($data->read(['COLUMN' => '*'])));
+        return $this->send($data->read(['COLUMN' => '*']));
+    }
+
+    public function POSTAction()
+    {
+        return $this->send();
+    }
+
+    public function PUTAction()
+    {
+        return $this->send();
+    }
+
+    public function DELETEAction()
+    {
+        return $this->send();
     }
 }

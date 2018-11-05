@@ -1,5 +1,6 @@
 <?php
 use Hook\Http\Header;
+use Yaf\Dispatcher;
 
 abstract class AbstractController extends Yaf\Controller_Abstract
 {
@@ -8,6 +9,12 @@ abstract class AbstractController extends Yaf\Controller_Abstract
 
     public function init()
     {
+        if ($this->_request->module === 'Api') {
+            Dispatcher::getInstance()->autoRender(false);
+            $this->_request->setParam('version', $this->_request->action);
+            $this->_request->action = $this->_request->method;
+        }
+
         $viewPath = '';
         if ($this->_request->module !== 'Index') {
             $viewPath = 'modules/'.$this->_request->module;
