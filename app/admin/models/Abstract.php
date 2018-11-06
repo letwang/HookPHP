@@ -82,7 +82,7 @@ abstract class AbstractModel
         return false;
     }
 
-    public static function delete(int $id): int
+    public function delete(int $id): int
     {
         return PdoConnect::getInstance()->delete('DELETE FROM `'.$this->table.'` WHERE `id`=?', [$id]);
     }

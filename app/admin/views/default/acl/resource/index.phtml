@@ -1,42 +1,33 @@
-<?php
-use Hook\Form\Form;
-
-require APP_ROOT.'/views/'.APP_THEME.'/top.phtml';
-?>
-
-<link href="css/login.css" rel="stylesheet" />
+<?php require APP_ROOT.'/views/'.APP_THEME.'/top.phtml';?>
 <title><?php echo $this->title;?></title>
 <meta name="description" content="<?php echo $this->description;?>" />
 <meta name="keywords" content="<?php echo $this->keywords;?>" />
 </head>
 <body>
-<div class="container">
-	<?php echo Form::form('acl', '/adminaclresource', 'post', 'class="needs-validation" novalidate');?>
-	<div class="form-group">
-	<?php echo Form::label('app').Form::input('app', '', 'required class="form-control"');?>
-	<div class="invalid-feedback"><?php echo l('tips.required')?></div>
-	</div>
-	<div class="form-group">
-	<?php echo Form::label('module').Form::input('module', '', 'required class="form-control"');?>
-	<div class="invalid-feedback"><?php echo l('tips.required')?></div>
-	</div>
-	<div class="form-group">
-	<?php echo Form::label('controller').Form::input('controller', '', 'required class="form-control"');?>
-	<div class="invalid-feedback"><?php echo l('tips.required')?></div>
-	</div>
-	<div class="form-group">
-	<?php echo Form::label('action').Form::input('action', '', 'required class="form-control"');?>
-	<div class="invalid-feedback"><?php echo l('tips.required')?></div>
-	</div>
-	<div class="form-group">
-	<?php echo Form::label('status').Form::select('status', [0, 1], 1, 'required class="form-control"');?>
-	<div class="invalid-feedback"><?php echo l('tips.required')?></div>
-	</div>
-	<div class="form-group">
-	<?php echo Form::label('name').Form::input('name', '', 'required class="form-control"');?>
-	<div class="invalid-feedback"><?php echo l('tips.required')?></div>
-	</div>
-	<?php echo Form::submit('submit', 'class="btn btn-primary"');?>
-	</form>
+<div class="app">
+    <?php require APP_ROOT.'/views/'.APP_THEME.'/head.phtml';?>
+    <?php require APP_ROOT.'/views/'.APP_THEME.'/left.phtml';?>
+    <main class="app-main">
+        <div class="wrapper">
+          <div class="page">
+            <div class="page-inner">
+              <?php require APP_ROOT.'/views/'.APP_THEME.'/table.phtml';?>
+            </div>
+          </div>
+        </div>
+        <?php require APP_ROOT.'/views/'.APP_THEME.'/foot.phtml';?>
+    </main>
 </div>
+<script type="text/javascript">advanceDataTables.init('/api/acl_resource/v1/', [
+{data:'id', className:'col-checker align-middle', orderable: false, searchable: false},
+{title:'status', data:'status', className:'align-middle'},
+{title:'date_add', data:'date_add', className:'align-middle'},
+{title:'date_upd', data:'date_upd', className:'align-middle'},
+{title:'app', data:'app', className:'align-middle'},
+{title:'module', data:'module', className:'align-middle'},
+{title:'controller', data:'controller', className:'align-middle'},
+{title:'action', data:'action', className:'align-middle'},
+{title:'name', data:'name', className:'align-middle'},
+{data:'id', className:'align-middle text-right', orderable: false, searchable: false}
+]);</script>
 <?php require APP_ROOT.'/views/'.APP_THEME.'/bottom.phtml';?>

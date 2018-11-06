@@ -5,22 +5,26 @@
 </head>
 <body>
 <div class="app">
-  <?php require APP_ROOT.'/views/'.APP_THEME.'/head.phtml';?>
-  <?php require APP_ROOT.'/views/'.APP_THEME.'/left.phtml';?>
-  <main class="app-main">
-    <div class="wrapper">
-      <div class="page">
-        <div class="page-inner">
-          <header class="page-title-bar">
-            <!-- page title stuff goes here -->
-          </header>
-          <div class="page-section">
-            <?php echo $this->test;?>
+    <?php require APP_ROOT.'/views/'.APP_THEME.'/head.phtml';?>
+    <?php require APP_ROOT.'/views/'.APP_THEME.'/left.phtml';?>
+    <main class="app-main">
+        <div class="wrapper">
+          <div class="page">
+            <div class="page-inner">
+              <?php require APP_ROOT.'/views/'.APP_THEME.'/table.phtml';?>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-    <?php require APP_ROOT.'/views/'.APP_THEME.'/foot.phtml';?>
-  </main>
+        <?php require APP_ROOT.'/views/'.APP_THEME.'/foot.phtml';?>
+    </main>
 </div>
+<script type="text/javascript">advanceDataTables.init('/api/app/v1/', [
+{data:'id', className:'col-checker align-middle', orderable: false, searchable: false},
+{title:'status', data:'status', className:'align-middle'},
+{title:'date_add', data:'date_add', className:'align-middle'},
+{title:'date_upd', data:'date_upd', className:'align-middle'},
+{title:'name', data:'name', className:'align-middle'},
+{title:'description', data:'description', className:'align-middle'},
+{data:'id', className:'align-middle text-right', orderable: false, searchable: false}
+]);</script>
 <?php require APP_ROOT.'/views/'.APP_THEME.'/bottom.phtml';?>

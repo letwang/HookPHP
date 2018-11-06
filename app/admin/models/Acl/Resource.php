@@ -1,5 +1,7 @@
 <?php
 namespace Acl;
+use Hook\Db\PdoConnect;
+use Hook\Sql\Acl;
 
 class ResourceModel extends \AbstractModel
 {
@@ -8,7 +10,7 @@ class ResourceModel extends \AbstractModel
 
     public function __construct()
     {
-        $this->validate = [
+        /*$this->validate = [
             'app' => [
                 'type' => INPUT_POST, 'filter' => FILTER_VALIDATE_REGEXP,
                 'options' => ['options' => ['regexp' => '/^[[:alpha:]]{'.APP_TABLE[$this->table]['app']['min'].','.APP_TABLE[$this->table]['app']['max'].'}$/']]
@@ -33,8 +35,13 @@ class ResourceModel extends \AbstractModel
                 'type' => INPUT_POST, 'filter' => FILTER_VALIDATE_REGEXP, 'lang' => true,
                 'options' => ['options' => ['regexp' => '/^[[:alpha:]]{'.APP_TABLE[$this->table.'_lang']['name']['min'].','.APP_TABLE[$this->table.'_lang']['name']['max'].'}$/u']]
             ]
-        ];
+        ];*/
         parent::__construct();
+    }
+
+    public function all(): array
+    {
+        return PdoConnect::getInstance()->fetchAll(Acl::SQL_GET_RESOURCE, [$_SESSION[APP_NAME]['lang_id'], 1]);
     }
 
     public function add(): int
@@ -47,7 +54,7 @@ class ResourceModel extends \AbstractModel
         return parent::update($id);
     }
 
-    public static function delete(int $id): int
+    public function delete(int $id): int
     {
         return parent::delete($id);
     }

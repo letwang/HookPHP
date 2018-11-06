@@ -1,5 +1,7 @@
 <?php
 namespace Acl;
+use Hook\Db\PdoConnect;
+use Hook\Sql\Acl;
 
 class GroupModel extends \AbstractModel
 {
@@ -12,6 +14,11 @@ class GroupModel extends \AbstractModel
         parent::__construct();
     }
 
+    public function all(): array
+    {
+        return PdoConnect::getInstance()->fetchAll(Acl::SQL_GET_GROUP, [$_SESSION[APP_NAME]['lang_id'], 1]);
+    }
+
     public function add(): int
     {
         return parent::add();
@@ -22,7 +29,7 @@ class GroupModel extends \AbstractModel
         return parent::update($id);
     }
 
-    public static function delete(int $id): int
+    public function delete(int $id): int
     {
         return parent::delete($id);
     }

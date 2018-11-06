@@ -1,5 +1,6 @@
 <?php
 namespace User;
+use Hook\Db\Table;
 
 class IndexModel extends \AbstractModel
 {
@@ -12,6 +13,12 @@ class IndexModel extends \AbstractModel
         parent::__construct();
     }
 
+    public function all(): array
+    {
+        $data = new Table($this->table);
+        return $data->read(['COLUMN' => '*']);
+    }
+
     public function add(): int
     {
         return parent::add();
@@ -22,7 +29,7 @@ class IndexModel extends \AbstractModel
         return parent::update($id);
     }
 
-    public static function delete(int $id): int
+    public function delete(int $id): int
     {
         return parent::delete($id);
     }

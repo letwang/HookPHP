@@ -27,7 +27,7 @@ class ConfigModel extends AbstractModel
         return parent::update($id);
     }
 
-    public static function delete(int $id): int
+    public function delete(int $id): int
     {
         return parent::delete($id);
     }

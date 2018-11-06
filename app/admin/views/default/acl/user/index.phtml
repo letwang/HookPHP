@@ -1,10 +1,29 @@
 <?php require APP_ROOT.'/views/'.APP_THEME.'/top.phtml';?>
-
-<link href="css/login.css" rel="stylesheet" />
 <title><?php echo $this->title;?></title>
 <meta name="description" content="<?php echo $this->description;?>" />
 <meta name="keywords" content="<?php echo $this->keywords;?>" />
 </head>
 <body>
-	<h1><a href="login/out/"><?php echo $this->test;?></a></h1>
+<div class="app">
+    <?php require APP_ROOT.'/views/'.APP_THEME.'/head.phtml';?>
+    <?php require APP_ROOT.'/views/'.APP_THEME.'/left.phtml';?>
+    <main class="app-main">
+        <div class="wrapper">
+          <div class="page">
+            <div class="page-inner">
+              <?php require APP_ROOT.'/views/'.APP_THEME.'/table.phtml';?>
+            </div>
+          </div>
+        </div>
+        <?php require APP_ROOT.'/views/'.APP_THEME.'/foot.phtml';?>
+    </main>
+</div>
+<script type="text/javascript">advanceDataTables.init('/api/acl_user/v1/', [
+{data:'id', className:'col-checker align-middle', orderable: false, searchable: false},
+{title:'user_id', data:'user_id', className:'align-middle'},
+{title:'role_id', data:'role_id', className:'align-middle'},
+{title:'status', data:'status', className:'align-middle'},
+{title:'date_add', data:'date_add', className:'align-middle'},
+{data:'id', className:'align-middle text-right', orderable: false, searchable: false}
+]);</script>
 <?php require APP_ROOT.'/views/'.APP_THEME.'/bottom.phtml';?>

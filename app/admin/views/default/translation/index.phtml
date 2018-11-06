@@ -1,10 +1,30 @@
 <?php require APP_ROOT.'/views/'.APP_THEME.'/top.phtml';?>
-
-<link href="css/login.css" rel="stylesheet" />
 <title><?php echo $this->title;?></title>
 <meta name="description" content="<?php echo $this->description;?>" />
 <meta name="keywords" content="<?php echo $this->keywords;?>" />
 </head>
 <body>
-	<h1><a href="login/out/"><?php echo $this->test;?></a></h1>
+<div class="app">
+    <?php require APP_ROOT.'/views/'.APP_THEME.'/head.phtml';?>
+    <?php require APP_ROOT.'/views/'.APP_THEME.'/left.phtml';?>
+    <main class="app-main">
+        <div class="wrapper">
+          <div class="page">
+            <div class="page-inner">
+              <?php require APP_ROOT.'/views/'.APP_THEME.'/table.phtml';?>
+            </div>
+          </div>
+        </div>
+        <?php require APP_ROOT.'/views/'.APP_THEME.'/foot.phtml';?>
+    </main>
+</div>
+<script type="text/javascript">advanceDataTables.init('/api/translation/v1/', [
+{data:'id', className:'col-checker align-middle', orderable: false, searchable: false},
+{title:'id_lang_from', data:'id_lang_from', className:'align-middle'},
+{title:'id_lang_to', data:'id_lang_to', className:'align-middle'},
+{title:'key_crc32', data:'key_crc32', className:'align-middle'},
+{title:'key', data:'key', className:'align-middle'},
+{title:'data', data:'data', className:'align-middle'},
+{data:'id', className:'align-middle text-right', orderable: false, searchable: false}
+]);</script>
 <?php require APP_ROOT.'/views/'.APP_THEME.'/bottom.phtml';?>

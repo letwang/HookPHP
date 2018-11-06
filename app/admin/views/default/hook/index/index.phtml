@@ -1,10 +1,31 @@
 <?php require APP_ROOT.'/views/'.APP_THEME.'/top.phtml';?>
-
-<link href="css/login.css" rel="stylesheet" />
 <title><?php echo $this->title;?></title>
 <meta name="description" content="<?php echo $this->description;?>" />
 <meta name="keywords" content="<?php echo $this->keywords;?>" />
 </head>
 <body>
-	<h1><a href="login/out/"><?php echo $this->test;?></a></h1>
+<div class="app">
+    <?php require APP_ROOT.'/views/'.APP_THEME.'/head.phtml';?>
+    <?php require APP_ROOT.'/views/'.APP_THEME.'/left.phtml';?>
+    <main class="app-main">
+        <div class="wrapper">
+          <div class="page">
+            <div class="page-inner">
+              <?php require APP_ROOT.'/views/'.APP_THEME.'/table.phtml';?>
+            </div>
+          </div>
+        </div>
+        <?php require APP_ROOT.'/views/'.APP_THEME.'/foot.phtml';?>
+    </main>
+</div>
+<script type="text/javascript">advanceDataTables.init('/api/hook_index/v1/', [
+{data:'id', className:'col-checker align-middle', orderable: false, searchable: false},
+{title:'position', data:'position', className:'align-middle'},
+{title:'date_add', data:'date_add', className:'align-middle'},
+{title:'date_upd', data:'date_upd', className:'align-middle'},
+{title:'name', data:'name', className:'align-middle'},
+{title:'title', data:'title', className:'align-middle'},
+{title:'description', data:'description', className:'align-middle'},
+{data:'id', className:'align-middle text-right', orderable: false, searchable: false}
+]);</script>
 <?php require APP_ROOT.'/views/'.APP_THEME.'/bottom.phtml';?>
