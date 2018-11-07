@@ -1,14 +1,14 @@
 <?php require APP_ROOT.'/views/'.APP_THEME.'/top.phtml';?>
 
-<link href="css/login.css" rel="stylesheet" />
+<link href="/css/login.css" rel="stylesheet" />
 <title><?php echo $this->title;?></title>
 <meta name="description" content="<?php echo $this->description;?>" />
 <meta name="keywords" content="<?php echo $this->keywords;?>" />
 </head>
 <body class="text-center">
 	<div class="container">
-		<form class="form-signin" role="form" method="post" action="login">
-		    <img class="mb-4" src="assets/images/brand.png" />
+		<form class="form-signin" role="form" method="post" action="/login">
+		    <img class="mb-4" src="/assets/images/brand.png" />
 			<h2 class="form-signin-heading">Please sign in</h2>
 			<input type="email" name="user" class="form-control" placeholder="Email address" required autofocus>
 			<br />
