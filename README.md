@@ -21,7 +21,7 @@
 sudo apt-get install php7.3-common php7.3-cli php7.3-bcmath php7.3-dev php7.3-xml php7.3-opcache php7.3-mbstring php7.3-mysql php7.3-fpm php7.3-gd php7.3-zip php7.3-curl php7.3-intl php7.3-json
 ```
 ### [C Extensions]
-#### [Yaf 3.0.7][6]
+#### [Yaf][6]
 [6]: http://php.net/yaf
 ```
 sudo pecl install yaf
@@ -32,7 +32,7 @@ yaf.use_namespace = 1
 yaf.use_spl_autoload = 1
 yaf.library = /home/letwang/workspace/HookPHP/vendor/
 ```
-#### [Yaconf 1.0.7][7]
+#### [Yaconf][7]
 [7]: http://php.net/yaconf
 ```
 sudo pecl install yaconf
@@ -41,7 +41,7 @@ sudo pecl install yaconf
 extension=yaconf
 yaconf.directory = /home/letwang/workspace/HookPHP/conf/
 ```
-#### [gRPC 1.16.0][19]
+#### [gRPC][19]
 [19]: https://grpc.io/docs/quickstart/php.html
 ```
 sudo pecl install grpc
@@ -49,7 +49,7 @@ sudo pecl install grpc
 [grpc]
 extension=grpc
 ```
-#### [SeasLog 1.8.6][3]
+#### [SeasLog][3]
 [3]: http://php.net/manual/zh/book.seaslog.php
 ```
 sudo pecl install seaslog
@@ -174,9 +174,23 @@ extension=mongodb
 [17]: https://docs.mongodb.com/manual/core/sharded-cluster-components/
 ## [RabbitMQ 3.7.8][4]
 [4]: http://www.rabbitmq.com/
-## [AMQP 1.9.3][5]
+```
+sudo apt-get install erlang-nox
+wget https://dl.bintray.com/rabbitmq/all/rabbitmq-server/3.7.8/rabbitmq-server_3.7.8-1_all.deb
+sudo rabbitmq-server start
+sudo rabbitmqctl status
+sudo rabbitmq-plugins enable rabbitmq_management
+```
+## [AMQP][5]
 [5]: http://www.php.net/manual/pl/book.amqp.php
 ```
+wget https://github.com/alanxz/rabbitmq-c/archive/v0.9.0.zip
+cd rabbitmq-c-0.9.0
+mkdir build && cd build
+cmake ..
+cmake --build .
+cmake -DCMAKE_INSTALL_PREFIX=/usr/local ..
+cmake --build . --target install
 sudo pecl install amqp
 
 [amqp]
@@ -190,6 +204,14 @@ wget -P /home/sphinx http://sphinxsearch.com/files/sphinx-3.0.3-facc3fb-linux-am
 ## [Varnish 6.1.0][12]
 [12]: https://varnish-cache.org/
 ```
+curl -L https://packagecloud.io/varnishcache/varnish61/gpgkey | sudo apt-key add -
+echo "deb https://packagecloud.io/varnishcache/varnish61/ubuntu/ xenial main\ndeb-src https://packagecloud.io/varnishcache/varnish61/ubuntu xenial main" | sudo tee /etc/apt/sources.list.d/varnishcache_varnish61.list
+
+sudo apt-get update
+sudo apt-get install varnish
+
+sudo apt-get install libvarnishapi1
+sudo apt-get install libvarnishapi-dev
 sudo pecl install varnish
 
 [varnish]
