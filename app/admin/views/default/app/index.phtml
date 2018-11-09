@@ -21,8 +21,8 @@
 <script type="text/javascript">advanceDataTables.init('/api/app/v1/', [
 {data:'id', className:'col-checker align-middle', orderable: false, searchable: false},
 {title:'status', data:'status', className:'align-middle'},
-{title:'date_add', data:'date_add', className:'align-middle'},
-{title:'date_upd', data:'date_upd', className:'align-middle'},
+{title:'date_add', data:'date_add', render: function c(data){return timeStampToDate(data);}, className:'align-middle'},
+{title:'date_upd', data:'date_upd', render: function c(data){return timeStampToDate(data);}, c:'align-middle'},
 {title:'name', data:'name', className:'align-middle'},
 {title:'description', data:'description', className:'align-middle'},
 {data:'id', className:'align-middle text-right', orderable: false, searchable: false}

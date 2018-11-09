@@ -21,8 +21,8 @@
 <script type="text/javascript">advanceDataTables.init('/api/acl_resource/v1/', [
 {data:'id', className:'col-checker align-middle', orderable: false, searchable: false},
 {title:'status', data:'status', className:'align-middle'},
-{title:'date_add', data:'date_add', className:'align-middle'},
-{title:'date_upd', data:'date_upd', className:'align-middle'},
+{title:'date_add', data:'date_add', render: function c(data){return timeStampToDate(data);}, className:'align-middle'},
+{title:'date_upd', data:'date_upd', render: function c(data){return timeStampToDate(data);}, c:'align-middle'},
 {title:'app', data:'app', className:'align-middle'},
 {title:'module', data:'module', className:'align-middle'},
 {title:'controller', data:'controller', className:'align-middle'},

@@ -23,7 +23,7 @@
 {title:'user_id', data:'user_id', className:'align-middle'},
 {title:'role_id', data:'role_id', className:'align-middle'},
 {title:'status', data:'status', className:'align-middle'},
-{title:'date_add', data:'date_add', className:'align-middle'},
+{title:'date_add', data:'date_add', render: function c(data){return timeStampToDate(data);}, className:'align-middle'},
 {data:'id', className:'align-middle text-right', orderable: false, searchable: false}
 ]);</script>
 <?php require APP_ROOT.'/views/'.APP_THEME.'/bottom.phtml';?>
