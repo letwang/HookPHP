@@ -21,12 +21,12 @@ class MenuModel extends AbstractModel
             return $data;
         }
         $redis = RedisConnect::getInstance()->redis;
-        $key = 'cache:'.md5(Menu::SQL_GET_MENUS);
+        $key = 'cache:'.md5(Menu::GET_ALL);
         if (!$redis->exists($key)) {
             $utils = new ArrayUtils();
             $utils->idKey = 'id';
             $utils->parentIdKey = 'parent';
-            $data = $utils->classify(PdoConnect::getInstance()->fetchAll(Menu::SQL_GET_MENUS));
+            $data = $utils->classify(PdoConnect::getInstance()->fetchAll(Menu::GET_ALL));
             $redis->set($key, $data);
             return $data;
         }

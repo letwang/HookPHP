@@ -16,7 +16,7 @@ class LoginController extends AbstractController
         $referer = $this->getRequest()->getPost('referer', '/');
         
         $login = PdoConnect::getInstance()->fetch(
-            Hook\Sql\Login::SQL_LOGIN,
+            Hook\Sql\Login::GET_MANAGER,
             [$user, $user, $user]
         );
         $login['language_code'] = 'zh-cn';

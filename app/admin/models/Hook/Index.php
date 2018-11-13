@@ -16,7 +16,7 @@ class IndexModel extends \AbstractModel
 
     public function all(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Hook::SQL_GET_ALL, [$_SESSION[APP_NAME]['lang_id']]);
+        return PdoConnect::getInstance()->fetchAll(Hook::GET_ALL, [$_SESSION[APP_NAME]['lang_id']]);
     }
 
     public function add(): int

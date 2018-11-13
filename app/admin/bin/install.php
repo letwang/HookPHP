@@ -13,13 +13,13 @@ echo "删除数据库 \e[32m 成功 \e[0m\n", PHP_EOL;
 PdoConnect::getInstance()->query('CREATE DATABASE `'.APP_CONFIG['mysql'][$name]['dbname'].'`');
 echo "创建数据库 \e[32m 成功 \e[0m\n", PHP_EOL;
 
-PdoConnect::getInstance($name, 'new')->query(Install::SQL_TABLES);
+PdoConnect::getInstance($name, 'new')->query(Install::CREATE_DATA);
 echo "初始化数据库 \e[32m 成功 \e[0m\n", PHP_EOL;
 
 $app->execute('main', $name);
 function main($name) {
     $data = '';
-    $tables = PdoConnect::getInstance($name, 'new')->fetchAll(Init::SQL_ALL_TABLES, [], PDO::FETCH_NUM);
+    $tables = PdoConnect::getInstance($name, 'new')->fetchAll(Table::GET_ALL, [], PDO::FETCH_NUM);
     foreach ($tables as list($tableName)) {
         $table = new Table($tableName);
         $data .= '['.$tableName.']'.PHP_EOL;

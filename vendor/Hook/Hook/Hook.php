@@ -14,9 +14,9 @@ class Hook
             return $data;
         }
         $redis = RedisConnect::getInstance()->redis;
-        $key = 'cache:'.md5(\Hook\Sql\Module::SQL_GET_MODULES_FOR_HOOK);
+        $key = 'cache:'.md5(\Hook\Sql\Module::GET_ALL);
         if (!$redis->exists($key)) {
-            $data = PdoConnect::getInstance()->fetchAll(\Hook\Sql\Module::SQL_GET_MODULES_FOR_HOOK, [], \PDO::FETCH_COLUMN | \PDO::FETCH_GROUP);
+            $data = PdoConnect::getInstance()->fetchAll(\Hook\Sql\Module::GET_ALL, [], \PDO::FETCH_COLUMN | \PDO::FETCH_GROUP);
             $redis->set($key, $data);
             return $data;
         }

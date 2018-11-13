@@ -30,5 +30,50 @@
 {title:'lastname', data:'lastname', className:'align-middle'},
 {title:'firstname', data:'firstname', className:'align-middle'},
 {data:'id', className:'align-middle text-right', orderable: false, searchable: false}
-]);</script>
+]);
+
+var editor; // use a global for the submit and return data rendering in the examples
+
+$(document).ready(function() {
+    editor = new $.fn.dataTable.Editor( {
+        ajax: '/api/user_index/v1/',
+        table: "#myTable",
+        fields: [ {
+                label: "lang_id",
+                name: "lang_id"
+            }, {
+                label: "status",
+                name: "status"
+            }, {
+                label: "date_add",
+                name: "date_add"
+            }, {
+                label: "date_upd",
+                name: "date_upd"
+            }, {
+                label: "user",
+                name: "user"
+            }, {
+                label: "email",
+                name: "email",
+            }, {
+                label: "phone",
+                name: "phone"
+            }, {
+                label: "lastname",
+                name: "lastname"
+            }, {
+                label: "firstname",
+                name: "firstname"
+            }
+        ]
+    } );
+
+    $('#myTable').on( 'click', 'tbody td:not(:first-child)', function (e) {
+        editor.inline( this, {
+            onBlur: 'submit'
+        } );
+    } );
+} );
+</script>
 <?php require APP_ROOT.'/views/'.APP_THEME.'/bottom.phtml';?>

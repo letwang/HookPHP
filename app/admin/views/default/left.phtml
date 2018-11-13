@@ -29,8 +29,8 @@
   <section class="aside-menu has-scrollable">
     <nav id="stacked-menu" class="stacked-menu">
       <ul class="menu">
-        <li class="menu-item has-active">
-          <a href="" class="menu-link">
+        <li class="menu-item">
+          <a href="/" class="menu-link">
             <span class="menu-icon oi oi-dashboard"></span>
             <span class="menu-text">Dashboard</span>
             <span class="badge badge-success">20+</span>
@@ -43,11 +43,15 @@
             <span class="menu-text"><?php echo $menu['name'];?></span>
           </a>
           <ul class="menu">
-          <?php foreach ($menu['childs'] as $menu){?>
-    <li class="menu-item"><a href="<?php echo $menu['url'];?>" class="menu-link"><?php echo $menu['name'];?></a></li>
+          <?php
+          foreach ($menu['childs'] as $menu){
+              $active = strpos($this->uri, $menu['url']) ? ' has-active': '';
+          ?>
+    <li class="menu-item<?php echo $active;?>"><a href="<?php echo $menu['url'];?>" class="menu-link"><?php echo $menu['name'];?></a></li>
           <?php }?></ul>
         </li>
         <?php }?>
+        <script>$('#stacked-menu').find('.has-active').parent().parent().addClass('has-active');</script>
       </ul>
     </nav>
   </section>

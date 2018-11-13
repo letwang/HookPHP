@@ -17,9 +17,9 @@ abstract class AbstractController extends Yaf\Controller_Abstract
 
         $viewPath = '';
         if ($this->_request->module !== 'Index') {
-            $viewPath = 'modules/'.$this->_request->module;
+            $viewPath = '/modules/'.$this->_request->module;
         }
-        $this->_view->setScriptPath(APP_ROOT.'/'.$viewPath.'/views/'.APP_THEME.'/');
+        $this->_view->setScriptPath(APP_ROOT.$viewPath.'/views/'.APP_THEME.'/');
 
         $this->_view->assign(['title' => l('application.title'), 'keywords' => l('application.keywords'), 'description' => l('application.description')]);
 
@@ -37,8 +37,7 @@ abstract class AbstractController extends Yaf\Controller_Abstract
         if (!$this->_request->isGet() && $_SESSION[APP_NAME]['security']['token'] !== $this->_request->getPost('token')) {
             throw new Exception(l('security.csrf'));
         }
-
-        $this->_view->assign(['menus' => MenuModel::classify()]);
+        $this->_view->assign(['uri' => $this->_request->getRequestUri(), 'menus' => MenuModel::classify()]);
 
         if (!isset($this->definition[$this->_request->action])) {
             return false;

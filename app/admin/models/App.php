@@ -1,5 +1,6 @@
 <?php
-use Hook\Db\Table;
+use Hook\Db\PdoConnect;
+use Hook\Sql\App;
 
 class AppModel extends AbstractModel
 {
@@ -13,8 +14,7 @@ class AppModel extends AbstractModel
 
     public function all(): array
     {
-        $data = new Table($this->table);
-        return $data->read(['COLUMN' => '*']);
+        return PdoConnect::getInstance()->fetchAll(App::GET_All, [$_SESSION[APP_NAME]['lang_id']]);
     }
 
     public function add(): int

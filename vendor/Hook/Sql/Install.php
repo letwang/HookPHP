@@ -3,7 +3,7 @@ namespace Hook\Sql;
 
 class Install
 {
-    const SQL_TABLES = "
+    const CREATE_DATA = "
 CREATE TABLE `hp_acl_group` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `app_id` int(10) unsigned NOT NULL,
@@ -27,7 +27,7 @@ CREATE TABLE `hp_acl_group_lang` (
   CONSTRAINT `FK_000009` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_000012` FOREIGN KEY (`group_id`) REFERENCES `hp_acl_group` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-INSERT INTO `hp_acl_group_lang` VALUES (1,1,1,1493439330,1493439330,'华东地区订单授权');
+INSERT INTO `hp_acl_group_lang` VALUES (1,1,1,'华东地区订单授权');
 
 CREATE TABLE `hp_acl_group_resource` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -71,7 +71,7 @@ CREATE TABLE `hp_acl_resource_lang` (
   CONSTRAINT `FK_000010` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_000013` FOREIGN KEY (`resource_id`) REFERENCES `hp_acl_resource` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-INSERT INTO `hp_acl_resource_lang` VALUES (1,1,1,1493439330,1493439330,'订单列表查看'),(2,1,2,1493439330,1493439330,'订单退货编辑'),(3,1,3,1493439330,1493439330,'订单详情删除');
+INSERT INTO `hp_acl_resource_lang` VALUES (1,1,1,'订单列表查看'),(2,1,2,'订单退货编辑'),(3,1,3,'订单详情删除');
 
 CREATE TABLE `hp_acl_role` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -96,7 +96,7 @@ CREATE TABLE `hp_acl_role_lang` (
   CONSTRAINT `FK_000011` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_000014` FOREIGN KEY (`role_id`) REFERENCES `hp_acl_role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-INSERT INTO `hp_acl_role_lang` VALUES (1,1,1,1493439330,1493439330,'江苏办总经理'),(2,1,2,1493439330,1493439330,'上海办总经理'),(3,1,3,1493439330,1493439330,'昆山办经理'),(4,1,4,1493439330,1493439330,'苏州办总经理');
+INSERT INTO `hp_acl_role_lang` VALUES (1,1,1,'江苏办总经理'),(2,1,2,'上海办总经理'),(3,1,3,'昆山办经理'),(4,1,4,'苏州办总经理');
 
 CREATE TABLE `hp_acl_role_resource` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -145,23 +145,23 @@ CREATE TABLE `hp_app` (
   `status` tinyint(3) unsigned NOT NULL DEFAULT '1',
   `date_add` int(10) unsigned NOT NULL,
   `date_upd` int(10) unsigned NOT NULL,
-  `name` char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `description` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `name` char(16) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-INSERT INTO `hp_app` VALUES (1,1,1493439330,1493439330,'admin','平台中控系统，统一管理各大平台'),(2,1,1493439330,1493439330,'erp','ERP系统'),(3,1,1493439330,1493439330,'paas','PAAS系统');
+INSERT INTO `hp_app` VALUES (1,1,1493439330,1493439330,'admin'),(2,1,1493439330,1493439330,'erp'),(3,1,1493439330,1493439330,'paas');
 
 CREATE TABLE `hp_app_lang` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `app_id` int(10) unsigned NOT NULL,
   `lang_id` int(10) unsigned NOT NULL,
+  `description` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_000031` (`app_id`),
   KEY `FK_000035` (`lang_id`),
   CONSTRAINT `FK_000031` FOREIGN KEY (`app_id`) REFERENCES `hp_app` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_000035` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-INSERT INTO `hp_app_lang` VALUES (1,1,1),(2,2,1),(3,3,1);
+INSERT INTO `hp_app_lang` VALUES (1,1,1,'平台中控系统，统一管理各大平台'),(2,2,1,'ERP系统'),(3,3,1,'PAAS系统');
 
 CREATE TABLE `hp_config` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -204,7 +204,7 @@ CREATE TABLE `hp_hook_lang` (
   CONSTRAINT `FK_000015` FOREIGN KEY (`hook_id`) REFERENCES `hp_hook` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_000016` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-INSERT INTO `hp_hook_lang` VALUES (1,1,1,1493439330,1493439330,'头部钩子','这里显示头部的钩子','所有头部的钩子按顺序依次显示在这里。');
+INSERT INTO `hp_hook_lang` VALUES (1,1,1,'头部钩子','这里显示头部的钩子','所有头部的钩子按顺序依次显示在这里。');
 
 CREATE TABLE `hp_hook_module` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -273,8 +273,6 @@ CREATE TABLE `hp_menu_lang` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `menu_id` int(10) unsigned NOT NULL,
   `lang_id` int(10) unsigned NOT NULL,
-  `date_add` int(10) unsigned NOT NULL,
-  `date_upd` int(10) unsigned NOT NULL,
   `name` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   KEY `FK_000019` (`menu_id`,`lang_id`) USING BTREE,
@@ -282,7 +280,7 @@ CREATE TABLE `hp_menu_lang` (
   CONSTRAINT `FK_000019` FOREIGN KEY (`menu_id`) REFERENCES `hp_menu` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_000020` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-INSERT INTO `hp_menu_lang` VALUES (1,1,1,1493439330,1493439330,'用户管理'),(2,2,1,1493439330,1493439330,'用户'),(3,3,1,1493439330,1493439330,'权限管理'),(4,4,1,1493439330,1493439330,'权限'),(5,5,1,1493439330,1493439330,'资源'),(6,6,1,1493439330,1493439330,'角色'),(7,7,1,1493439330,1493439330,'用户'),(8,8,1,1493439330,1493439330,'分组'),(9,9,1,1493439330,1493439330,'配置管理'),(10,10,1,1493439330,1493439330,'配置'),(11,11,1,1493439330,1493439330,'翻译管理'),(12,12,1,1493439330,1493439330,'翻译'),(13,13,1,1493439330,1493439330,'超管管理'),(14,14,1,1493439330,1493439330,'超级管理员'),(15,15,1,1493439330,1493439330,'菜单管理'),(16,16,1,1493439330,1493439330,'菜单'),(17,17,1,1493439330,1493439330,'语言管理'),(18,18,1,1493439330,1493439330,'语言'),(19,19,1,1493439330,1493439330,'模块管理'),(20,20,1,1493439330,1493439330,'钩子'),(21,21,1,1493439330,1493439330,'模块'),(22,22,1,1493439330,1493439330,'模板管理'),(23,23,1,1493439330,1493439330,'模板'),(24,24,1,1493439330,1493439330,'平台管理'),(25,25,1,1493439330,1493439330,'平台');
+INSERT INTO `hp_menu_lang` VALUES (1,1,1,'用户管理'),(2,2,1,'用户'),(3,3,1,'权限管理'),(4,4,1,'权限'),(5,5,1,'资源'),(6,6,1,'角色'),(7,7,1,'用户'),(8,8,1,'分组'),(9,9,1,'配置管理'),(10,10,1,'配置'),(11,11,1,'翻译管理'),(12,12,1,'翻译'),(13,13,1,'超管管理'),(14,14,1,'超级管理员'),(15,15,1,'菜单管理'),(16,16,1,'菜单'),(17,17,1,'语言管理'),(18,18,1,'语言'),(19,19,1,'模块管理'),(20,20,1,'钩子'),(21,21,1,'模块'),(22,22,1,'模板管理'),(23,23,1,'模板'),(24,24,1,'平台管理'),(25,25,1,'平台');
 
 CREATE TABLE `hp_module` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
