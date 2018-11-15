@@ -39,14 +39,14 @@ class ResourceModel extends \AbstractModel
         parent::__construct();
     }
 
-    public function all(): array
+    public static function read(string $table, int $id = 0): array
     {
         return PdoConnect::getInstance()->fetchAll(Acl::GET_RESOURCE, [$_SESSION[APP_NAME]['lang_id'], 1]);
     }
 
-    public function add(): int
+    public function create(): int
     {
-        return parent::add();
+        return parent::create();
     }
 
     public function update(int $id): bool

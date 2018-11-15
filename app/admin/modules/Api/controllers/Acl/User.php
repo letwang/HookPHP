@@ -9,7 +9,7 @@ class Acl_UserController extends AbstractController
     
     public function GETAction()
     {
-        return $this->send($this->model->all());
+        return $this->send($this->model->read($this->model->table));
     }
     
     public function POSTAction()

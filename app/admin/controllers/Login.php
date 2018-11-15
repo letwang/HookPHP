@@ -19,7 +19,6 @@ class LoginController extends AbstractController
             Hook\Sql\Login::GET_MANAGER,
             [$user, $user, $user]
         );
-        $login['language_code'] = 'zh-cn';
         
         if ($login && PassWord::verify($user.$pass, $login['pass'])) {
             $login['security'] = [

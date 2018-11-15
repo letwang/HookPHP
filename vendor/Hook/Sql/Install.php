@@ -4,6 +4,7 @@ namespace Hook\Sql;
 class Install
 {
     const CREATE_DATA = "
+SET FOREIGN_KEY_CHECKS = 0;
 CREATE TABLE `hp_acl_group` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `app_id` int(10) unsigned NOT NULL,

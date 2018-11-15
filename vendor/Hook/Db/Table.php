@@ -1,27 +1,23 @@
 <?php
 namespace Hook\Db;
 
-use Redis;
 use \Hook\Validate\Validate;
 
 class Table
 {
     public $table;
-    public $field;
 
     public $operator = ['>' => '>', '>=' => '>=', '<' => '<', '<=' => '<=', '!=' => '!=', 'LIKE' => 'LIKE', 'NOT LIKE' => 'NOT LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
     public $selectExpr = ['DISTINCT', 'DISTINCTROW', 'SQL_CACHE', 'SQL_NO_CACHE', 'SQL_CALC_FOUND_ROWS'];
 
     public function __construct(string $table)
     {
-        $key = 'table:'.$table;
-        $redis = RedisConnect::getInstance()->redis;
-        if (!$redis->exists($key)) {
-            $data = PdoConnect::getInstance()->fetchAll('DESC ' . $table);
-            $redis->hMset($key, array_combine(array_column($data, 'Field'), $data));
-        }
         $this->table = $table;
-        $this->field = $redis->hGetAll($key);
+    }
+
+    public function desc(): array
+    {
+        return PdoConnect::getInstance()->fetchAll('DESC `'.$this->table.'`');
     }
 
     public function read(array $param = [])
@@ -84,7 +80,7 @@ class Table
 
         //sql字段名注入检查
         preg_match_all('/`(\w+)`/', $sql, $matches);
-        $whiteField = $this->field + [$this->table => ['Field' => $this->table]];
+        $whiteField = APP_TABLE[$this->table] + [$this->table => []];
         foreach ($matches[1] as $field) {
             if (!isset($whiteField[$field])) {
                 throw new \Exception('db hack~');
@@ -95,12 +91,10 @@ class Table
         return PdoConnect::getInstance()->{$param['CALLBACK']}($sql, $parameters, (int) $param['TYPE']);
     }
 
-    public function validate(string $column, $needle = null):array
+    public function validate(string $type): array
     {
-        $type = $this->field[$column]['Type'];
         $unsigned = strpos($type, 'unsigned');
         $data = ['min' => null, 'max' => null];
-        $callback = function ($value) {return strlen($value);};
         switch (1) {
             case strpos($type, 'tinyint') === 0:
                 $data = ['min' => -128, 'max' => 127];
@@ -141,9 +135,6 @@ class Table
                     )
                 );
                 $data = ['min' => 0, 'max' => count($type)];
-                if ($needle !== null) {
-                    $data['validate'] = isset($type[$needle]);
-                }
                 return $data;
                 break;
             case strpos($type, 'char') !== false:
@@ -166,14 +157,14 @@ class Table
                 $data = ['min' => 0, 'max' => 4294967295];//4G
                 break;
         }
-        
-        if ($needle !== null) {
-            $data += [
-                'length' => $callback($needle),
-                'validate' => $needle >= $data['min'] && $needle <= $data['max'],
-            ];
-        }
-        
         return $data;
+    }
+
+    public function synData(): bool
+    {
+        $redis = RedisConnect::getInstance()->redis;
+        $key = 'table:'.$this->table;
+        $redis->del($key);
+        return $redis->hMset($key, $this->read(['COLUMN' => ['id', '*'], 'TYPE' => \PDO::FETCH_ASSOC | \PDO::FETCH_UNIQUE]));
     }
 }

@@ -1,5 +1,5 @@
 <?php
-use Hook\Db\{PdoConnect,Table};
+use Hook\Db\{PdoConnect,RedisConnect,Table};
 
 abstract class AbstractModel
 {
@@ -23,7 +23,14 @@ abstract class AbstractModel
         }
     }
 
-    public function add(): int
+    public static function read(string $table, int $id): array
+    {
+        $key = 'table:'.$table;
+        $redis = RedisConnect::getInstance()->redis;
+        return $id === 0 ? array_values($redis->hGetAll($key)) : $redis->hGet($key, $id);
+    }
+
+    public function create(): int
     {
         try {
             PdoConnect::getInstance()->pdo->beginTransaction();
