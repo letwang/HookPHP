@@ -14,7 +14,7 @@ class GroupModel extends \AbstractModel
         parent::__construct();
     }
 
-    public static function read(string $table, int $id = 0): array
+    public function read(int $id = 0, int $langId = 0): array
     {
         return PdoConnect::getInstance()->fetchAll(Acl::GET_GROUP, [$_SESSION[APP_NAME]['lang_id'], 1]);
     }

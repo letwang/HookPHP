@@ -13,9 +13,9 @@ class IndexModel extends \AbstractModel
         parent::__construct();
     }
 
-    public static function read(string $table, int $id = 0): array
+    public function read(int $id = 0, int $langId = 0): array
     {
-        return parent::read($table, $id);
+        return parent::get($this->table, $id, $langId);
     }
 
     public function create(): int

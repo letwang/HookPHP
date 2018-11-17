@@ -9,7 +9,12 @@ class User_IndexController extends AbstractController
 
     public function GETAction()
     {
-        return $this->send($this->model->read($this->model->table));
+        $data = $this->model->read();
+        foreach ($data as &$v) {
+            $v['lang_id'] = $this->model::get('hp_lang', $v['lang_id'])['name'];
+            $v['status'] = l('status.'.$v['status']);
+        }
+        return $this->send($data);
     }
 
     public function POSTAction()

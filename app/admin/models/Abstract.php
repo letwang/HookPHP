@@ -1,5 +1,6 @@
 <?php
 use Hook\Db\{PdoConnect,RedisConnect,Table};
+use Hook\Cache\Cache;
 
 abstract class AbstractModel
 {
@@ -23,11 +24,21 @@ abstract class AbstractModel
         }
     }
 
-    public static function read(string $table, int $id): array
+    public static function get(string $table, int $id = 0, int $langId = 0): array
     {
+        $data = &Cache::static(__METHOD__);
+        if (isset($data[$table][$id][$langId])) {
+            return $data[$table][$id][$langId];
+        }
+
+        if ($langId > 0) {
+            $id .= '_'.$langId;
+        }
+
         $key = 'table:'.$table;
         $redis = RedisConnect::getInstance()->redis;
-        return $id === 0 ? array_values($redis->hGetAll($key)) : $redis->hGet($key, $id);
+        $data[$table][$id][$langId]  = strpos($id, '0') === 0 ? array_values($redis->hGetAll($key)) : $redis->hGet($key, $id);
+        return $data[$table][$id][$langId];
     }
 
     public function create(): int

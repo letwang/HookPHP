@@ -205,7 +205,7 @@ CREATE TABLE `hp_hook_lang` (
   CONSTRAINT `FK_000015` FOREIGN KEY (`hook_id`) REFERENCES `hp_hook` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_000016` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-INSERT INTO `hp_hook_lang` VALUES (1,1,1,'头部钩子','这里显示头部的钩子','所有头部的钩子按顺序依次显示在这里。');
+INSERT INTO `hp_hook_lang` VALUES (1,1,1,'顶部钩子','这里显示顶部的钩子','所有顶部的钩子按顺序依次显示在这里。'),(2,2,1,'头部钩子','这里显示头部的钩子','所有头部的钩子按顺序依次显示在这里。'),(3,3,1,'尾部钩子','这里显示尾部的钩子','所有尾部的钩子按顺序依次显示在这里。');
 
 CREATE TABLE `hp_hook_module` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -250,7 +250,7 @@ CREATE TABLE `hp_manager` (
   KEY `lang_id` (`lang_id`) USING BTREE,
   CONSTRAINT `FK_000034` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-INSERT INTO `hp_manager` VALUES (1,1,1,1493439330,1493439330,'admin@hookphp.com','\$argon2i\$v=19\$m=1024,t=2,p=2\$c2NtWmdCb255NGZZUFBOLw\$Hoi3pZx1vlPKT6nwtcu9/zyAppezbxKAOW2u1EmtxqA','','','bobstephen','');
+INSERT INTO `hp_manager` VALUES (1,1,1,1493439330,1493439330,'admin@hookphp.com','\$argon2i\$v=19\$m=1024,t=2,p=2\$c2NtWmdCb255NGZZUFBOLw\$Hoi3pZx1vlPKT6nwtcu9/zyAppezbxKAOW2u1EmtxqA','','','Stephen','Bob');
 
 CREATE TABLE `hp_menu` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -325,6 +325,6 @@ CREATE TABLE `hp_user` (
   KEY `lang_id` (`lang_id`) USING BTREE,
   CONSTRAINT `FK_000021` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-INSERT INTO `hp_user` VALUES (1,1,1,1493439330,1493439330,'test@hotmail.com','\$argon2i\$v=19\$m=1024,t=2,p=2\$c2NtWmdCb255NGZZUFBOLw\$Hoi3pZx1vlPKT6nwtcu9/zyAppezbxKAOW2u1EmtxqA','','','bobstephen','');
+INSERT INTO `hp_user` VALUES (1,1,1,1493439330,1493439330,'test@hotmail.com','\$argon2i\$v=19\$m=1024,t=2,p=2\$c2NtWmdCb255NGZZUFBOLw\$Hoi3pZx1vlPKT6nwtcu9/zyAppezbxKAOW2u1EmtxqA','','','Stephen','Bob');
 ";
 }

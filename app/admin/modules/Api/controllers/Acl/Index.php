@@ -9,7 +9,13 @@ class Acl_IndexController extends AbstractController
     
     public function GETAction()
     {
-        return $this->send($this->model->read($this->model->table));
+        $data = $this->model->read();
+        foreach ($data as &$v) {
+            $v['group_id'] = $this->model::get('hp_acl_group_lang', $v['group_id'], $_SESSION[APP_NAME]['lang_id'])['name'];
+            $v['resource_id'] = $this->model::get('hp_acl_resource_lang', $v['resource_id'], $_SESSION[APP_NAME]['lang_id'])['name'];
+            $v['status'] = l('status.'.$v['status']);
+        }
+        return $this->send($data);
     }
     
     public function POSTAction()

@@ -9,7 +9,14 @@ class MenuController extends AbstractController
 
     public function GETAction()
     {
-        return $this->send($this->model->read($this->model->table));
+        $data = $this->model->read();
+        foreach ($data as &$v) {
+            $v['app_id'] = $this->model::get('hp_app', $v['app_id'])['name'];
+            $v['name'] = $this->model::get('hp_menu_lang', $v['id'], $_SESSION[APP_NAME]['lang_id'])['name'];
+            $v['parent'] = $this->model::get('hp_menu_lang', (int) $v['parent'], $_SESSION[APP_NAME]['lang_id'])['name'] ?? '';
+            $v['status'] = l('status.'.$v['status']);
+        }
+        return $this->send($data);
     }
 
     public function POSTAction()

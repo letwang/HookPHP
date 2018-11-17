@@ -9,7 +9,13 @@ class Acl_UserController extends AbstractController
     
     public function GETAction()
     {
-        return $this->send($this->model->read($this->model->table));
+        $data = $this->model->read();
+        foreach ($data as &$v) {
+            $v['user_id'] = $this->model::get('hp_user', $v['user_id'])['firstname'].' '.$this->model::get('hp_user', $v['user_id'])['lastname'];
+            $v['role_id'] = $this->model::get('hp_acl_role_lang', $v['role_id'], $_SESSION[APP_NAME]['lang_id'])['name'];
+            $v['status'] = l('status.'.$v['status']);
+        }
+        return $this->send($data);
     }
     
     public function POSTAction()

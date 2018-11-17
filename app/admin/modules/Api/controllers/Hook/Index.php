@@ -9,7 +9,7 @@ class Hook_IndexController extends AbstractController
     
     public function GETAction()
     {
-        return $this->send($this->model->read($this->model->table));
+        return $this->send($this->model->read());
     }
     
     public function POSTAction()

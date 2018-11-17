@@ -9,7 +9,12 @@ class Hook_ModuleController extends AbstractController
     
     public function GETAction()
     {
-        return $this->send($this->model->read($this->model->table));
+        $data = $this->model->read();
+        foreach ($data as &$v) {
+            $v['hook_id'] = $this->model::get('hp_hook_lang', $v['hook_id'], $_SESSION[APP_NAME]['lang_id'])['name'];
+            $v['module_id'] = $this->model::get('hp_module', $v['module_id'])['name'];
+        }
+        return $this->send($data);
     }
     
     public function POSTAction()

@@ -165,6 +165,16 @@ class Table
         $redis = RedisConnect::getInstance()->redis;
         $key = 'table:'.$this->table;
         $redis->del($key);
-        return $redis->hMset($key, $this->read(['COLUMN' => ['id', '*'], 'TYPE' => \PDO::FETCH_ASSOC | \PDO::FETCH_UNIQUE]));
+        $data = $this->read(['COLUMN' => ['id', '*'], 'TYPE' => \PDO::FETCH_ASSOC | \PDO::FETCH_UNIQUE]);
+        $flag = explode('_', $this->table);
+        $max = count($flag) - 1;
+        if ($max > 1 && $flag[$max] === 'lang') {
+            $temp = [];
+            foreach ($data as &$v) {
+                $temp[$v[$flag[$max-1].'_id'].'_'.$v['lang_id']] = $v;
+            }
+            $data = $temp;
+        }
+        return $redis->hMset($key, $data);
     }
 }

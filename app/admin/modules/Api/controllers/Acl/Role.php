@@ -9,7 +9,11 @@ class Acl_RoleController extends AbstractController
     
     public function GETAction()
     {
-        return $this->send($this->model->read($this->model->table));
+        $data = $this->model->read();
+        foreach ($data as &$v) {
+            $v['status'] = l('status.'.$v['status']);
+        }
+        return $this->send($data);
     }
     
     public function POSTAction()
