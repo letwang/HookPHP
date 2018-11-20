@@ -89,4 +89,9 @@ class Tools
     {
         return $min + mt_rand() / mt_getrandmax() * ($max - $min);
     }
+
+    public static function isEmpty($value)
+    {
+        return $value === '' || $value === null;
+    }
 }

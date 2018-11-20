@@ -9,9 +9,30 @@ class MenuModel extends AbstractModel
     public $table = 'hp_menu';
     public $foreign = 'menu_id';
 
-    public function __construct()
+    public $parent;
+    public $status;
+    public $position;
+    public $date_add;
+    public $date_upd;
+    public $url;
+    public $icon;
+
+    public $name;
+
+    public $fields = [
+        'parent' => array('type' => 1, 'require' => false, 'validate' => 'nl2br'),
+        'status' => array('type' => 1, 'require' => true, 'validate' => 'nl2br'),
+        'position' => array('type' => 3, 'require' => true, 'validate' => 'nl2br'),
+        'date_add' => array('type' => 4, 'require' => true, 'validate' => 'nl2br'),
+        'date_upd' => array('type' => 5, 'require' => true, 'validate' => 'nl2br'),
+        'url' => array('type' => 6, 'require' => true, 'validate' => 'nl2br'),
+        'icon' => array('type' => 7, 'require' => true, 'validate' => 'nl2br'),
+        'name' => array('type' => 8, 'require' => true, 'validate' => 'nl2br'),
+    ];
+
+    public function __construct(int $id = null, int $appId = null, int $langId = null)
     {
-        parent::__construct();
+        parent::__construct($id, $appId, $langId);
     }
 
     public static function classify(): array

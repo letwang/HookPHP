@@ -1,9 +1,6 @@
 <?php
 abstract class AbstractController extends Yaf\Controller_Abstract
 {
-    public $result = [];
-    public $definition = [];
-
     public function init()
     {
         $viewPath = '';

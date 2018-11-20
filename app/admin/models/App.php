@@ -5,11 +5,19 @@ use Hook\Sql\App;
 class AppModel extends AbstractModel
 {
     public $table = 'hp_app';
-    public $foreign = '';
+    public $foreign = 'app_id';
 
-    public function __construct()
+    public $status;
+    public $date_add;
+    public $date_upd;
+    public $name;
+    public $description;
+
+    public $fields = [];
+
+    public function __construct(int $id = null, int $appId = null, int $langId = null)
     {
-        parent::__construct();
+        parent::__construct($id, $appId, $langId);
     }
 
     public function read(int $id = 0, int $langId = 0): array

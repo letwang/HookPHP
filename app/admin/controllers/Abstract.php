@@ -4,9 +4,6 @@ use Yaf\Dispatcher;
 
 abstract class AbstractController extends Yaf\Controller_Abstract
 {
-    public $result = [];
-    public $definition = [];
-
     public function init()
     {
         //API模块单独处理
@@ -33,15 +30,6 @@ abstract class AbstractController extends Yaf\Controller_Abstract
         //跨站攻击
         if (!$this->_request->isGet() && $_SESSION[APP_NAME]['security']['token'] !== $this->_request->getPost('token')) {
             throw new Exception(l('security.csrf'));
-        }
-        //控制层验证
-        foreach ($this->definition[$this->_request->action] ?? [] as $field => $filter) {
-            $result = filter_input($filter['type'], $field, $filter['filter'], $filter['options']);
-            if ($result === false || $result === null) {
-                throw new \InvalidArgumentException(l(get_called_class().'.'.$field.'.validate.error'));
-            }
-
-            $this->result[$field] = $result;
         }
         //初始化模板变量
         $this->_view->assign(['uri' => $this->_request->getRequestUri(), 'menus' => MenuModel::classify()]);

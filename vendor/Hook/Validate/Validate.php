@@ -36,7 +36,7 @@ class Validate
         return isset($md5) && preg_match('/^[a-f0-9A-F]{32}$/', $md5) ? $md5 : $default;
     }
 
-    public static function nl2br(&$str)
+    public static function nl2br($str)
     {
         return isset($str) ? str_replace(
             ["\r\n", "\r", "\n"],
