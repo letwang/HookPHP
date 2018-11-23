@@ -9,17 +9,17 @@ class Hook_ModuleController extends AbstractController
     
     public function GETAction()
     {
-        $data = $this->model->read();
+        $data = $this->model->get();
         foreach ($data as &$v) {
-            $v['hook_id'] = $this->model::get('hp_hook_lang', $v['hook_id'], $_SESSION[APP_NAME]['lang_id'])['name'];
-            $v['module_id'] = $this->model::get('hp_module', $v['module_id'])['name'];
+            $v['hook_id'] = $this->model::read('hp_hook_lang', $v['hook_id'], $_SESSION[APP_NAME]['lang_id'])['name'];
+            $v['module_id'] = $this->model::read('hp_module', $v['module_id'])['name'];
         }
         return $this->send($data);
     }
     
     public function POSTAction()
     {
-        return $this->send($this->model->add());
+        return $this->send($this->model->create());
     }
     
     public function PUTAction()

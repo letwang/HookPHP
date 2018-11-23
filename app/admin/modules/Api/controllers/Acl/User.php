@@ -9,10 +9,10 @@ class Acl_UserController extends AbstractController
     
     public function GETAction()
     {
-        $data = $this->model->read();
+        $data = $this->model->get();
         foreach ($data as &$v) {
-            $v['user_id'] = $this->model::get('hp_user', $v['user_id'])['firstname'].' '.$this->model::get('hp_user', $v['user_id'])['lastname'];
-            $v['role_id'] = $this->model::get('hp_acl_role_lang', $v['role_id'], $_SESSION[APP_NAME]['lang_id'])['name'];
+            $v['user_id'] = $this->model::read('hp_user', $v['user_id'])['firstname'].' '.$this->model::read('hp_user', $v['user_id'])['lastname'];
+            $v['role_id'] = $this->model::read('hp_acl_role_lang', $v['role_id'], $_SESSION[APP_NAME]['lang_id'])['name'];
             $v['status'] = l('status.'.$v['status']);
         }
         return $this->send($data);
@@ -20,7 +20,7 @@ class Acl_UserController extends AbstractController
     
     public function POSTAction()
     {
-        return $this->send($this->model->add());
+        return $this->send($this->model->create());
     }
     
     public function PUTAction()

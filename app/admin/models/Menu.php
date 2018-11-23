@@ -9,25 +9,15 @@ class MenuModel extends AbstractModel
     public $table = 'hp_menu';
     public $foreign = 'menu_id';
 
-    public $parent;
-    public $status;
-    public $position;
-    public $date_add;
-    public $date_upd;
-    public $url;
-    public $icon;
-
-    public $name;
-
     public $fields = [
-        'parent' => array('type' => 1, 'require' => false, 'validate' => 'nl2br'),
-        'status' => array('type' => 1, 'require' => true, 'validate' => 'nl2br'),
-        'position' => array('type' => 3, 'require' => true, 'validate' => 'nl2br'),
-        'date_add' => array('type' => 4, 'require' => true, 'validate' => 'nl2br'),
-        'date_upd' => array('type' => 5, 'require' => true, 'validate' => 'nl2br'),
-        'url' => array('type' => 6, 'require' => true, 'validate' => 'nl2br'),
-        'icon' => array('type' => 7, 'require' => true, 'validate' => 'nl2br'),
-        'name' => array('type' => 8, 'require' => true, 'validate' => 'nl2br'),
+        'parent' => array('type' => 1, 'require' => false, 'validate' => 'isGenericName'),
+        'status' => array('type' => 2, 'require' => true, 'validate' => 'isGenericName'),
+        'position' => array('type' => 1, 'require' => true, 'validate' => 'isGenericName'),
+        'date_add' => array('type' => 1, 'require' => true, 'validate' => 'isGenericName'),
+        'date_upd' => array('type' => 1, 'require' => true, 'validate' => 'isGenericName'),
+        'url' => array('type' => 6, 'require' => true, 'validate' => 'isGenericName'),
+        'icon' => array('type' => 6, 'require' => true, 'validate' => 'isGenericName'),
+        'name' => array('type' => 5, 'require' => true, 'validate' => 'isGenericName'),
     ];
 
     public function __construct(int $id = null, int $appId = null, int $langId = null)
@@ -55,23 +45,8 @@ class MenuModel extends AbstractModel
         return $data;
     }
 
-    public function read(int $id = 0, int $langId = 0): array
+    public function get(int $id = 0, int $langId = 0): array
     {
-        return parent::get($this->table, $id, $langId);
-    }
-
-    public function create(): int
-    {
-        return parent::create();
-    }
-
-    public function update(int $id): bool
-    {
-        return parent::update($id);
-    }
-
-    public function delete(int $id): int
-    {
-        return parent::delete($id);
+        return parent::read($this->table, $id, $langId);
     }
 }

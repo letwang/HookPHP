@@ -9,16 +9,16 @@ class ConfigController extends AbstractController
 
     public function GETAction()
     {
-        $data = $this->model->read();
+        $data = $this->model->get();
         foreach ($data as &$v) {
-            $v['app_id'] = $this->model::get('hp_app', $v['app_id'])['name'];
+            $v['app_id'] = $this->model::read('hp_app', $v['app_id'])['name'];
         }
         return $this->send($data);
     }
 
     public function POSTAction()
     {
-        return $this->send($this->model->add());
+        return $this->send($this->model->create());
     }
 
     public function PUTAction()

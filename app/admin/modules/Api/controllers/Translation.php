@@ -9,12 +9,12 @@ class TranslationController extends AbstractController
 
     public function GETAction()
     {
-        return $this->send($this->model->read());
+        return $this->send($this->model->get());
     }
 
     public function POSTAction()
     {
-        return $this->send($this->model->add());
+        return $this->send($this->model->create());
     }
 
     public function PUTAction()

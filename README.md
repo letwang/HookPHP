@@ -150,8 +150,12 @@ server {
 ```
 ## [MySQL 8.0.12][10]
 [10]: https://dev.mysql.com/downloads/mysql/
-## [ProxySQL 1.4.12][15]
+## [ProxySQL][15]
 [15]: https://proxysql.com/
+```
+wget https://github.com/sysown/proxysql/releases/download/v1.4.12/proxysql_1.4.12-ubuntu16_amd64.deb
+sudo dpkg -i proxysql_1.4.12-ubuntu16_amd64.deb
+```
 ## [Redis 5.0][1]
 [1]: https://redis.io/download
 ## [RedisProxy][16]

@@ -9,7 +9,7 @@ class AppController extends AbstractController
 
     public function GETAction()
     {
-        $data = $this->model->read();
+        $data = $this->model->get();
         foreach ($data as &$v) {
             $v['status'] = l('status.'.$v['status']);
         }
@@ -18,7 +18,7 @@ class AppController extends AbstractController
 
     public function POSTAction()
     {
-        return $this->send($this->model->add());
+        return $this->send($this->model->create());
     }
 
     public function PUTAction()

@@ -85,4 +85,9 @@ class Validate
     {
         return isset($expr) && $expr === 'ASC' ? $expr : $default;
     }
+
+    public static function isGenericName($name)
+    {
+        return empty($name) || preg_match('/^[^<>={}]*$/u', $name);
+    }
 }

@@ -56,7 +56,7 @@ class PdoConnect extends Cache
     {
         return [
             'rowCount' => $this->query($statement, $parameter)->rowCount(),
-            'lastInsertId' => $this->pdo->lastInsertId()
+            'lastInsertId' => (int) $this->pdo->lastInsertId()
         ];
     }
 

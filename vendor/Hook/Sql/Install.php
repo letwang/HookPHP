@@ -146,7 +146,7 @@ CREATE TABLE `hp_app` (
   `status` tinyint(3) unsigned NOT NULL DEFAULT '1',
   `date_add` int(10) unsigned NOT NULL,
   `date_upd` int(10) unsigned NOT NULL,
-  `name` char(16) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+  `key` char(16) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 INSERT INTO `hp_app` VALUES (1,1,1493439330,1493439330,'admin'),(2,1,1493439330,1493439330,'erp'),(3,1,1493439330,1493439330,'paas');
@@ -169,10 +169,10 @@ CREATE TABLE `hp_config` (
   `app_id` int(10) unsigned NOT NULL,
   `date_add` int(10) unsigned NOT NULL,
   `date_upd` int(10) unsigned NOT NULL,
-  `name` char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+  `key` char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   `value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `key` (`name`),
+  UNIQUE KEY `key` (`key`),
   KEY `FK_000029` (`app_id`),
   CONSTRAINT `FK_000029` FOREIGN KEY (`app_id`) REFERENCES `hp_app` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -184,9 +184,9 @@ CREATE TABLE `hp_hook` (
   `position` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `date_add` int(10) unsigned NOT NULL,
   `date_upd` int(10) unsigned NOT NULL,
-  `name` char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+  `key` char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `key` (`name`),
+  UNIQUE KEY `key` (`key`),
   KEY `FK_000030` (`app_id`),
   CONSTRAINT `FK_000030` FOREIGN KEY (`app_id`) REFERENCES `hp_app` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -290,9 +290,9 @@ CREATE TABLE `hp_module` (
   `date_add` int(10) unsigned NOT NULL,
   `date_upd` int(10) unsigned NOT NULL,
   `version` char(8) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
-  `name` char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+  `key` char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `key` (`name`),
+  UNIQUE KEY `key` (`key`),
   KEY `FK_000033` (`app_id`),
   CONSTRAINT `FK_000033` FOREIGN KEY (`app_id`) REFERENCES `hp_app` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

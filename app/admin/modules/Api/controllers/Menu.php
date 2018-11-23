@@ -9,11 +9,11 @@ class MenuController extends AbstractController
 
     public function GETAction()
     {
-        $data = $this->model->read();
+        $data = $this->model->get();
         foreach ($data as &$v) {
-            $v['app_id'] = $this->model::get('hp_app', $v['app_id'])['name'];
-            $v['name'] = $this->model::get('hp_menu_lang', $v['id'], $_SESSION[APP_NAME]['lang_id'])['name'];
-            $v['parent'] = $this->model::get('hp_menu_lang', (int) $v['parent'], $_SESSION[APP_NAME]['lang_id'])['name'] ?? '';
+            $v['app_id'] = $this->model::read('hp_app', $v['app_id'])['name'];
+            $v['name'] = $this->model::read('hp_menu_lang', $v['id'], $_SESSION[APP_NAME]['lang_id'])['name'];
+            $v['parent'] = $this->model::read('hp_menu_lang', (int) $v['parent'], $_SESSION[APP_NAME]['lang_id'])['name'] ?? '';
             $v['status'] = l('status.'.$v['status']);
         }
         return $this->send($data);
@@ -21,7 +21,7 @@ class MenuController extends AbstractController
 
     public function POSTAction()
     {
-        return $this->send($this->model->add());
+        return $this->send($this->model->create());
     }
 
     public function PUTAction()

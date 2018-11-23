@@ -6,31 +6,14 @@ use Hook\Sql\Acl;
 class UserModel extends \AbstractModel
 {
     public $table = '';
-    public $foreign = '';
 
-    public function __construct()
+    public function __construct(int $id = null, int $appId = null, int $langId = null)
     {
-        $this->validate = [];
-        parent::__construct();
+        parent::__construct($id, $appId, $langId);
     }
 
-    public function read(int $id = 0, int $langId = 0): array
+    public function get(int $id = 0, int $langId = 0): array
     {
         return PdoConnect::getInstance()->fetchAll(Acl::GET_USER, [$_SESSION[APP_NAME]['lang_id'], 1]);
-    }
-
-    public function create(): int
-    {
-        return parent::create();
-    }
-
-    public function update(int $id): bool
-    {
-        return parent::update($id);
-    }
-
-    public function delete(int $id): int
-    {
-        return parent::delete($id);
     }
 }

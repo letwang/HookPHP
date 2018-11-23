@@ -9,9 +9,9 @@ class ManagerController extends AbstractController
 
     public function GETAction()
     {
-        $data = $this->model->read();
+        $data = $this->model->get();
         foreach ($data as &$v) {
-            $v['lang_id'] = $this->model::get('hp_lang', $v['lang_id'])['name'];
+            $v['lang_id'] = $this->model::read('hp_lang', $v['lang_id'])['name'];
             $v['status'] = l('status.'.$v['status']);
         }
         return $this->send($data);
@@ -19,7 +19,7 @@ class ManagerController extends AbstractController
 
     public function POSTAction()
     {
-        return $this->send($this->model->add());
+        return $this->send($this->model->create());
     }
 
     public function PUTAction()
