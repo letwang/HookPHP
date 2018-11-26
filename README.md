@@ -198,7 +198,9 @@ cmake --build . --target install
 sudo pecl install amqp
 
 [amqp]
-extension=amqp
+extension=amqp.so
+amqp.login=admin
+amqp.password=12345678
 ```
 ## [Sphinx 3.0.3][9]
 [9]: http://sphinxsearch.com/downloads/
