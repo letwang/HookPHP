@@ -1,7 +1,7 @@
 <?php
 namespace Hook\Translation;
 
-use Hook\Validate\Validate;
+use Hook\Tools\Tools;
 use Hook\Translation\TranslationInterface;
 
 abstract class AbstractAdapter implements TranslationInterface
@@ -24,7 +24,7 @@ abstract class AbstractAdapter implements TranslationInterface
             throw new \Exception('from ' . $this->id_lang_from . ' to ' . $this->id_lang_to);
         }
         
-        $this->key_crc32 = Validate::crc32($this->key);
+        $this->key_crc32 = Tools::crc32($this->key);
     }
 
     protected function cache()

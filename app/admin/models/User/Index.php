@@ -6,13 +6,13 @@ class IndexModel extends \AbstractModel
 {
     public $table = 'hp_user';
     public $fields = [
-        'status' => array('type' => 2, 'require' => true, 'validate' => 'isGenericName'),
-        'date_add' => array('type' => 1, 'require' => true, 'validate' => 'isGenericName'),
-        'date_upd' => array('type' => 1, 'require' => true, 'validate' => 'isGenericName'),
+        'status' => array('type' => 2, 'require' => true, 'validate' => 'isInt'),
+        'date_add' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
+        'date_upd' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
         'user' => array('type' => 6, 'require' => true, 'validate' => 'isGenericName'),
-        'pass' => array('type' => 6, 'require' => true, 'validate' => 'isGenericName'),
-        'email' => array('type' => 6, 'require' => true, 'validate' => 'isGenericName'),
-        'phone' => array('type' => 6, 'require' => true, 'validate' => 'isGenericName'),
+        'pass' => array('type' => 6, 'require' => true),
+        'email' => array('type' => 6, 'require' => true, 'validate' => 'isEmail'),
+        'phone' => array('type' => 6, 'require' => true, 'validate' => 'isPhone'),
         'lastname' => array('type' => 6, 'require' => true, 'validate' => 'isGenericName'),
         'firstname' => array('type' => 6, 'require' => true, 'validate' => 'isGenericName'),
     ];

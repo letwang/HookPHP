@@ -11,7 +11,7 @@ class ConfigController extends AbstractController
     {
         $data = $this->model->get();
         foreach ($data as &$v) {
-            $v['app_id'] = $this->model::read('hp_app', $v['app_id'])['name'];
+            $v['app_id'] = $this->model::read('hp_app', $v['app_id'])['key'];
         }
         return $this->send($data);
     }

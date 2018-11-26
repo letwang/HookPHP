@@ -8,11 +8,11 @@ class AppModel extends AbstractModel
     public $foreign = 'app_id';
 
     public $fields = [
-        'status' => array('type' => 2, 'require' => true, 'validate' => 'isGenericName'),
-        'date_add' => array('type' => 1, 'require' => true, 'validate' => 'isGenericName'),
-        'date_upd' => array('type' => 1, 'require' => true, 'validate' => 'isGenericName'),
+        'status' => array('type' => 2, 'require' => true, 'validate' => 'isInt'),
+        'date_add' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
+        'date_upd' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
         'key' => array('type' => 6, 'require' => true, 'validate' => 'isGenericName'),
-        'description' => array('type' => 5, 'require' => true, 'validate' => 'isGenericName'),
+        'description' => array('type' => 5, 'require' => true),
     ];
 
     public function __construct(int $id = null, int $appId = null, int $langId = null)

@@ -3,91 +3,118 @@ namespace Hook\Validate;
 
 class Validate
 {
-
-    public static function int(&$int, $default = 0, $min = 0, $max = PHP_INT_MAX)
+    public static function isEmpty(string $value): bool
     {
-        return isset($int) ? filter_var(
-            $int,
-            FILTER_VALIDATE_INT,
-            ['options' => ['default' => $default, 'min_range' => $min, 'max_range' => $max]]
-        ) : $default;
+        return $value === '' || $value === null;
     }
 
-    public static function float(&$float, $default = 0, $min = 0, $max = PHP_INT_MAX, $decimal = '.')
+    public static function isIp2Long(string $value): bool
     {
-        return isset($float) && $float >= $min && $float <= $max ? filter_var(
-            $float,
-            FILTER_VALIDATE_FLOAT,
-            ['options' => ['default' => $default, 'decimal' => $decimal]]
-        ) : $default;
+        return preg_match('/^-?[0-9]+$/', (string) $value);
     }
 
-    public static function bool(&$bool, $default = false)
+    public static function isEmail(string $value): bool
     {
-        return isset($bool) ? filter_var(
-            $bool,
-            FILTER_VALIDATE_BOOLEAN,
-            ['options' => ['default' => $default]]
-        ) : $default;
+        return preg_match('/'.APP_CONFIG['regexp']['core']['email'].'/', $value);
     }
 
-    public static function md5(&$md5, $default = false)
+    public static function isUrl(string $value): bool
     {
-        return isset($md5) && preg_match('/^[a-f0-9A-F]{32}$/', $md5) ? $md5 : $default;
+        return preg_match('/'.APP_CONFIG['regexp']['core']['url'].'/', $value);
     }
 
-    public static function nl2br($str)
+    public static function isMd5(string $value): bool
     {
-        return isset($str) ? str_replace(
-            ["\r\n", "\r", "\n"],
-            '<br />',
-            $str
-        ) : '';
+        return preg_match('/^[a-f0-9A-F]{32}$/', $value);
     }
 
-    public static function ip2long(&$ip)
+    public static function isSha1(string $value): bool
     {
-        return sprintf('%u', ip2long($ip));
+        return preg_match('/^[a-fA-F0-9]{40}$/', $value);
     }
 
-    public static function crc32(&$url)
+    public static function isFloat(string $value): bool
     {
-        return sprintf('%u', crc32($url));
+        return preg_match('/'.APP_CONFIG['regexp']['core']['float'].'/', $value);
     }
 
-    public static function mbSubstr(&$str, $length, $encoding = 'utf-8')
+    public static function isBool(string $value): bool
     {
-        return isset($str) ? mb_substr($str, 0, $length, $encoding) . ($length < mb_strlen($str, $encoding) ? '...' : '') : '';
+        return $value === '1';
     }
 
-    public static function url(&$url, $default = false, $flags = null)
+    public static function isInt(string $value): bool
     {
-        return isset($url) ? filter_var(
-            $url,
-            FILTER_VALIDATE_URL,
-            [
-                'options' => ['default' => $default],
-                'flags' => $flags ?: FILTER_FLAG_SCHEME_REQUIRED | FILTER_FLAG_HOST_REQUIRED | FILTER_FLAG_PATH_REQUIRED | FILTER_FLAG_QUERY_REQUIRED
-            ]
-        ) : $default;
+        return preg_match('/'.APP_CONFIG['regexp']['core']['int'].'/', $value);
     }
 
-    public static function email(&$email, $default = false)
+    public static function isPrice(string $value): bool
     {
-        return isset($email) ? filter_var(
-            $email,
-            FILTER_VALIDATE_EMAIL,
-            ['options' => ['default' => $default]]
-        ) : $default;
+        return preg_match('/^[0-9]{1,10}(\.[0-9]{1,9})?$/', $value);
     }
 
-    public static function order(&$expr, $default = 'DESC')
+    public static function isIsoCode(string $value): bool
     {
-        return isset($expr) && $expr === 'ASC' ? $expr : $default;
+        return preg_match('/^[a-zA-Z]{2,3}$/', $value);
     }
 
-    public static function isGenericName($name)
+    public static function isLanguageCode(string $value): bool
     {
-        return empty($name) || preg_match('/^[^<>={}]*$/u', $name);
+        return preg_match('/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/', $value);
+    }
+
+    public static function isPhone(string $value): bool
+    {
+        return preg_match('/'.APP_CONFIG['regexp']['core']['phone'].'/', $value);
+    }
+
+    public static function isMobile(string $value): bool
+    {
+        return preg_match('/'.APP_CONFIG['regexp']['core']['mobile'].'/', $value);
+    }
+
+    public static function isGenericName(string $value): bool
+    {
+        return preg_match('/^[^<>={}]*$/u', $value);
+    }
+
+    public static function isZh(string $value): bool
+    {
+        return preg_match('/'.APP_CONFIG['regexp']['core']['zh'].'/', $value);
+    }
+
+    public static function isMb(string $value): bool
+    {
+        return preg_match('/'.APP_CONFIG['regexp']['core']['mb'].'/', $value);
+    }
+
+    public static function isQq(string $value): bool
+    {
+        return preg_match('/'.APP_CONFIG['regexp']['core']['qq'].'/', $value);
+    }
+
+    public static function isPostal(string $value): bool
+    {
+        return preg_match('/'.APP_CONFIG['regexp']['core']['postal'].'/', $value);
+    }
+
+    public static function isIpv4(string $value): bool
+    {
+        return preg_match('/'.APP_CONFIG['regexp']['core']['ipv4'].'/', $value);
+    }
+
+    public static function isCard(string $value): bool
+    {
+        return preg_match('/'.APP_CONFIG['regexp']['core']['card'].'/', $value);
+    }
+
+    public static function isDate(string $value): bool
+    {
+        return preg_match('/'.APP_CONFIG['regexp']['core']['date'].'/', $value);
+    }
+
+    public static function isName(string $value): bool
+    {
+        return preg_match('/'.APP_CONFIG['regexp']['core']['name'].'/', $value);
     }
 }

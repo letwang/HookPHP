@@ -9,9 +9,9 @@ class ResourceModel extends \AbstractModel
     public $foreign = 'resource_id';
 
     public $fields = [
-        'status' => array('type' => 2, 'require' => true, 'validate' => 'isGenericName'),
-        'date_add' => array('type' => 1, 'require' => true, 'validate' => 'isGenericName'),
-        'date_upd' => array('type' => 1, 'require' => true, 'validate' => 'isGenericName'),
+        'status' => array('type' => 2, 'require' => true, 'validate' => 'isInt'),
+        'date_add' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
+        'date_upd' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
         'app' => array('type' => 6, 'require' => true, 'validate' => 'isGenericName'),
         'module' => array('type' => 6, 'require' => true, 'validate' => 'isGenericName'),
         'controller' => array('type' => 6, 'require' => true, 'validate' => 'isGenericName'),

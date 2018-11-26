@@ -9,13 +9,13 @@ class IndexModel extends \AbstractModel
     public $foreign = 'hook_id';
 
     public $fields = [
-        'position' => array('type' => 1, 'require' => true, 'validate' => 'isGenericName'),
-        'date_add' => array('type' => 1, 'require' => true, 'validate' => 'isGenericName'),
-        'date_upd' => array('type' => 1, 'require' => true, 'validate' => 'isGenericName'),
+        'position' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
+        'date_add' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
+        'date_upd' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
         'key' => array('type' => 6, 'require' => true, 'validate' => 'isGenericName'),
         'name' => array('type' => 5, 'require' => true, 'validate' => 'isGenericName'),
         'title' => array('type' => 5, 'require' => true, 'validate' => 'isGenericName'),
-        'description' => array('type' => 5, 'require' => true, 'validate' => 'isGenericName'),
+        'description' => array('type' => 5, 'require' => true),
     ];
 
     public function __construct(int $id = null, int $appId = null, int $langId = null)

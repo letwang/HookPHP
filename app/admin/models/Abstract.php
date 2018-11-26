@@ -1,7 +1,7 @@
 <?php
 use Hook\Db\{PdoConnect,RedisConnect,Table};
 use Hook\Cache\Cache;
-use Hook\Tools\Tools;
+use Hook\Validate\Validate;
 
 abstract class AbstractModel
 {
@@ -179,7 +179,7 @@ abstract class AbstractModel
 
     private function validateField($field, $value, $langId = null)
     {
-        if (!empty($this->fields[$field]['require']) && Tools::isEmpty($value)) {
+        if (!empty($this->fields[$field]['require']) && Validate::isEmpty($value)) {
             return sprintf('The %s field is required.', $field);
         }
 

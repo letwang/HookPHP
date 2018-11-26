@@ -5,11 +5,11 @@ class LangModel extends AbstractModel
 {
     public $table = 'hp_lang';
     public $fields = [
-        'status' => array('type' => 2, 'require' => true, 'validate' => 'isGenericName'),
-        'date_add' => array('type' => 1, 'require' => true, 'validate' => 'isGenericName'),
-        'date_upd' => array('type' => 1, 'require' => true, 'validate' => 'isGenericName'),
-        'iso' => array('type' => 6, 'require' => true, 'validate' => 'isGenericName'),
-        'lang' => array('type' => 6, 'require' => true, 'validate' => 'isGenericName'),
+        'status' => array('type' => 2, 'require' => true, 'validate' => 'isInt'),
+        'date_add' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
+        'date_upd' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
+        'iso' => array('type' => 6, 'require' => true, 'validate' => 'isIsoCode'),
+        'lang' => array('type' => 6, 'require' => true, 'validate' => 'isLanguageCode'),
         'name' => array('type' => 5, 'require' => true, 'validate' => 'isGenericName'),
     ];
 

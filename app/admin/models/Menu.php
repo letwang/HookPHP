@@ -10,12 +10,12 @@ class MenuModel extends AbstractModel
     public $foreign = 'menu_id';
 
     public $fields = [
-        'parent' => array('type' => 1, 'require' => false, 'validate' => 'isGenericName'),
-        'status' => array('type' => 2, 'require' => true, 'validate' => 'isGenericName'),
-        'position' => array('type' => 1, 'require' => true, 'validate' => 'isGenericName'),
-        'date_add' => array('type' => 1, 'require' => true, 'validate' => 'isGenericName'),
-        'date_upd' => array('type' => 1, 'require' => true, 'validate' => 'isGenericName'),
-        'url' => array('type' => 6, 'require' => true, 'validate' => 'isGenericName'),
+        'parent' => array('type' => 1, 'require' => false, 'validate' => 'isInt'),
+        'status' => array('type' => 2, 'require' => true, 'validate' => 'isInt'),
+        'position' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
+        'date_add' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
+        'date_upd' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
+        'url' => array('type' => 6, 'require' => true, 'validate' => 'isUrl'),
         'icon' => array('type' => 6, 'require' => true, 'validate' => 'isGenericName'),
         'name' => array('type' => 5, 'require' => true, 'validate' => 'isGenericName'),
     ];

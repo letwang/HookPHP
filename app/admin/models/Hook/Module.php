@@ -6,11 +6,11 @@ class ModuleModel extends \AbstractModel
 {
     public $table = 'hp_hook_module';
     public $fields = [
-        'hook_id' => array('type' => 1, 'require' => true, 'validate' => 'isGenericName'),
-        'module_id' => array('type' => 1, 'require' => true, 'validate' => 'isGenericName'),
-        'position' => array('type' => 1, 'require' => true, 'validate' => 'isGenericName'),
-        'date_add' => array('type' => 1, 'require' => true, 'validate' => 'isGenericName'),
-        'date_upd' => array('type' => 1, 'require' => true, 'validate' => 'isGenericName'),
+        'hook_id' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
+        'module_id' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
+        'position' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
+        'date_add' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
+        'date_upd' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
     ];
 
     public function __construct(int $id = null, int $appId = null, int $langId = null)

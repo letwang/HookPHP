@@ -1,7 +1,7 @@
 <?php
 namespace Hook\Db;
 
-use \Hook\Validate\Validate;
+use \Hook\Tools\Tools;
 
 class Table
 {
@@ -59,7 +59,7 @@ class Table
         if (is_array($param['GROUP']) && !empty($param['GROUP'])) {
             $group = [];
             foreach ($param['GROUP'] as $field => $expr) {
-                $group[] = '`'.$field.'` '.Validate::order($expr);
+                $group[] = '`'.$field.'` '.Tools::order($expr);
             }
             $sql .= ' GROUP BY '.join(',', $group);
         }
@@ -68,7 +68,7 @@ class Table
         if (is_array($param['ORDER']) && !empty($param['ORDER'])) {
             $order = [];
             foreach ($param['ORDER'] as $field => $expr) {
-                $order[] = '`'.$field.'` '.Validate::order($expr);
+                $order[] = '`'.$field.'` '.Tools::order($expr);
             }
             $sql .= ' ORDER BY '.join(',', $order);
         }
