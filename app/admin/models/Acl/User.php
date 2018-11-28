@@ -5,7 +5,7 @@ use Hook\Sql\Acl;
 
 class UserModel extends \AbstractModel
 {
-    public $table = '';
+    public static $table = '';
 
     public function __construct(int $id = null, int $appId = null, int $langId = null)
     {

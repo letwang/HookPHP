@@ -2,11 +2,12 @@
 use Hook\Db\{PdoConnect,RedisConnect,Table};
 use Hook\Cache\Cache;
 use Hook\Validate\Validate;
+use Hook\Tools\Tools;
 
 abstract class AbstractModel
 {
-    public $table;
-    public $foreign;
+    public static $table;
+    public static $foreign;
 
     public $id;
     public $appId;
@@ -25,9 +26,9 @@ abstract class AbstractModel
     {
         $this->id = $id;
         $this->appId = $appId ?? 1;
-        $this->langId = $langId ?? 1;
+        $this->langId = $langId;
 
-        $this->ignore = ['id' => true, 'app_id' => true, $this->foreign => true, 'lang_id' => true];
+        $this->ignore = ['id' => true, 'app_id' => true, 'date_add' => true, 'date_upd' => true, 'lang_id' => true, static::$foreign => true];
     }
 
     public function create(): int
@@ -36,28 +37,26 @@ abstract class AbstractModel
         try {
             PdoConnect::getInstance()->pdo->beginTransaction();
 
-            $keys = array_keys($this->getFields());
+            $data = $this->getFields();
+            $data += isset(APP_TABLE[static::$table]['app_id']) ? ['app_id' => $this->appId]: [];
+            $data += isset(APP_TABLE[static::$table]['date_add']) ? ['date_add' => time()] : [];
             $result = PdoConnect::getInstance()->insert(
-                'INSERT INTO `'.$this->table.'`(`'.join('`,`', $keys).'`)VALUES(:'.join(',:', $keys).');',
-                $this->getFields()
+                'INSERT INTO `'.static::$table.'`(`'.join('`,`', array_keys($data)).'`)VALUES(:'.join(',:', array_keys($data)).');',
+                $data
             );
 
-            if ($this->foreign) {
-                foreach ($this->getFieldsLang() as $langId => $lang) {
-                    $lang[$this->foreign] = $result['lastInsertId'];
-                    $keys = array_keys($lang);
-                    PdoConnect::getInstance()->insert(
-                        'INSERT INTO `'.$this->table.'_lang`(`'.join('`,`', $keys).'`)VALUES(:'.join(',:', $keys).');',
-                        $lang
-                    );
-                }
+            foreach ($this->getFieldsLang() as $langId => $data) {
+                $data += ['lang_id' => $langId, static::$foreign => $result['lastInsertId']];
+                PdoConnect::getInstance()->insert(
+                    'INSERT INTO `'.static::$table.'_lang`(`'.join('`,`', array_keys($data)).'`)VALUES(:'.join(',:', array_keys($data)).');',
+                    $data
+                );
             }
             return PdoConnect::getInstance()->pdo->commit() ? $result['lastInsertId']: 0;
         } catch (Throwable $e) {
             PdoConnect::getInstance()->pdo->rollBack();
             throw new Exception($e->getMessage());
         }
-        return 0;
     }
 
     public static function read(string $table, int $id = 0, int $langId = 0)
@@ -82,31 +81,27 @@ abstract class AbstractModel
         $this->copyFromPost();
         try {
             PdoConnect::getInstance()->pdo->beginTransaction();
-            $this->ignore += ['date_add' => true];
 
             $keys = '';
             foreach ($this->getFields() as $key => $value) {
                 $keys .= '`'.$key.'`=:'.$key.',';
             }
             PdoConnect::getInstance()->update(
-                'UPDATE `'.$this->table.'` SET '.substr($keys, 0, -1).' WHERE `id`='.$this->id,
+                'UPDATE `'.static::$table.'` SET '.substr($keys, 0, -1).' WHERE `id`='.$this->id,
                 $this->getFields()
             );
 
-            if ($this->foreign) {
-                foreach ($this->getFieldsLang() as $langId => $lang) {
-                    unset($lang['lang_id']);
-                    static $keys = '';
-                    if ($keys === '') {
-                        foreach ($lang as $key => $value) {
-                            $keys .= '`'.$key.'`=:'.$key.',';
-                        }
+            foreach ($this->getFieldsLang() as $langId => $data) {
+                static $keys = '';
+                if ($keys === '') {
+                    foreach ($data as $key => $value) {
+                        $keys .= '`'.$key.'`=:'.$key.',';
                     }
-                    PdoConnect::getInstance()->update(
-                        'UPDATE `'.$this->table.'_lang` SET '.substr($keys, 0, -1).' WHERE `'.$this->foreign.'`='.$this->id.' AND `lang_id`='.$this->langId,
-                        $lang
-                    );
                 }
+                PdoConnect::getInstance()->update(
+                    'UPDATE `'.static::$table.'_lang` SET '.substr($keys, 0, -1).' WHERE `'.static::$foreign.'`='.$this->id.' AND `lang_id`='.$langId,
+                    $data
+                );
             }
 
             return PdoConnect::getInstance()->pdo->commit();
@@ -114,43 +109,39 @@ abstract class AbstractModel
             PdoConnect::getInstance()->pdo->rollBack();
             throw new Exception($e->getMessage());
         }
-        return false;
     }
 
     public function delete(): bool
     {
-        return PdoConnect::getInstance()->delete('DELETE FROM `'.$this->table.'` WHERE `id`=?', [$this->id]) === 1;
+        return PdoConnect::getInstance()->delete('DELETE FROM `'.static::$table.'` WHERE `id`=?', [$this->id]) === 1;
     }
 
     private function getFields(): array
     {
         $this->validateFields();
-        $fields['app_id'] = $this->appId;
-        $fields += $this->formatFields();
+        $fields = $this->formatFields();
         return $fields;
     }
 
     private function getFieldsLang(): array
     {
+        if (!static::$foreign) {
+            return [];
+        }
+
         $this->validateFieldsLang();
         $fields = [];
-        if ($this->langId) {
-            $fields = [$this->langId => $this->formatFields($this->langId)];
-            $fields[$this->langId]['lang_id'] = $this->langId;
-        } else {
-            foreach ([1] as $langId) {
-                $fields[$langId] = $this->formatFields($langId);
-                $fields[$langId]['lang_id'] = $langId;
-            }
+        foreach ($this->langId ? [$this->langId] : LangModel::getIds() as $langId) {
+            $fields[$langId] = $this->formatFields($langId);
         }
         return $fields;
     }
 
-    private function validateFields($exit = true, $return = false)
+    private function validateFields(bool $exit = true, bool $return = false)
     {
-        foreach ($this->getDefinition($this->table) as $field) {
+        foreach ($this->getDefinition(static::$table) as $field) {
             $message = $this->validateField($field, $this->{$field});
-            if ($message !== true) {
+            if ($message !== '') {
                 if ($exit) {
                     throw new \Exception($message);
                 }
@@ -160,13 +151,12 @@ abstract class AbstractModel
         return true;
     }
 
-    private function validateFieldsLang($exit = true, $return = false)
+    private function validateFieldsLang(bool $exit = true, bool $return = false)
     {
-        foreach ($this->getDefinition($this->table.'_lang') as $field) {
-            $values = $this->$field;
-            foreach ($values as $langId => $value) {
+        foreach ($this->getDefinition(static::$table.'_lang') as $field) {
+            foreach ($this->$field as $langId => $value) {
                 $message = $this->validateField($field, $value, $langId);
-                if ($message !== true) {
+                if ($message !== '') {
                     if ($exit) {
                         throw new \Exception($message);
                     }
@@ -177,13 +167,22 @@ abstract class AbstractModel
         return true;
     }
 
-    private function validateField($field, $value, $langId = null)
+    private function validateField(string $field, $value, $langId = null): string
     {
         if (!empty($this->fields[$field]['require']) && Validate::isEmpty($value)) {
             return sprintf('The %s field is required.', $field);
         }
 
-        $desc = APP_TABLE[$this->table][$field] ?? APP_TABLE[$this->table.'_lang'][$field];
+        if (!isset($this->fields[$field]['type'])) {
+            return sprintf('The %s field type is required.', $field);
+        }
+
+        $desc = APP_TABLE[static::$table][$field] ?? APP_TABLE[static::$table.'_lang'][$field];
+
+        if (Validate::isEmpty($value)) {
+            $value = $desc['default'];
+            $langId ? $this->{$field}[$langId] = $value : $this->$field = $value;
+        }
 
         if (strpos($desc['type'], 'int') === false) {
             $length = mb_strlen($value);
@@ -195,61 +194,66 @@ abstract class AbstractModel
                 return sprintf('The %s field must be from %d to %d', $field, $desc['min'], $desc['max']);
             }
         }
-        if (!call_user_func(['Hook\Validate\Validate', $this->fields[$field]['validate']], $value)) {
+        if (isset($this->fields[$field]['validate']) && !call_user_func(['Hook\Validate\Validate', $this->fields[$field]['validate']], $value)) {
             return sprintf('The %s field is invalid.', $field);
         }
-        return true;
+        return '';
     }
 
     private function formatFields(int $langId = null): array
     {
         $fields = [];
         if ($langId) {
-            foreach ($this->getDefinition($this->table.'_lang') as $field) {
-                $fields[$field] = $this->formatValue($this->{$field}[$langId] ?? '', $this->fields[$field]['type']);
+            foreach ($this->getDefinition(static::$table.'_lang') as $field) {
+                $fields[$field] = $this->formatValue($this->{$field}[$langId], $this->fields[$field]['type']);
             }
         } else {
-            foreach ($this->getDefinition($this->table) as $field) {
-                $fields[$field] = $this->formatValue($this->$field ?? '', $this->fields[$field]['type']);
+            foreach ($this->getDefinition(static::$table) as $field) {
+                $fields[$field] = $this->formatValue($this->$field, $this->fields[$field]['type']);
             }
+            $fields += isset(APP_TABLE[static::$table]['date_upd']) ? ['date_upd' => time()] : [];
         }
         return $fields;
     }
 
-    private function formatValue($value, $type)
+    private function formatValue($value, int $type)
     {
         switch ($type) {
             case self::INT:
                 return (int) $value;
             case self::BOOL:
-                return (bool) $value;
+                return (int) (bool) $value;
             case self::FLOAT:
-                return (float) str_replace(',', '.', $value);
+                return (float) $value;
             case self::DATE:
-                return $value ? $value : '0000-00-00';
+                return strtotime(Tools::dateFormat($value));
             case self::NOTHING:
                 return $value;
             case self::HTML:
             default:
-                return htmlentities($value);;
+                return Tools::safeOutPut($value);
         }
     }
 
-    private function copyFromPost()
+    protected function copyFromPost()
     {
-        foreach ($this->getDefinition($this->table) as $field) {
-            $this->{$field} = $_GET[$field] ?? '';
+        foreach ($this->getDefinition(static::$table) as $field) {
+            $this->{$field} = $_GET[$field] ?? null;
         }
 
-        foreach ($this->getDefinition($this->table.'_lang') as $field) {
-            foreach ([1] as $langId) {
+        foreach ($this->getDefinition(static::$table.'_lang') as $field) {
+            foreach ($this->langId ? [$this->langId] : LangModel::getIds() as $langId) {
                 $this->{$field}[$langId] = $_GET[$field.'_'.$langId] ?? null;
             }
         }
     }
 
-    private function getDefinition($table)
+    protected function getDefinition(string $table): array
     {
-        return isset(APP_TABLE[$table]) ? array_keys(array_diff_key(APP_TABLE[$table], $this->ignore)) : [];
+        $data = &Cache::static(__METHOD__);
+        if (isset($data[$table])) {
+            return $data[$table];
+        }
+        return $data[$table] = isset(APP_TABLE[$table]) ? array_keys(array_diff_key(APP_TABLE[$table], $this->ignore)) : [];
     }
 }

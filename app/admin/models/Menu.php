@@ -6,18 +6,16 @@ use Hook\Data\ArrayUtils;
 
 class MenuModel extends AbstractModel
 {
-    public $table = 'hp_menu';
-    public $foreign = 'menu_id';
+    public static $table = 'hp_menu';
+    public static $foreign = 'menu_id';
 
     public $fields = [
-        'parent' => array('type' => 1, 'require' => false, 'validate' => 'isInt'),
-        'status' => array('type' => 2, 'require' => true, 'validate' => 'isInt'),
-        'position' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
-        'date_add' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
-        'date_upd' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
-        'url' => array('type' => 6, 'require' => true, 'validate' => 'isUrl'),
-        'icon' => array('type' => 6, 'require' => true, 'validate' => 'isGenericName'),
-        'name' => array('type' => 5, 'require' => true, 'validate' => 'isGenericName'),
+        'parent' => array('type' => parent::INT, 'require' => false, 'validate' => 'isInt'),
+        'status' => array('type' => parent::BOOL, 'require' => true, 'validate' => 'isBool'),
+        'position' => array('type' => parent::INT, 'require' => true, 'validate' => 'isInt'),
+        'url' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isUrl'),
+        'icon' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isGenericName'),
+        'name' => array('type' => parent::HTML, 'require' => true, 'validate' => 'isGenericName'),
     ];
 
     public function __construct(int $id = null, int $appId = null, int $langId = null)
@@ -47,6 +45,6 @@ class MenuModel extends AbstractModel
 
     public function get(int $id = 0, int $langId = 0): array
     {
-        return parent::read($this->table, $id, $langId);
+        return parent::read(self::$table, $id, $langId);
     }
 }

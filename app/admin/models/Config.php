@@ -3,12 +3,10 @@ use Hook\Db\Table;
 
 class ConfigModel extends AbstractModel
 {
-    public $table = 'hp_config';
+    public static $table = 'hp_config';
     public $fields = [
-        'date_add' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
-        'date_upd' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
-        'key' => array('type' => 6, 'require' => true, 'validate' => 'isGenericName'),
-        'value' => array('type' => 5, 'require' => true),
+        'key' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isGenericName'),
+        'value' => array('type' => parent::HTML, 'require' => true),
     ];
 
     public function __construct(int $id = null, int $appId = null, int $langId = null)
@@ -18,6 +16,6 @@ class ConfigModel extends AbstractModel
 
     public function get(int $id = 0, int $langId = 0): array
     {
-        return parent::read($this->table, $id, $langId);
+        return parent::read(self::$table, $id, $langId);
     }
 }

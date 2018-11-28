@@ -5,17 +5,15 @@ use Hook\Sql\Hook;
 
 class IndexModel extends \AbstractModel
 {
-    public $table = 'hp_hook';
-    public $foreign = 'hook_id';
+    public static $table = 'hp_hook';
+    public static $foreign = 'hook_id';
 
     public $fields = [
-        'position' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
-        'date_add' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
-        'date_upd' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
-        'key' => array('type' => 6, 'require' => true, 'validate' => 'isGenericName'),
-        'name' => array('type' => 5, 'require' => true, 'validate' => 'isGenericName'),
-        'title' => array('type' => 5, 'require' => true, 'validate' => 'isGenericName'),
-        'description' => array('type' => 5, 'require' => true),
+        'position' => array('type' => parent::INT, 'require' => true, 'validate' => 'isInt'),
+        'key' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isGenericName'),
+        'name' => array('type' => parent::HTML, 'require' => true, 'validate' => 'isGenericName'),
+        'title' => array('type' => parent::HTML, 'require' => true, 'validate' => 'isGenericName'),
+        'description' => array('type' => parent::HTML, 'require' => true),
     ];
 
     public function __construct(int $id = null, int $appId = null, int $langId = null)

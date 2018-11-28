@@ -4,13 +4,11 @@ use Hook\Db\Table;
 
 class ModuleModel extends \AbstractModel
 {
-    public $table = 'hp_hook_module';
+    public static $table = 'hp_hook_module';
     public $fields = [
-        'hook_id' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
-        'module_id' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
-        'position' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
-        'date_add' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
-        'date_upd' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
+        'hook_id' => array('type' => parent::INT, 'require' => true, 'validate' => 'isInt'),
+        'module_id' => array('type' => parent::INT, 'require' => true, 'validate' => 'isInt'),
+        'position' => array('type' => parent::INT, 'require' => true, 'validate' => 'isInt'),
     ];
 
     public function __construct(int $id = null, int $appId = null, int $langId = null)
@@ -20,6 +18,6 @@ class ModuleModel extends \AbstractModel
 
     public function get(int $id = 0, int $langId = 0): array
     {
-        return parent::read($this->table, $id, $langId);
+        return parent::read(self::$table, $id, $langId);
     }
 }

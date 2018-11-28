@@ -3,7 +3,7 @@ use Hook\Db\Table;
 
 class ThemeModel extends AbstractModel
 {
-    public $table = 'hp_theme';
+    public static $table = 'hp_theme';
 
     public function __construct(int $id = null, int $appId = null, int $langId = null)
     {
@@ -12,6 +12,6 @@ class ThemeModel extends AbstractModel
 
     public function get(int $id = 0, int $langId = 0): array
     {
-        return parent::read($this->table, $id, $langId);
+        return parent::read(self::$table, $id, $langId);
     }
 }

@@ -4,15 +4,13 @@ use Hook\Sql\App;
 
 class AppModel extends AbstractModel
 {
-    public $table = 'hp_app';
-    public $foreign = 'app_id';
+    public static $table = 'hp_app';
+    public static $foreign = 'app_id';
 
     public $fields = [
-        'status' => array('type' => 2, 'require' => true, 'validate' => 'isInt'),
-        'date_add' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
-        'date_upd' => array('type' => 1, 'require' => true, 'validate' => 'isInt'),
-        'key' => array('type' => 6, 'require' => true, 'validate' => 'isGenericName'),
-        'description' => array('type' => 5, 'require' => true),
+        'status' => array('type' => parent::BOOL, 'require' => true, 'validate' => 'isBool'),
+        'key' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isGenericName'),
+        'description' => array('type' => parent::HTML, 'require' => true),
     ];
 
     public function __construct(int $id = null, int $appId = null, int $langId = null)
