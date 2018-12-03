@@ -4,6 +4,8 @@ use Yaf\Dispatcher;
 
 abstract class AbstractController extends Yaf\Controller_Abstract
 {
+    protected $fieldsList = [];
+
     public function init()
     {
         //API模块单独处理
@@ -15,7 +17,7 @@ abstract class AbstractController extends Yaf\Controller_Abstract
         //全局模板路径
         $this->_view->setScriptPath(APP_ROOT.($this->_request->module === 'Index' ? '' : '/modules/'.$this->_request->module).'/views/'.APP_THEME.'/');
         //全局META SEO
-        $this->_view->assign(['title' => l('application.title'), 'keywords' => l('application.keywords'), 'description' => l('application.description')]);
+        $this->_view->assign(['title' => l('app.title'), 'keywords' => l('app.keywords'), 'description' => l('app.description')]);
         //登录检测
         if (!isset($_SESSION[APP_NAME])) {
             if ($this->_request->controller !== 'Login') {

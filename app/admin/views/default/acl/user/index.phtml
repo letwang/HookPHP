@@ -18,12 +18,5 @@
         <?php require APP_ROOT.'/views/'.APP_THEME.'/foot.phtml';?>
     </main>
 </div>
-<script type="text/javascript">advanceDataTables.init('/api/acl_user/v1/', [
-{data:'id', className:'col-checker align-middle', orderable: false, searchable: false},
-{title:'user_id', data:'user_id', className:'align-middle'},
-{title:'role_id', data:'role_id', className:'align-middle'},
-{title:'status', data:'status', className:'align-middle'},
-{title:'date_add', data:'date_add', render: function c(data){return timeStampToDate(data);}, className:'align-middle'},
-{data:'id', className:'align-middle text-right', orderable: false, searchable: false}
-]);</script>
+<script type="text/javascript">advanceDataTables.init('/api/acl_user/v1/', [<?php echo join(',', array_map('json_encode', $this->fieldsList));?>]);</script>
 <?php require APP_ROOT.'/views/'.APP_THEME.'/bottom.phtml';?>

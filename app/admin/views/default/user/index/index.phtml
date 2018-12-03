@@ -18,62 +18,6 @@
         <?php require APP_ROOT.'/views/'.APP_THEME.'/foot.phtml';?>
     </main>
 </div>
-<script type="text/javascript">advanceDataTables.init('/api/user_index/v1/', [
-{data:'id', className:'col-checker align-middle', orderable: false, searchable: false},
-{title:'lang_id', data:'lang_id', className:'align-middle'},
-{title:'status', data:'status', className:'align-middle'},
-{title:'date_add', data:'date_add', render: function c(data){return timeStampToDate(data);}, className:'align-middle'},
-{title:'date_upd', data:'date_upd', render: function c(data){return timeStampToDate(data);}, c:'align-middle'},
-{title:'user', data:'user', className:'align-middle'},
-{title:'email', data:'email', className:'align-middle'},
-{title:'phone', data:'phone', className:'align-middle'},
-{title:'lastname', data:'lastname', className:'align-middle'},
-{title:'firstname', data:'firstname', className:'align-middle'},
-{data:'id', className:'align-middle text-right', orderable: false, searchable: false}
-]);
-
-var editor; // use a global for the submit and return data rendering in the examples
-
-$(document).ready(function() {
-    editor = new $.fn.dataTable.Editor( {
-        ajax: '/api/user_index/v1/',
-        table: "#myTable",
-        fields: [ {
-                label: "lang_id",
-                name: "lang_id"
-            }, {
-                label: "status",
-                name: "status"
-            }, {
-                label: "date_add",
-                name: "date_add"
-            }, {
-                label: "date_upd",
-                name: "date_upd"
-            }, {
-                label: "user",
-                name: "user"
-            }, {
-                label: "email",
-                name: "email",
-            }, {
-                label: "phone",
-                name: "phone"
-            }, {
-                label: "lastname",
-                name: "lastname"
-            }, {
-                label: "firstname",
-                name: "firstname"
-            }
-        ]
-    } );
-
-    $('#myTable').on( 'click', 'tbody td:not(:first-child)', function (e) {
-        editor.inline( this, {
-            onBlur: 'submit'
-        } );
-    } );
-} );
+<script type="text/javascript">advanceDataTables.init('/api/user_index/v1/', [<?php echo join(',', array_map('json_encode', $this->fieldsList));?>]);
 </script>
 <?php require APP_ROOT.'/views/'.APP_THEME.'/bottom.phtml';?>

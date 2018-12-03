@@ -18,15 +18,5 @@
         <?php require APP_ROOT.'/views/'.APP_THEME.'/foot.phtml';?>
     </main>
 </div>
-<script type="text/javascript">advanceDataTables.init('/api/hook_index/v1/', [
-{data:'id', className:'col-checker align-middle', orderable: false, searchable: false},
-{title:'position', data:'position', className:'align-middle'},
-{title:'date_add', data:'date_add', render: function c(data){return timeStampToDate(data);}, className:'align-middle'},
-{title:'date_upd', data:'date_upd', render: function c(data){return timeStampToDate(data);}, c:'align-middle'},
-{title:'key', data:'key', className:'align-middle'},
-{title:'name', data:'name', className:'align-middle'},
-{title:'title', data:'title', className:'align-middle'},
-{title:'description', data:'description', className:'align-middle'},
-{data:'id', className:'align-middle text-right', orderable: false, searchable: false}
-]);</script>
+<script type="text/javascript">advanceDataTables.init('/api/hook_index/v1/', [<?php echo join(',', array_map('json_encode', $this->fieldsList));?>]);</script>
 <?php require APP_ROOT.'/views/'.APP_THEME.'/bottom.phtml';?>

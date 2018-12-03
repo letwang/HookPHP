@@ -36,7 +36,7 @@ class LoginController extends AbstractController
             return true;
         }
         
-        $this->_view->error = [l('login.fail')];
+        $this->_view->error = [l('Login.fail')];
     }
 
     public function outAction()
