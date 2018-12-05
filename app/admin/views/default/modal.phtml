@@ -1,4 +1,4 @@
-<div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="modalDeleteLabel" aria-hidden="true">
+<div class="modal fade modalDelete" tabindex="-1" role="dialog" aria-labelledby="modalDeleteLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -17,3 +17,27 @@
     </div>
   </div>
 </div>
+<script type="text/javascript">
+$(function(){
+    $('.modalDelete').on('show.bs.modal', function (event) {
+        var row = $(event.relatedTarget).parent().parent();
+        var id = row.find('input').val();
+        $('.btn-primary').unbind('click').click(function () {
+            $.ajax({
+                type: 'DELETE',
+                dataType: 'json',
+                url: '/api<?php echo $this->uri;?>/v1/id/'+id,
+                data: {'token': '<?php echo $_SESSION[APP_NAME]['security']['token'];?>'},
+                success: function(data){
+                    if (data.code === 10000) {
+                        $('.modalDelete').modal('hide');
+                        row.remove();
+                        return true;
+                    }
+                    alert(data.id +':'+ data.msg);
+                }
+            });
+        });
+    });
+});
+</script>

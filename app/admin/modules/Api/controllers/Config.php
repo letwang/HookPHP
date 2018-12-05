@@ -4,7 +4,7 @@ class ConfigController extends AbstractController
     public function init()
     {
         parent::init();
-        $this->model = new ConfigModel();
+        $this->model = new ConfigModel($this->getRequest()->get('id'));
     }
 
     public function GETAction()
@@ -23,13 +23,11 @@ class ConfigController extends AbstractController
 
     public function PUTAction()
     {
-        $id = (int) $this->getRequest()->getPut('id');
-        return $this->send($this->model->update($id));
+        return $this->send($this->model->update());
     }
 
     public function DELETEAction()
     {
-        $id = (int) $this->getRequest()->getDelete('id');
-        return $this->send($this->model->delete($id));
+        return $this->send($this->model->delete());
     }
 }

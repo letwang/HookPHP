@@ -113,7 +113,8 @@ abstract class AbstractModel
 
     public function delete(): bool
     {
-        return PdoConnect::getInstance()->delete('DELETE FROM `'.static::$table.'` WHERE `id`=?', [$this->id]) === 1;
+        $data = PdoConnect::getInstance()->delete('DELETE FROM `'.static::$table.'` WHERE `id`=?', [$this->id]) === 1;
+        return $data && $this->afterDelete();
     }
 
     private function getFields(): array
@@ -255,5 +256,15 @@ abstract class AbstractModel
             return $data[$table];
         }
         return $data[$table] = isset(APP_TABLE[$table]) ? array_keys(array_diff_key(APP_TABLE[$table], $this->ignore)) : [];
+    }
+
+    protected function afterDelete(): bool
+    {
+        $redis = RedisConnect::getInstance()->redis;
+        $redis->hDel('table:'.static::$table, $this->id);
+        foreach (LangModel::getIds() as $langId) {
+            $redis->hDel('table:'.static::$table.'_lang', $this->id.'_'.$langId);
+        }
+        return true;
     }
 }

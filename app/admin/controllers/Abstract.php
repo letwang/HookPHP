@@ -30,8 +30,11 @@ abstract class AbstractController extends Yaf\Controller_Abstract
             throw new Exception(l('security.hijack'));
         }
         //跨站攻击
-        if (!$this->_request->isGet() && $_SESSION[APP_NAME]['security']['token'] !== $this->_request->getPost('token')) {
-            throw new Exception(l('security.csrf'));
+        if (!$this->_request->isGet()) {
+            mb_parse_str(file_get_contents('php://input'), $result);
+            if ($_SESSION[APP_NAME]['security']['token'] !== $this->_request->getPost('token', $result['token'] ?? null)) {
+                throw new Exception(l('security.csrf'));
+            }
         }
         //初始化模板变量
         $this->_view->assign(['uri' => $this->_request->getRequestUri(), 'menus' => MenuModel::classify()]);
