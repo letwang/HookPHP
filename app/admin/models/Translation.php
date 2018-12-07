@@ -1,6 +1,4 @@
 <?php
-use Hook\Db\Table;
-
 class TranslationModel extends AbstractModel
 {
     public static $table = 'hp_translation';

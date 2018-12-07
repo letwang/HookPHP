@@ -1,5 +1,5 @@
 <?php
-use Hook\Db\{PdoConnect, Table};
+use Hook\Db\{PdoConnect, Orm};
 use Hook\Sql\{Install};
 
 require __DIR__.'/../init.php';
@@ -20,7 +20,7 @@ $app->execute('main', $name);
 function main($name) {
     $data = '';
     foreach (PdoConnect::getInstance()->fetchAll(\Hook\Sql\Table::GET_ALL, [], PDO::FETCH_NUM) as list($tableName)) {
-        $table = new Table($tableName);
+        $table = new Orm($tableName);
         $table->synData();
         $data .= '['.$tableName.']'.PHP_EOL;
         foreach ($table->desc() as $field) {

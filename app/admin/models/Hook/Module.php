@@ -1,6 +1,5 @@
 <?php
 namespace Hook;
-use Hook\Db\Table;
 
 class ModuleModel extends \AbstractModel
 {

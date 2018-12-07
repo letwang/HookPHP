@@ -1,6 +1,4 @@
 <?php
-use Hook\Db\Table;
-
 class ThemeModel extends AbstractModel
 {
     public static $table = 'hp_theme';

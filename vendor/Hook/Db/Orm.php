@@ -1,0 +1,325 @@
+<?php
+namespace Hook\Db;
+
+class Orm
+{
+    public $table;
+
+    private $statement = '';
+    private $parameter = [];
+
+    private $operator = ['>' => '>', '>=' => '>=', '<' => '<', '<=' => '<=', '!=' => '!=', 'LIKE' => 'LIKE', 'NOT LIKE' => 'NOT LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
+    private $expression = ['1', 'DISTINCT', 'DISTINCTROW', 'SQL_CALC_FOUND_ROWS'];
+
+    public function __construct(string $table)
+    {
+        $this->table = $table;
+    }
+
+    public function desc(): array
+    {
+        return PdoConnect::getInstance()->fetchAll('DESC `'.$this->table.'`');
+    }
+
+    /**
+     * ->select(['id', 'name'], ['SQL_CALC_FOUND_ROWS'])
+     * @param array $column
+     * @param array $expression
+     * @return self
+     */
+    public function select(array $column = ['id'], array $expression = []): self
+    {
+        if ($expression) {
+            $this->statement .= join(' ', array_intersect($expression, $this->expression));
+        }
+        if ($column) {
+            $this->statement .= '`'.join('`,`', $column).'`';
+        }
+        $this->statement = 'SELECT '.$this->statement.' FROM `'.$this->table.'` WHERE 1';
+        return $this;
+    }
+
+    /**
+     * ->where(['id' => ['<=' => 100, 'IN' => [1, 2]]])
+       ->where(['iso' => ['LIKE' => '%zh%']], 'OR')
+       ->where(['name' => 'cn'], 'AND')
+     * @param array $where
+     * @param string $relation
+     * @return self
+     */
+    public function where(array $where, string $relation = 'AND'): self
+    {
+        $relation = $relation === 'AND' ? ' AND ' : ' OR ';
+        foreach ($where as $column => $value) {
+            if (is_array($value)) {
+                foreach ($value as $operator => $value) {
+                    $this->statement .= $relation.'`'.$column.'` '.$this->operator[$operator].' ';
+                    if (is_array($value)) {
+                        $this->statement .= '('.implode(',', array_fill(0, count($value), '?')).')';
+                        $this->parameter = array_merge($this->parameter, $value);
+                    } else {
+                        $this->statement .= '?';
+                        $this->parameter[] = $value;
+                    }
+                }
+            } else {
+                $this->statement .= $relation.'`'.$column.'` = ?';
+                $this->parameter[] = $value;
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * ->group(['id' => 'ASC', 'name' => 'DESC'])
+     * @param array $group
+     * @return self
+     */
+    public function group(array $group): self
+    {
+        $this->statement .= ' GROUP BY';
+        foreach ($group as $column => $value) {
+            $this->statement .= ' `'.$column.'` '.($value === 'DESC' ? 'DESC' : 'ASC').',';
+        }
+        $this->statement = substr($this->statement, 0, -1);
+
+        return $this;
+    }
+
+    /**
+     * ->order(['id' => 'ASC', 'name' => 'DESC'])
+     * @param array $order
+     * @return self
+     */
+    public function order(array $order): self
+    {
+        $this->statement .= ' ORDER BY';
+        foreach ($order as $column => $value) {
+            $this->statement .= ' `'.$column.'` '.($value === 'DESC' ? 'DESC' : 'ASC').',';
+        }
+        $this->statement = substr($this->statement, 0, -1);
+
+        return $this;
+    }
+
+    /**
+     * ->limit(0, 100)
+     * @param int $offset
+     * @param int $count
+     * @return self
+     */
+    public function limit(int $offset = 0, int $count = 30): self
+    {
+        $this->statement .= ' LIMIT '.$offset.', '.$count;
+        return $this;
+    }
+
+    /**
+     * 注释参考PdoConnect::getInstance()->fetchAll
+     * @param int $type
+     * @return array
+     */
+    public function fetchAll(int $type = \PDO::FETCH_ASSOC): array
+    {
+        $this->safeCheck();
+        return PdoConnect::getInstance()->fetchAll($this->statement, $this->parameter, $type);
+    }
+
+    /**
+     * 获取第1行数据
+     * @param int $type
+     * @return mixed[array|object|false]
+     */
+    public function fetch(int $type = \PDO::FETCH_ASSOC)
+    {
+        $this->safeCheck();
+        return PdoConnect::getInstance()->fetch($this->statement, $this->parameter, $type);
+    }
+
+    /**
+     * 获取某1列数据
+     * @param int $column
+     * @return mixed[string|false]
+     */
+    public function fetchColumn(int $column = 0)
+    {
+        $this->safeCheck();
+        return PdoConnect::getInstance()->fetchColumn($this->statement, $this->parameter, $column);
+    }
+
+    /**
+     * ->insert(['status' => 1, 'name' => 'a'])
+     * @param array $parameter
+     * @return array
+     */
+    public function insert(array $parameter): array
+    {
+        $this->statement = 'INSERT INTO `'.$this->table.'`(`'.join('`,`', array_keys($parameter)).'`)VALUES(:'.join(',:', array_keys($parameter)).');';
+        $this->parameter = $parameter;
+        $this->safeCheck();
+        return PdoConnect::getInstance()->insert($this->statement, $this->parameter);
+    }
+
+    /**
+     * ->update(['status' => 0, 'name' => 'b'], ['id' => 1, 'status' => 1])
+     * @param array $parameter
+     * @return int
+     */
+    public function update(array $parameter, array $where = []): int
+    {
+        $assignment = [];
+        $this->parameter = [];
+        foreach ($parameter as $column => $value) {
+            $assignment[] = '`'.$column.'`=?';
+            $this->parameter[] = $value;
+        }
+        $this->statement = 'UPDATE `'.$this->table.'` SET '.join(',', $assignment);
+
+        if ($where) {
+            $condition = [];
+            foreach ($where as $column => $value) {
+                $condition[] = '`'.$column.'`=?';
+                $this->parameter[] = $value;
+            }
+            $this->statement .= ' WHERE '.join(' AND ', $condition);
+        }
+        $this->safeCheck();
+        return PdoConnect::getInstance()->update($this->statement, $this->parameter);
+    }
+
+    /**
+     * ->delete(['id' => 1, 'status' => 0])
+     * @param array $where
+     * @return int
+     */
+    public function delete(array $where = []): int
+    {
+        $this->parameter = [];
+        $this->statement = 'DELETE FROM `'.$this->table.'`';
+        if ($where) {
+            $condition = [];
+            foreach ($where as $column => $value) {
+                $condition[] = '`'.$column.'`=?';
+                $this->parameter[] = $value;
+            }
+            $this->statement .= ' WHERE '.join(' AND ', $condition);
+        }
+        $this->safeCheck();
+        return PdoConnect::getInstance()->delete($this->statement, $this->parameter);
+    }
+
+    /**
+     * 根据DB表结构返回该字段取值范围
+     * @param string $type
+     * @return array
+     */
+    public function validate(string $type): array
+    {
+        $unsigned = strpos($type, 'unsigned');
+        $data = ['min' => null, 'max' => null];
+        switch (1) {
+            case strpos($type, 'tinyint') === 0:
+                $data = ['min' => -128, 'max' => 127];
+                if ($unsigned) {
+                    $data = ['min' => 0, 'max' => 255];
+                }
+                break;
+            case strpos($type, 'smallint') === 0:
+                $data = ['min' => -32768, 'max' => 32767];
+                if ($unsigned) {
+                    $data = ['min' => 0, 'max' => 65535];
+                }
+                break;
+            case strpos($type, 'mediumint') === 0:
+                $data = ['min' => -8388608, 'max' => 8388607];
+                if ($unsigned) {
+                    $data = ['min' => 0, 'max' => 16777215];
+                }
+                break;
+            case strpos($type, 'int') === 0:
+                $data = ['min' => -2147483648, 'max' => 2147483647];
+                if ($unsigned) {
+                    $data = ['min' => 0, 'max' => 4294967295];
+                }
+                break;
+            case strpos($type, 'bigint') === 0:
+                $data = ['min' => -9223372036854775808, 'max' => 9223372036854775807];
+                if ($unsigned) {
+                    $data = ['min' => 0, 'max' => 18446744073709551615];
+                }
+                break;
+            case strpos($type, 'enum') === 0:
+                $type = array_flip(
+                    preg_replace(
+                        ['/enum\(/', '/\)/', '/\'/'],
+                        '',
+                        explode("','", $type)
+                    )
+                );
+                $data = ['min' => 0, 'max' => count($type)];
+                return $data;
+                break;
+            case strpos($type, 'char') !== false:
+                $func = function ($value) {return mb_strlen($value);};
+                $data = ['min' => 0, 'max' => (int) preg_replace(['/var/', '/char/', '/\(/', '/\)/'], '', $type)];
+                break;
+            case strpos($type, 'binary') !== false:
+                $data = ['min' => 0, 'max' => (int) preg_replace(['/var/', '/binary/', '/\(/', '/\)/'], '', $type)];
+                break;
+            case strpos($type, 'tinytext') === 0 || strpos($type, 'tinyblob') === 0:
+                $data = ['min' => 0, 'max' => 255];//255B
+                break;
+            case strpos($type, 'text') === 0 || strpos($type, 'blob') === 0:
+                $data = ['min' => 0, 'max' => 65535];//64K
+                break;
+            case strpos($type, 'mediumtext') === 0 || strpos($type, 'mediumblob') === 0:
+                $data = ['min' => 0, 'max' => 16777215];//16M
+                break;
+            case strpos($type, 'longtext') === 0 || strpos($type, 'longblob') === 0:
+                $data = ['min' => 0, 'max' => 4294967295];//4G
+                break;
+        }
+        return $data;
+    }
+
+    /**
+     * 同步MySQL数据到Redis
+     * @return bool
+     */
+    public function synData(): bool
+    {
+        $redis = RedisConnect::getInstance()->redis;
+        $key = 'table:'.$this->table;
+        $redis->del($key);
+        $data = $this->select(['id', '*'])->fetchAll(\PDO::FETCH_ASSOC | \PDO::FETCH_UNIQUE);
+        $flag = explode('_', $this->table);
+        $max = count($flag) - 1;
+        if ($max > 1 && $flag[$max] === 'lang') {
+            $temp = [];
+            foreach ($data as &$v) {
+                $temp[$v[$flag[$max-1].'_id'].'_'.$v['lang_id']] = $v;
+            }
+            $data = $temp;
+        }
+        return $redis->hMset($key, $data);
+    }
+
+    /**
+     * SQL注入一次性检测
+     * @throws \Exception
+     * @return bool
+     */
+    private function safeCheck(): bool
+    {
+         preg_match_all('/`(\w+)`/', $this->statement, $matches);
+         $white = APP_TABLE[$this->table] + [$this->table => []];
+         foreach ($matches[1] as $column) {
+             if (!isset($white[$column])) {
+                throw new \Exception('db hack~');
+             }
+         }
+
+         return true;
+    }
+}

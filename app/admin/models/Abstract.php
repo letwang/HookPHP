@@ -1,5 +1,5 @@
 <?php
-use Hook\Db\{PdoConnect,RedisConnect,Table};
+use Hook\Db\{PdoConnect,RedisConnect,Orm};
 use Hook\Cache\Cache;
 use Hook\Validate\Validate;
 use Hook\Tools\Tools;
@@ -33,26 +33,28 @@ abstract class AbstractModel
 
     public function create(): int
     {
+        $this->beforeCreate();
         $this->copyFromPost();
         try {
             PdoConnect::getInstance()->pdo->beginTransaction();
 
-            $data = $this->getFields();
-            $data += isset(APP_TABLE[static::$table]['app_id']) ? ['app_id' => $this->appId]: [];
-            $data += isset(APP_TABLE[static::$table]['date_add']) ? ['date_add' => time()] : [];
-            $result = PdoConnect::getInstance()->insert(
-                'INSERT INTO `'.static::$table.'`(`'.join('`,`', array_keys($data)).'`)VALUES(:'.join(',:', array_keys($data)).');',
-                $data
-            );
+            $parameter = $this->getFields();
+            $parameter += isset(APP_TABLE[static::$table]['app_id']) ? ['app_id' => $this->appId]: [];
+            $parameter += isset(APP_TABLE[static::$table]['date_add']) ? ['date_add' => time()] : [];
 
-            foreach ($this->getFieldsLang() as $langId => $data) {
-                $data += ['lang_id' => $langId, static::$foreign => $result['lastInsertId']];
-                PdoConnect::getInstance()->insert(
-                    'INSERT INTO `'.static::$table.'_lang`(`'.join('`,`', array_keys($data)).'`)VALUES(:'.join(',:', array_keys($data)).');',
-                    $data
-                );
+            $table = new Orm(static::$table);
+            $result = $table->insert($parameter);
+
+            $lang = $this->getFieldsLang();
+            if ($lang) {
+                $table = new Orm(static::$table.'_lang');
+                foreach ($lang as $langId => $parameter) {
+                    $parameter += ['lang_id' => $langId, static::$foreign => $result['lastInsertId']];
+                    $table->insert($parameter);
+                }
             }
-            return PdoConnect::getInstance()->pdo->commit() ? $result['lastInsertId']: 0;
+
+            return PdoConnect::getInstance()->pdo->commit() && $this->afterCreate($result['lastInsertId']) ? $result['lastInsertId']: 0;
         } catch (Throwable $e) {
             PdoConnect::getInstance()->pdo->rollBack();
             throw new Exception($e->getMessage());
@@ -78,33 +80,23 @@ abstract class AbstractModel
 
     public function update(): bool
     {
+        $this->beforeUpdate();
         $this->copyFromPost();
         try {
             PdoConnect::getInstance()->pdo->beginTransaction();
 
-            $keys = '';
-            foreach ($this->getFields() as $key => $value) {
-                $keys .= '`'.$key.'`=:'.$key.',';
-            }
-            PdoConnect::getInstance()->update(
-                'UPDATE `'.static::$table.'` SET '.substr($keys, 0, -1).' WHERE `id`='.$this->id,
-                $this->getFields()
-            );
+            $table = new Orm(static::$table);
+            $table->update($this->getFields(), ['id' => $this->id]);
 
-            foreach ($this->getFieldsLang() as $langId => $data) {
-                static $keys = '';
-                if ($keys === '') {
-                    foreach ($data as $key => $value) {
-                        $keys .= '`'.$key.'`=:'.$key.',';
-                    }
+            $lang = $this->getFieldsLang();
+            if ($lang) {
+                $table = new Orm(static::$table.'_lang');
+                foreach ($lang as $langId => $parameter) {
+                    $table->update($parameter, [static::$foreign => $this->id, 'lang_id' => $langId]);
                 }
-                PdoConnect::getInstance()->update(
-                    'UPDATE `'.static::$table.'_lang` SET '.substr($keys, 0, -1).' WHERE `'.static::$foreign.'`='.$this->id.' AND `lang_id`='.$langId,
-                    $data
-                );
             }
 
-            return PdoConnect::getInstance()->pdo->commit();
+            return PdoConnect::getInstance()->pdo->commit() && $this->afterUpdate();
         } catch (Throwable $e) {
             PdoConnect::getInstance()->pdo->rollBack();
             throw new Exception($e->getMessage());
@@ -113,8 +105,9 @@ abstract class AbstractModel
 
     public function delete(): bool
     {
-        $data = PdoConnect::getInstance()->delete('DELETE FROM `'.static::$table.'` WHERE `id`=?', [$this->id]) === 1;
-        return $data && $this->afterDelete();
+        $this->beforeDelete();
+        $table = new Orm(static::$table);
+        return $table->delete(['id' => $this->id]) === 1 && $this->afterDelete();
     }
 
     private function getFields(): array
@@ -258,12 +251,55 @@ abstract class AbstractModel
         return $data[$table] = isset(APP_TABLE[$table]) ? array_keys(array_diff_key(APP_TABLE[$table], $this->ignore)) : [];
     }
 
+    protected function beforeCreate(): bool
+    {
+        return true;
+    }
+
+    protected function afterCreate(int $id): bool
+    {
+        $table = new Orm($this->table);
+        $redis = RedisConnect::getInstance()->redis;
+        $redis->hSet(
+            'table:'.$this->table,
+            $this->id,
+            $table->select(['*'])->where(['id' => $this->id])->fetch()
+        );
+
+        if (isset(APP_TABLE[$this->table.'_lang'])) {
+            $redis->hSet(
+                'table:'.$this->table.'_lang',
+                $this->id.'_'.$this->langId,
+                $table->select(['*'])->where(['id' => $this->id, 'lang_id' => $this->langId])->fetch()
+            );
+        }
+        return true;
+    }
+
+    protected function beforeUpdate(): bool
+    {
+        return true;
+    }
+
+    protected function afterUpdate(): bool
+    {
+        return $this->afterCreate($this->id);
+    }
+
+    protected function beforeDelete(): bool
+    {
+        return true;
+    }
+
     protected function afterDelete(): bool
     {
         $redis = RedisConnect::getInstance()->redis;
         $redis->hDel('table:'.static::$table, $this->id);
-        foreach (LangModel::getIds() as $langId) {
-            $redis->hDel('table:'.static::$table.'_lang', $this->id.'_'.$langId);
+
+        if (isset(APP_TABLE[$this->table.'_lang'])) {
+            foreach (LangModel::getIds() as $langId) {
+                $redis->hDel('table:'.static::$table.'_lang', $this->id.'_'.$langId);
+            }
         }
         return true;
     }

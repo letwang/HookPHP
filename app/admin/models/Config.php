@@ -1,5 +1,4 @@
 <?php
-use Hook\Db\Table;
 
 class ConfigModel extends AbstractModel
 {

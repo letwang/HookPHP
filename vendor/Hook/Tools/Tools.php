@@ -166,9 +166,4 @@ class Tools
             ['options' => ['default' => $default]]
             ) : $default;
     }
-
-    public static function order(&$expr, $default = 'DESC')
-    {
-        return isset($expr) && $expr === 'ASC' ? $expr : $default;
-    }
 }

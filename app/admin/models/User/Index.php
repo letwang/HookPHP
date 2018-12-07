@@ -1,6 +1,5 @@
 <?php
 namespace User;
-use Hook\Db\Table;
 
 class IndexModel extends \AbstractModel
 {

@@ -1,5 +1,5 @@
 <?php
-use Hook\Db\{RedisConnect, PdoConnect, Table};
+use Hook\Db\{RedisConnect, PdoConnect};
 use Hook\Sql\Menu;
 use Hook\Cache\Cache;
 use Hook\Data\ArrayUtils;
