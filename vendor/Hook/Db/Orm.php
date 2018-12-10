@@ -3,7 +3,7 @@ namespace Hook\Db;
 
 class Orm
 {
-    public $table;
+    public $table = '';
 
     private $statement = '';
     private $parameter = [];
@@ -14,6 +14,12 @@ class Orm
     public function __construct(string $table)
     {
         $this->table = $table;
+    }
+
+    public function __destruct()
+    {
+        $this->statement = '';
+        $this->parameter = [];
     }
 
     public function desc(): array
@@ -35,7 +41,7 @@ class Orm
         if ($column) {
             $this->statement .= '`'.join('`,`', $column).'`';
         }
-        $this->statement = 'SELECT '.$this->statement.' FROM `'.$this->table.'` WHERE 1';
+        $this->statement = 'SELECT '.$this->statement.' FROM `'.$this->table.'`';
         return $this;
     }
 
@@ -122,8 +128,8 @@ class Orm
      */
     public function fetchAll(int $type = \PDO::FETCH_ASSOC): array
     {
-        $this->safeCheck();
-        return PdoConnect::getInstance()->fetchAll($this->statement, $this->parameter, $type);
+        list($statement, $parameter) = $this->checkAndClear();
+        return PdoConnect::getInstance()->fetchAll($statement, $parameter, $type);
     }
 
     /**
@@ -133,19 +139,32 @@ class Orm
      */
     public function fetch(int $type = \PDO::FETCH_ASSOC)
     {
-        $this->safeCheck();
-        return PdoConnect::getInstance()->fetch($this->statement, $this->parameter, $type);
+        list($statement, $parameter) = $this->checkAndClear();
+        return PdoConnect::getInstance()->fetch($statement, $parameter, $type);
     }
 
     /**
-     * 获取某1列数据
+     * 获取某行某列数据
      * @param int $column
      * @return mixed[string|false]
      */
     public function fetchColumn(int $column = 0)
     {
-        $this->safeCheck();
-        return PdoConnect::getInstance()->fetchColumn($this->statement, $this->parameter, $column);
+        list($statement, $parameter) = $this->checkAndClear();
+        return PdoConnect::getInstance()->fetchColumn($statement, $parameter, $column);
+    }
+
+    /**
+     * ->select(['*'], ['SQL_CALC_FOUND_ROWS'])->fetch()
+       ...
+       ->count()
+     * @return int
+     */
+    public function count(): int
+    {
+        $this->statement = 'SELECT FOUND_ROWS()';
+        $this->parameter = [];
+        return $this->fetch()['FOUND_ROWS()'];
     }
 
     /**
@@ -157,56 +176,39 @@ class Orm
     {
         $this->statement = 'INSERT INTO `'.$this->table.'`(`'.join('`,`', array_keys($parameter)).'`)VALUES(:'.join(',:', array_keys($parameter)).');';
         $this->parameter = $parameter;
-        $this->safeCheck();
-        return PdoConnect::getInstance()->insert($this->statement, $this->parameter);
+        list($statement, $parameter) = $this->checkAndClear();
+        return PdoConnect::getInstance()->insert($statement, $parameter);
     }
 
     /**
-     * ->update(['status' => 0, 'name' => 'b'], ['id' => 1, 'status' => 1])
-     * @param array $parameter
+     * ->where(['id' => 1])->where(['id' => 2], 'OR')->update(['status' => 0, 'iso' => 3])
+     * @param array $assignment
      * @return int
      */
-    public function update(array $parameter, array $where = []): int
+    public function update(array $assignment): int
     {
-        $assignment = [];
-        $this->parameter = [];
-        foreach ($parameter as $column => $value) {
-            $assignment[] = '`'.$column.'`=?';
-            $this->parameter[] = $value;
+        $statement = '';
+        $parameter = [];
+        foreach ($assignment as $column => $value) {
+            $statement .= '`'.$column.'`=?,';
+            $parameter[] = $value;
         }
-        $this->statement = 'UPDATE `'.$this->table.'` SET '.join(',', $assignment);
 
-        if ($where) {
-            $condition = [];
-            foreach ($where as $column => $value) {
-                $condition[] = '`'.$column.'`=?';
-                $this->parameter[] = $value;
-            }
-            $this->statement .= ' WHERE '.join(' AND ', $condition);
-        }
-        $this->safeCheck();
-        return PdoConnect::getInstance()->update($this->statement, $this->parameter);
+        $this->statement = 'UPDATE `'.$this->table.'` SET '.substr($statement, 0, -1).$this->statement;
+        $this->parameter = array_merge($parameter, $this->parameter);
+        list($statement, $parameter) = $this->checkAndClear();
+        return PdoConnect::getInstance()->update($statement, $parameter);
     }
 
     /**
-     * ->delete(['id' => 1, 'status' => 0])
-     * @param array $where
+     * ->where(['id' => 1])->where(['id' => 2], 'OR')->delete()
      * @return int
      */
-    public function delete(array $where = []): int
+    public function delete(): int
     {
-        $this->parameter = [];
-        $this->statement = 'DELETE FROM `'.$this->table.'`';
-        if ($where) {
-            $condition = [];
-            foreach ($where as $column => $value) {
-                $condition[] = '`'.$column.'`=?';
-                $this->parameter[] = $value;
-            }
-            $this->statement .= ' WHERE '.join(' AND ', $condition);
-        }
-        $this->safeCheck();
-        return PdoConnect::getInstance()->delete($this->statement, $this->parameter);
+        $this->statement = 'DELETE FROM `'.$this->table.'`'.$this->statement;
+        list($statement, $parameter) = $this->checkAndClear();
+        return PdoConnect::getInstance()->delete($statement, $parameter);
     }
 
     /**
@@ -306,20 +308,23 @@ class Orm
     }
 
     /**
-     * SQL注入一次性检测
+     * SQL注入一次性检测&操作清理
      * @throws \Exception
-     * @return bool
+     * @return array
      */
-    private function safeCheck(): bool
+    private function checkAndClear(): array
     {
          preg_match_all('/`(\w+)`/', $this->statement, $matches);
          $white = APP_TABLE[$this->table] + [$this->table => []];
-         foreach ($matches[1] as $column) {
+         foreach (array_flip($matches[1]) as $column => $index) {
              if (!isset($white[$column])) {
                 throw new \Exception('db hack~');
              }
          }
 
-         return true;
+         $this->statement = preg_replace(['/` OR `/', '/` AND `/', '/=\? OR `/', '/=\? AND `/'], ['` WHERE `', '` WHERE `', '=? WHERE `', '=? WHERE `'], $this->statement, 1);
+         $data = [$this->statement, $this->parameter];
+         $this->__destruct();
+         return $data;
     }
 }
