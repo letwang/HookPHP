@@ -5,7 +5,7 @@ class IndexController extends AbstractController
     {
         $this->_view->assign(
             [
-                'resource' => $table->desc()
+                'resource' => 1
             ]
         );
     }

@@ -42,12 +42,12 @@ abstract class AbstractModel
             $parameter += isset(APP_TABLE[static::$table]['app_id']) ? ['app_id' => $this->appId]: [];
             $parameter += isset(APP_TABLE[static::$table]['date_add']) ? ['date_add' => time()] : [];
 
-            $table = new Orm(static::$table);
+            $table = Orm::getInstance(static::$table);
             $result = $table->insert($parameter);
 
             $lang = $this->getFieldsLang();
             if ($lang) {
-                $table = new Orm(static::$table.'_lang');
+                $table = Orm::getInstance(static::$table.'_lang');
                 foreach ($lang as $langId => $parameter) {
                     $parameter += ['lang_id' => $langId, static::$foreign => $result['lastInsertId']];
                     $table->insert($parameter);
@@ -85,12 +85,12 @@ abstract class AbstractModel
         try {
             PdoConnect::getInstance()->pdo->beginTransaction();
 
-            $table = new Orm(static::$table);
+            $table = Orm::getInstance(static::$table);
             $table->update($this->getFields(), ['id' => $this->id]);
 
             $lang = $this->getFieldsLang();
             if ($lang) {
-                $table = new Orm(static::$table.'_lang');
+                $table = Orm::getInstance(static::$table.'_lang');
                 foreach ($lang as $langId => $parameter) {
                     $table->update($parameter, [static::$foreign => $this->id, 'lang_id' => $langId]);
                 }
@@ -106,7 +106,7 @@ abstract class AbstractModel
     public function delete(): bool
     {
         $this->beforeDelete();
-        $table = new Orm(static::$table);
+        $table = Orm::getInstance(static::$table);
         return $table->delete(['id' => $this->id]) === 1 && $this->afterDelete();
     }
 
@@ -258,7 +258,7 @@ abstract class AbstractModel
 
     protected function afterCreate(int $id): bool
     {
-        $table = new Orm($this->table);
+        $table = Orm::getInstance($this->table);
         $redis = RedisConnect::getInstance()->redis;
         $redis->hSet(
             'table:'.$this->table,

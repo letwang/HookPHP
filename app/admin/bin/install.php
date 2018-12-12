@@ -19,11 +19,12 @@ echo "初始化数据库 \e[32m 成功 \e[0m\n", PHP_EOL;
 $app->execute('main', $name);
 function main($name) {
     $data = '';
-    foreach (PdoConnect::getInstance()->fetchAll(\Hook\Sql\Table::GET_ALL, [], PDO::FETCH_NUM) as list($tableName)) {
-        $table = new Orm($tableName);
+    $pdo = PdoConnect::getInstance();
+    foreach ($pdo->fetchAll(\Hook\Sql\Table::GET_ALL, [], PDO::FETCH_NUM) as list($tableName)) {
+        $table = Orm::getInstance($tableName);
         $table->synData();
         $data .= '['.$tableName.']'.PHP_EOL;
-        foreach ($table->desc() as $field) {
+        foreach ($pdo->fetchAll('DESC `'.$tableName.'`') as $field) {
             $data .= $field['Field'].'.type='.substr($field['Type'], 0, strpos($field['Type'], '(')).PHP_EOL;
             $data .= $field['Field'].'.null='.$field['Null'].PHP_EOL;
             $data .= $field['Field'].'.key='.$field['Key'].PHP_EOL;

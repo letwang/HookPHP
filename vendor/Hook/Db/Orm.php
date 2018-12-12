@@ -1,7 +1,9 @@
 <?php
 namespace Hook\Db;
 
-class Orm
+use Hook\Cache\Cache;
+
+class Orm extends Cache
 {
     public $table = '';
 
@@ -11,6 +13,10 @@ class Orm
     private $operator = ['>' => '>', '>=' => '>=', '<' => '<', '<=' => '<=', '!=' => '!=', 'LIKE' => 'LIKE', 'NOT LIKE' => 'NOT LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
     private $expression = ['1', 'DISTINCT', 'DISTINCTROW', 'SQL_CALC_FOUND_ROWS'];
 
+    /**
+     * Orm::getInstance('hp_lang')->exist()
+     * @param string $table
+     */
     public function __construct(string $table)
     {
         $this->table = $table;
@@ -22,9 +28,23 @@ class Orm
         $this->parameter = [];
     }
 
+    /**
+     * 获取经过优化后的表结构
+     * @return array
+     */
     public function desc(): array
     {
-        return PdoConnect::getInstance()->fetchAll('DESC `'.$this->table.'`');
+        return APP_TABLE[$this->table];
+    }
+
+    /**
+     * 判断该表、字段是否存在
+     * @param string $column
+     * @return bool
+     */
+    public function exist(string $column = null): bool
+    {
+        return $column ? isset(APP_TABLE[$this->table][$column]) : isset(APP_TABLE[$this->table]);
     }
 
     /**
@@ -41,7 +61,7 @@ class Orm
         if ($column) {
             $this->statement .= '`'.join('`,`', $column).'`';
         }
-        $this->statement = 'SELECT '.$this->statement.' FROM `'.$this->table.'`';
+        $this->statement = 'SELECT '.$this->statement.' FROM `'.$this->table.'` ';
         return $this;
     }
 
@@ -58,8 +78,9 @@ class Orm
         $relation = $relation === 'AND' ? ' AND ' : ' OR ';
         foreach ($where as $column => $value) {
             if (is_array($value)) {
+                $this->statement .= '(';
                 foreach ($value as $operator => $value) {
-                    $this->statement .= $relation.'`'.$column.'` '.$this->operator[$operator].' ';
+                    $this->statement .= '`'.$column.'` '.$this->operator[$operator].' ';
                     if (is_array($value)) {
                         $this->statement .= '('.implode(',', array_fill(0, count($value), '?')).')';
                         $this->parameter = array_merge($this->parameter, $value);
@@ -67,9 +88,11 @@ class Orm
                         $this->statement .= '?';
                         $this->parameter[] = $value;
                     }
+                    $this->statement .= ' AND ';
                 }
+                $this->statement = substr($this->statement, 0, -5).')'.$relation;
             } else {
-                $this->statement .= $relation.'`'.$column.'` = ?';
+                $this->statement .= '`'.$column.'` = ?'.$relation;
                 $this->parameter[] = $value;
             }
         }
@@ -144,7 +167,7 @@ class Orm
     }
 
     /**
-     * 获取某行某列数据
+     * 获取该行某列数据
      * @param int $column
      * @return mixed[string|false]
      */
@@ -174,7 +197,7 @@ class Orm
      */
     public function insert(array $parameter): array
     {
-        $this->statement = 'INSERT INTO `'.$this->table.'`(`'.join('`,`', array_keys($parameter)).'`)VALUES(:'.join(',:', array_keys($parameter)).');';
+        $this->statement = 'INSERT INTO `'.$this->table.'`(`'.join('`,`', array_keys($parameter)).'`)VALUES(:'.join(',:', array_keys($parameter)).')';
         $this->parameter = $parameter;
         list($statement, $parameter) = $this->checkAndClear();
         return PdoConnect::getInstance()->insert($statement, $parameter);
@@ -321,8 +344,8 @@ class Orm
                 throw new \Exception('db hack~');
              }
          }
-
-         $this->statement = preg_replace(['/` OR `/', '/` AND `/', '/=\? OR `/', '/=\? AND `/'], ['` WHERE `', '` WHERE `', '=? WHERE `', '=? WHERE `'], $this->statement, 1);
+         $this->statement = str_replace(['` (`', '?`', '``'], ['` WHERE (`', '? WHERE `', '` WHERE `'], $this->statement, $count);
+         $this->statement = $count > 0 ? substr($this->statement, 0, -4) : $this->statement;
          $data = [$this->statement, $this->parameter];
          $this->__destruct();
          return $data;

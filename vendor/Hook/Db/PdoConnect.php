@@ -58,7 +58,7 @@ class PdoConnect extends Cache
     }
 
     /**
-     * 获取某行某列数据
+     * 获取该行某列数据
      * @param string $statement
      * @param array $parameter
      * @param int $column
