@@ -16,13 +16,7 @@
         "ext-zip": ">=1.15",
         "ext-yaf": ">=3.0",
         "ext-yaconf": ">=1.0",
-        "ext-grpc": ">=1.16",
-        "ext-seaslog": ">=1.8",
-        "ext-xhprof": ">=2.0",
-        "ext-rar": ">=4.0",
         "ext-redis": ">=4.1",
-        "ext-mongodb": ">=1.5",
-        "ext-amqp": ">=1.9",
-        "ext-varnish": ">=1.2"
+        "ext-mongodb": ">=1.5"
     }
 }

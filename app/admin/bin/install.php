@@ -7,19 +7,27 @@ require __DIR__.'/../init.php';
 $app = new Yaf\Application(['application' => APP_CONFIG['application']]);
 
 $name = 'default';
-PdoConnect::getInstance($name, 'new')->query('DROP DATABASE `'.APP_CONFIG['mysql'][$name]['dbname'].'`');
+$dsn = 'mysql:host='.APP_CONFIG['mysql'][$name]['host'].';port='.APP_CONFIG['mysql'][$name]['port'];
+$dsn .= ';charset='.APP_CONFIG['mysql'][$name]['charset'];
+$pdo = new \PDO(
+    $dsn,
+    APP_CONFIG['mysql'][$name]['username'],
+    APP_CONFIG['mysql'][$name]['passwd'],
+    APP_CONFIG['mysql'][$name]['options']
+);
+$pdo->query('DROP DATABASE IF EXISTS `'.APP_CONFIG['mysql'][$name]['dbname'].'`');
 echo "删除数据库 \e[32m 成功 \e[0m\n", PHP_EOL;
 
-PdoConnect::getInstance($name, 'new')->query('CREATE DATABASE `'.APP_CONFIG['mysql'][$name]['dbname'].'`');
+$pdo->query('CREATE DATABASE `'.APP_CONFIG['mysql'][$name]['dbname'].'`');
 echo "创建数据库 \e[32m 成功 \e[0m\n", PHP_EOL;
 
-PdoConnect::getInstance()->query(Install::CREATE_DATA);
+$pdo = PdoConnect::getInstance();
+$pdo->query(Install::CREATE_DATA);
 echo "初始化数据库 \e[32m 成功 \e[0m\n", PHP_EOL;
 
-$app->execute('main', $name);
-function main($name) {
+$app->execute('main', $pdo);
+function main($pdo) {
     $data = '';
-    $pdo = PdoConnect::getInstance();
     foreach ($pdo->fetchAll(\Hook\Sql\Table::GET_ALL, [], PDO::FETCH_NUM) as list($tableName)) {
         $table = Orm::getInstance($tableName);
         $table->synData();

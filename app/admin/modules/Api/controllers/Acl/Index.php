@@ -14,6 +14,7 @@ class Acl_IndexController extends AbstractController
             $v['group_id'] = $this->model::read('hp_acl_group_lang', $v['group_id'], $_SESSION[APP_NAME]['lang_id'])['name'];
             $v['resource_id'] = $this->model::read('hp_acl_resource_lang', $v['resource_id'], $_SESSION[APP_NAME]['lang_id'])['name'];
             $v['status'] = l('status.'.$v['status']);
+            $v['date_add'] = date('Y-m-d H:i:s', $v['date_add']);
         }
         return $this->send($data);
     }

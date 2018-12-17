@@ -9,7 +9,12 @@ class Hook_IndexController extends AbstractController
     
     public function GETAction()
     {
-        return $this->send($this->model->get());
+        $data = $this->model->get();
+        foreach ($data as &$v) {
+            $v['date_add'] = date('Y-m-d H:i:s', $v['date_add']);
+            $v['date_upd'] = date('Y-m-d H:i:s', $v['date_upd']);
+        }
+        return $this->send($data);
     }
     
     public function POSTAction()
