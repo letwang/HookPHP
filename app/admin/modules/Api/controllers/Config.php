@@ -4,7 +4,7 @@ class ConfigController extends AbstractController
     public function init()
     {
         parent::init();
-        $this->model = new ConfigModel($this->getRequest()->get('id'));
+        $this->model = new ConfigModel($this->getRequest()->getParam('id'));
     }
 
     public function GETAction()

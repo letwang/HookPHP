@@ -4,7 +4,7 @@ class Acl_ResourceController extends AbstractController
     public function init()
     {
         parent::init();
-        $this->model = new Acl\ResourceModel($this->getRequest()->get('id'));
+        $this->model = new Acl\ResourceModel($this->getRequest()->getParam('id'));
     }
     
     public function GETAction()

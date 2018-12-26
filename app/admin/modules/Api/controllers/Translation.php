@@ -4,7 +4,7 @@ class TranslationController extends AbstractController
     public function init()
     {
         parent::init();
-        $this->model = new TranslationModel($this->getRequest()->get('id'));
+        $this->model = new TranslationModel($this->getRequest()->getParam('id'));
     }
 
     public function GETAction()

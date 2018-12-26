@@ -4,7 +4,7 @@ class Acl_GroupController extends AbstractController
     public function init()
     {
         parent::init();
-        $this->model = new Acl\GroupModel($this->getRequest()->get('id'));
+        $this->model = new Acl\GroupModel($this->getRequest()->getParam('id'));
     }
     
     public function GETAction()

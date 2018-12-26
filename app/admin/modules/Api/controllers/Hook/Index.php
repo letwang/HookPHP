@@ -4,7 +4,7 @@ class Hook_IndexController extends AbstractController
     public function init()
     {
         parent::init();
-        $this->model = new Hook\IndexModel($this->getRequest()->get('id'));
+        $this->model = new Hook\IndexModel($this->getRequest()->getParam('id'));
     }
     
     public function GETAction()

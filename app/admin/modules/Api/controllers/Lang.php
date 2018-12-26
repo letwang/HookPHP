@@ -4,7 +4,7 @@ class LangController extends AbstractController
     public function init()
     {
         parent::init();
-        $this->model = new LangModel($this->getRequest()->get('id'));
+        $this->model = new LangModel($this->getRequest()->getParam('id'));
     }
 
     public function GETAction()

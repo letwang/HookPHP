@@ -4,7 +4,7 @@ class MenuController extends AbstractController
     public function init()
     {
         parent::init();
-        $this->model = new MenuModel($this->getRequest()->get('id'));
+        $this->model = new MenuModel($this->getRequest()->getParam('id'));
     }
 
     public function GETAction()

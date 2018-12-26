@@ -1,0 +1,479 @@
+<?php if (isset($this->fields['title'])) {?><h3><?php echo $this->fields['title'];?></h3><?php }?>
+<form id="<?php echo $this->controller;
+?>_form" class="defaultForm form-horizontal <?php echo $this->controller;
+?>" action="/api/<?php echo $this->controller;?>/v1/<?php echo $this->id ? 'id/'.$this->id: '';
+?>" method="<?php echo $this->id ? 'PUT' : 'POST';
+?>" enctype="multipart/form-data" novalidate>
+<?php foreach($this->fields['form'] as $index => $fieldSet) {?>
+<div class="panel" id="fieldSet_<?php echo $index;?>_0_0">
+<?php foreach($fieldSet['form'] as $key => $field) {
+//////////////////////////////////////////////////////
+if ($key === 'legend') {?>
+<div class="panel-heading"><?php
+if (isset($field['image']) && isset($field['title'])) {
+?><img src="<?php echo $field['image'];?>" alt="<?php echo $field['title'];?>" /><?php
+}
+if (isset($field['icon'])) {
+?><i class="<?php echo $field['icon'];?>"></i><?php
+}
+echo $field['title'];?></div>
+<?php
+//////////////////////////////////////////////////////
+} elseif ($key === 'description'){?>
+<div class="alert alert-info"><?php echo $field;?></div>
+<?php
+//////////////////////////////////////////////////////
+}elseif ($key === 'warning'){?>
+<div class="alert alert-warning"><?php echo $field;?></div>
+<?php
+//////////////////////////////////////////////////////
+}elseif ($key === 'success'){?>
+<div class="alert alert-success"><?php echo $field;?></div>
+<?php
+//////////////////////////////////////////////////////
+}elseif ($key === 'error'){?>
+<div class="alert alert-danger"><?php echo $field;?></div>
+<?php
+//////////////////////////////////////////////////////
+}elseif ($key === 'input'){?>
+<div class="form-wrapper">
+<?php foreach($field as $input) {?>
+<div class="form-group<?php echo $input['class'] ?? '';
+if ($input['type'] === 'hidden') {?> hide<?php }?>">
+<?php
+//****************************************************
+if ($input['type'] === 'hidden') {?>
+<input type="hidden" name="<?php echo $input['name'];
+?>" id="<?php echo $input['name'];
+?>" value="<?php echo $this->fieldsValue[$input['name']] ?? '';?>" />
+<?php } else {
+    if (isset($input['label'])) {?>
+<label class="control-label col-lg-3<?php
+if (isset($input['required']) && $input['type'] !== 'radio') {?> required<?php }?>"><?php
+if (isset($input['hint'])) {?><span class="label-tooltip" data-toggle="tooltip" data-html="true" title="<?php
+    if (is_array($input['hint'])) {
+        foreach($input['hint']as $hint) {
+            echo $hint['text'] ?? $hint;
+        }
+    } else {
+        echo $input['hint'];
+    }?>"><?php
+}
+echo $input['label'];
+if (isset($input['hint'])) {?></span><?php }?></label>
+<?php }?>
+<div class="col-lg-<?php echo $input['col'] ?? 9;if (!isset($input['label'])) {?> col-lg-offset-3<?php }?>">
+<?php
+//****************************************************
+if ($input['type'] === 'text') {
+    if (isset($input['lang'])) {
+        if ($this->languages > 1) {?>
+<div class="form-group">
+<?php
+        }
+foreach($this->languages as $language) {
+    if ($this->languages > 1) {?>
+<div class="translatable-field lang-<?php echo $language['id'];
+?>" <?php if ($language['id'] !== APP_LANG) {?>style="display:none"<?php }?>>
+<div class="col-lg-9"><?php
+    }
+if (isset($input['maxchar']) || isset($input['prefix']) || isset($input['suffix'])) {?>
+<div class="input-group<?php echo $input['class'] ?? '';?>">
+<?php }if (isset($input['maxchar'])) {?>
+<span id="<?php echo ($input['id'] ?? $input['name']).'_'.$language['id'];?>_counter" class="input-group-addon">
+<span class="text-count-down"><?php echo $input['maxchar'];?></span>
+</span>
+<?php }if (isset($input['prefix'])) {?>
+<span class="input-group-addon">
+  <?php echo $input['prefix'];?>
+</span>
+<?php }?>
+<input type="text" id="<?php echo ($input['id'] ?? $input['name']).$language['id'];
+?>" name="<?php echo $input['name'].$language['id'];
+?>" class="<?php $input['class'] ?? '';
+?>" value="<?php echo $this->fieldsValue[$input['name']][$language['id']];?>" <?php
+if (isset($input['size'])) {?> size="<?php echo $input['size'];?>"<?php }
+if (isset($input['maxchar'])) {?> data-maxchar="<?php echo $input['maxchar'];?>"<?php }
+if (isset($input['maxlength'])) {?> maxlength="<?php echo $input['maxlength'];?>"<?php }
+if (isset($input['readonly'])) {?> readonly="readonly"<?php }
+if (isset($input['disabled'])) {?> disabled="disabled"<?php }
+if (isset($input['autocomplete'])) {?> autocomplete="off"<?php }
+if (isset($input['required'])) {?> required="required"<?php }
+if (isset($input['placeholder'])) {?> placeholder="<?php echo $input['placeholder'];?>"<?php }?> />
+<?php if (isset($input['suffix'])) {?>
+<span class="input-group-addon">
+  <?php echo $input['suffix'];?>
+</span>
+<?php }if (isset($input['maxchar']) || isset($input['prefix']) || isset($input['suffix'])) {?>
+</div>
+<?php }if ($this->languages > 1) {?>
+</div>
+<div class="col-lg-2">
+    <button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
+        <?php echo $language['iso'];?>
+    <i class="icon-caret-down"></i>
+</button>
+<ul class="dropdown-menu">
+    <?php foreach($this->languages as $language) {?>
+<li><a href="javascript:hideOtherLanguage(<?php echo $language['id'];?>);" tabindex="-1"><?php
+echo $language['name'];?></a></li>
+<?php }?>
+        </ul>
+    </div>
+</div>
+<?php }}if ($this->languages > 1) {?>
+</div>
+<?php }} else {if (isset($input['maxchar']) || isset($input['prefix']) || isset($input['suffix'])) {?>
+<div class="input-group<?php echo $input['class'] ?? '';?>">
+<?php }if (isset($input['maxchar']) && $input['maxchar']) {?>
+<span id="<?php echo $input['id'] ?? $input['name'];
+?>_counter" class="input-group-addon"><span class="text-count-down"><?php
+echo $input['maxchar'];
+?></span></span>
+<?php }if (isset($input['prefix'])) {?>
+<span class="input-group-addon">
+  <?php echo $input['prefix'];?>
+</span>
+<?php }?>
+<input type="text" name="<?php echo $input['name'];
+?>" id="<?php echo $input['id'] ?? $input['name'];
+?>" value="<?php echo $this->fieldsValue[$input['name']] ?? '';
+?>" class="<?php echo $input['class'] ?? '';?>"<?php
+if (isset($input['size'])) {?> size="<?php echo $input['size'];?>"<?php }
+if (isset($input['maxchar'])) {?> data-maxchar="<?php echo $input['maxchar'];?>"<?php }
+if (isset($input['maxlength'])) {?> maxlength="<?php echo $input['maxlength'];?>"<?php }
+if (isset($input['readonly'])) {?> readonly="readonly"<?php }
+if (isset($input['disabled'])) {?> disabled="disabled"<?php }
+if (isset($input['autocomplete'])) {?> autocomplete="off"<?php }
+if (isset($input['required'])) {?> required="required"<?php }
+if (isset($input['placeholder'])) {?> placeholder="<?php echo $input['placeholder'];?>"<?php }?> />
+<?php if (isset($input['suffix'])) {?>
+<span class="input-group-addon">
+  <?php echo $input['suffix'];?>
+</span>
+<?php }if (isset($input['maxchar']) || isset($input['prefix']) || isset($input['suffix'])) {?>
+</div>
+<?php }}
+//****************************************************
+} elseif ($input['type'] === 'select') {?>
+<select id="<?php echo $input['id'] ?? $input['name'];
+?>" name="<?php echo $input['name'];
+?>" class="<?php $input['class'] ?? '';?> fixed-width-xl"<?php
+if (isset($input['multiple'])) {?> multiple="multiple"<?php }
+if (isset($input['size'])) {?> size="<?php echo $input['size'];?>"<?php }
+if (isset($input['onchange'])) {?> onchange="<?php echo $input['onchange'];?>"<?php }
+if (isset($input['disabled'])) {?> disabled="disabled"<?php }?>>
+<?php if (isset($input['options.default'])) {?>
+<option value="<?php echo $input['options']['default']['value'];?>"><?php
+echo $input['options']['default']['label'];?></option>
+<?php }
+if (isset($input['options']['optiongroup'])) {
+    foreach($input['options']['optiongroup']['query'] as $optiongroup) {?>
+<optgroup label="<?php echo $optiongroup[$input['options']['optiongroup']['label']];?>">
+<?php foreach($optiongroup['options']['options']['query'] as $option) {?>
+<option value="<?php echo $option[$input['options']['options']['id']];?>"
+<?php
+if (isset($input['multiple'])) {
+    foreach($this->fieldsValue['name'] as $fieldValue) {
+        if ($fieldValue === $option[$input['options']['options']['id']]) {
+        ?> selected="selected"<?php
+        }
+    }
+} else {
+    if ($this->fieldsValue[$input['name']] === $option[$input['options']['options']['id']]) {
+    ?> selected="selected"<?php
+    }
+}?>><?php echo $option[$input['options']['options']['name']];?></option><?php }?>
+</optgroup>
+<?php }} else {
+    foreach($input['options']['query'] as $option) {
+        if ($option === '-') {?>
+<option value=''>-</option><?php } else { ?>
+<option value="<?php echo $option[$input['options']['id']];?>"<?php
+if (isset($input['multiple'])) {
+    foreach($this->fieldsValue[$input['name']] as $fieldValue) {
+        if ($fieldValue === $option[$input['options']['id']]) {?> selected="selected"<?php }
+    }
+} else {
+    if ($this->fieldsValue[$input['name']] ?? '' === $option[$input['options']['id']]) {
+    ?> selected="selected"<?php
+    }
+}?>><?php echo $option[$input['options']['name']];?></option><?php }}}?></select>
+<?php
+//****************************************************
+} elseif ($input['type'] === 'radio') {
+    foreach($input['values'] as $value) {?>
+<div class="radio <?php echo $input['class'] ?? '';?>">
+<label>
+<input type="radio" name="<?php echo $value['name'];
+?>" id="<?php echo $value['id'];
+?>" value="<?php echo $value['value'];
+?>"<?php
+if ($this->fieldsValue[$input['name']] ?? '' === $value['value']) {?> checked="checked"<?php }
+if (isset($input['disabled']) || isset($value['disabled'])) {?> disabled="disabled"<?php }?>/>
+<?php echo $value['label'] ?? '';?>
+    </label>
+</div>
+<?php if (isset($value['p'])) {?><p class="help-block"><?php echo $value['p'];?></p><?php }}
+//****************************************************
+} elseif ($input['type'] === 'switch') {?>
+<span class="switch fixed-width-lg">
+    <?php foreach($input['values'] as $value) {?>
+<input type="radio" name="<?php echo $input['name'];
+?>" id="<?php echo $input['name'].'_'.($value['value'] === 1 ? 'on' : 'off');
+?>" value="<?php echo $input['value']['value'];?>"<?php
+if ($this->fieldsValue[$input['name']] === $value['value']) {?> checked="checked"<?php }
+if (isset($input['disabled']) || isset($value['disabled'])) {?> disabled="disabled"<?php }?>/>
+<label for="<?php echo $input['name'].'_'.($value['value'] === 1 ? 'on' : 'off');?>">
+<?php echo $value['value'] === 1 ? 'Yes' : 'No';?>
+</label>
+<?php }?>
+    <a class="slide-button btn"></a>
+</span>
+<?php
+//****************************************************
+} elseif ($input['type'] === 'textarea') {
+    if (isset($input['lang'])) {
+        foreach($this->languages as $language) {
+            if ($this->languages > 1) {?>
+<div class="form-group translatable-field lang-<?php echo $language['id'];?>"<?php
+if ($language['id'] !== APP_LANG) {?> style="display:none;"<?php }?>>
+<div class="col-lg-9">
+<?php }if (isset($input['maxchar'])) {?>
+<div class="input-group">
+<span id="<?php echo ($input['id'] ?? $input['name']).'_'.$language['id'];?>_counter" class="input-group-addon">
+<span class="text-count-down"><?php echo $input['maxchar'];?></span>
+</span>
+<?php }?>
+<textarea name="<?php echo $input['name'].'_'.$language['id'];
+?>" id="<?php echo ($input['id'] ?? $input['name']).'_'.$language['id'];
+?>" class="<?php echo (isset($input['autoload_rte']) ? 'rte autoload_rte ' : 'textarea-autosize ').
+                      ($input['class'] ?? '');
+?>" <?php
+if (isset($input['readonly'])) {?> readonly="readonly"<?php }
+if (isset($input['cols'])) {?> cols="<?php echo $input['cols'];?>"<?php }
+if (isset($input['rows'])) {?> rows="<?php echo $input['rows'];?>"<?php }
+if (isset($input['maxlength'])) {?> maxlength="<?php echo $input['maxlength'];?>"<?php }
+if (isset($input['maxchar'])) {?> data-maxchar="<?php echo $input['maxchar'];?>"<?php }?>><?php
+echo $this->fieldsValue[$input['name']][$language['id']];?></textarea>
+<?php if (isset($input['maxchar'])) {?>
+</div>
+<?php }if ($this->languages > 1) {?>
+</div>
+<div class="col-lg-2">
+<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
+<?php echo $language['iso'];?>
+<span class="caret"></span>
+</button>
+<ul class="dropdown-menu">
+<?php foreach($this->languages as $language) {?>
+<li><a href="javascript:hideOtherLanguage(<?php echo $language['id'];?>);" tabindex="-1"><?php
+echo $language['name'];?></a></li>
+<?php }?>
+</ul>
+</div>
+</div>
+<?php }}} else {if (isset($input['maxchar'])) {?> 
+<span id="<?php echo ($input['id'] ?? $input['name']).'_'.$language['id'];?>_counter" class="input-group-addon">
+<span class="text-count-down"><?php echo $input['maxchar'];?></span>
+</span>
+<?php }?>
+<textarea name="<?php echo $input['name'];
+?>" id="<?php echo $input['id'] ?? $input['name'];
+?>" class="<?php echo (isset($input['autoload_rte']) ? 'rte autoload_rte ' : 'textarea-autosize ').
+                      ($input['class'] ?? '');
+?>" <?php
+if (isset($input['readonly'])) {?> readonly="readonly"<?php }
+if (isset($input['cols'])) {?> cols="<?php echo $input['cols'];?>"<?php }
+if (isset($input['rows'])) {?> rows="<?php echo $input['rows'];?>"<?php }
+if (isset($input['maxlength'])) {?> maxlength="<?php echo $input['maxlength'];?>"<?php }
+if (isset($input['maxchar'])) {?> data-maxchar="<?php echo $input['maxchar'];?>"<?php }?>><?php
+echo $this->fieldsValue[$input['name']] ?? '';?></textarea>
+<?php }
+//****************************************************
+} elseif ($input['type'] === 'checkbox') {
+    if (isset($input['expand'])) {?>
+<a class="btn btn-default show_checkbox<?php if ($input['expand']['default'] === 'hide') {?> hidden<?php }?>" href="#">
+<i class="icon-<?php echo $input['expand']['show']['icon'];?>"></i>
+<?php echo $input['expand']['show']['text'];if (!empty($input['expand']['print_total'])) {?>
+<span class="badge"><?php echo $input['expand']['print_total'];?></span>
+<?php }?>
+</a>
+<a class="btn btn-default hide_checkbox<?php if ($input['expand']['default'] === 'show') {?> hidden<?php }?>" href="#">
+<i class="icon-<?php echo $input['expand']['hide']['icon'];?>"></i>
+<?php echo $input['expand']['hide']['text'];if (!empty($input['expand']['print_total'])) {?>
+<span class="badge"><?php echo $input['expand']['print_total'];?></span>
+<?php }?>
+</a>
+<?php }foreach($input['values']['query'] as $value) {
+    $idCheckbox = $input['name'].'_'.$value[$input['values']['id']];
+?>
+<div class="checkbox<?php if ($input['expand']['default'] ?? '' === 'show') {?> hidden<?php }?>">
+<label for="<?php echo $idCheckbox;?>">
+<input type="checkbox" name="<?php echo $idCheckbox;
+?>" id="<?php echo $idCheckbox;
+?>" class="<?php echo $input['class'] ?? '';?>" <?php
+if (isset($value['val'])) {?> value="<?php echo $value['val'];?>"<?php }
+if (isset($this->fieldsValue[$idCheckbox])) {?> checked="checked"<?php }?> />
+<?php echo $value[$input['values']['name']];?>
+        </label>
+</div>
+<?php }
+//****************************************************
+} elseif ($input['type'] === 'password') {?>
+<div class="input-group fixed-width-lg">
+<span class="input-group-addon"><i class="icon-key"></i></span>
+<input type="password" id="<?php echo $input['id'] ?? $input['name'];
+?>" name="<?php echo $input['name'];
+?>" class="<?php echo $input['class'] ?? '';
+?>" value=""<?php
+if (isset($input['autocomplete'])) {?> autocomplete="off"<?php }
+if (isset($input['required'])) {?> required="required"<?php }?> />
+</div>
+<?php
+//****************************************************
+} elseif ($input['type'] === 'birthday') {?>
+<div class="form-group">
+<?php foreach($input['options'] as $key => $select) {?>
+<div class="col-lg-2">
+<select name="<?php echo $key;?>" class="fixed-width-lg <?php echo $input['class'] ?? '';?>">
+<option value="">-</option>
+<?php if ($key === 'months') {
+          foreach($select as $k => $v) {?>
+<option value="<?php echo $k;?>"<?php if ($k === $this->fieldsValue[$key]) {?> selected="selected"<?php }
+?>><?php echo $v;?></option>
+<?php
+          }
+      } else {
+          foreach($select as $v) {?>
+<option value="<?php echo $v;?>"<?php if ($v === $this->fieldsValue[$key]) {?> selected="selected"<?php }
+?>><?php echo $v;?></option>
+<?php     }
+      }?>
+    </select>
+</div>
+<?php }?>
+</div>
+<?php
+//****************************************************
+} elseif ($input['type'] === 'color') {?>
+<div class="form-group">
+<div class="col-lg-2">
+<div class="row">
+<div class="input-group">
+<input type="color" data-hex="true" class="<?php echo $input['class'] ?? 'color mColorPickerInput';
+?>" name="<?php echo $input['name'];
+?>" value="<?php echo $this->fieldsValue[$input['name']];?>" />
+</div>
+</div>
+</div>
+</div>
+<?php
+//****************************************************
+} elseif ($input['type'] === 'date') {?>
+<div class="row">
+<div class="input-group col-lg-4">
+<input id="<?php echo $input['id'] ?? $input['name'];
+?>" type="text" data-hex="true" class="<?php echo $input['class'] ?? 'datepicker';
+?>" name="<?php echo $input['name'];
+?>" value="<?php echo $this->fieldsValue[$input['name']];?>" />
+<span class="input-group-addon"><i class="icon-calendar-empty"></i></span>
+</div>
+</div>
+<?php
+//****************************************************
+} elseif ($input['type'] === 'datetime') {?>
+<div class="row">
+<div class="input-group col-lg-4">
+<input id="<?php echo $input['id'] ?? $input['name'];
+?>" type="text" data-hex="true" class="<?php echo $input['class'] ?? 'datetimepicker';
+?>" name="<?php echo $input['name'];
+?>" value="<?php echo $this->fieldsValue[$input['name']];?>" />
+<span class="input-group-addon"><i class="icon-calendar-empty"></i></span>
+</div>
+</div>
+<?php }if (isset($input['desc'])) {?>
+<p class="help-block">
+<?php
+if (is_array($input['desc'])) {
+    foreach($input['desc'] as $p) {
+        if (is_array($p)) {?>
+<span id="<?php echo $p['id'];?>"><?php echo $p['text'];?></span><br />
+<?php   } else {
+           echo $p;?><br />
+<?php   }
+    }
+} else {
+    echo $input['desc'];
+}?>
+</p>
+<?php }?>
+</div>
+<?php }?>
+</div>
+<?php }?>
+</div>
+<?php
+//////////////////////////////////////////////////////
+} elseif ($key === 'desc') {?>
+<div class="alert alert-info col-lg-offset-3">
+<?php
+if (is_array($field)) {
+    foreach($field as $k => $p) {
+        if (is_array($p)) {?>
+<span<?php if (isset($p['id'])) {?> id="<?php echo $p['id'];?>"<?php }?>><?php echo $p['text'];?></span><br />
+<?php   } else {
+            echo $p;
+            if (isset($field[$k+1])) {?><br /><?php }
+        }
+    }
+} else {
+    echo $field;
+}?>
+</div>
+<?php }}if (isset($fieldSet['form']['submit']) || isset($fieldSet['form']['buttons'])) {
+//####################################################
+?>
+<div class="panel-footer">
+    <?php if (isset($fieldSet['form']['submit'])) {?>
+<button type="submit" value="1" id="<?php echo $this->controller.'_form_submit_btn';
+?>_1" name="<?php echo $fieldSet['form']['submit']['name'];
+?>" class="<?php echo $fieldSet['form']['submit']['class'] ?? 'btn btn-default pull-right';?>">
+<i class="<?php echo $fieldSet['form']['submit']['icon'] ?? 'process-icon-save';?>"></i> <?php
+echo $fieldSet['form']['submit']['title'];?>
+</button>
+<?php }if (isset($this->showCancelButton)) {?>
+<a href="#" class="btn btn-default"<?php
+if ($this->controller) {echo ' id="'.$this->controller.'_form_cancel_btn"';}
+?> onclick="window.history.back();">
+<i class="process-icon-cancel"></i>Cancel</a>
+<?php }if (isset($fieldSet['form']['reset'])) {?>
+<button type="reset" id="<?php echo $fieldSet['form']['reset']['id'] ?? $this->controller.'_form_reset_btn';
+?>" class="<?php echo $fieldSet['form']['reset']['class'] ?? 'btn btn-default';?>">
+<?php if (isset($fieldSet['form']['reset']['icon'])) {
+?><i class="<?php echo $fieldSet['form']['reset']['icon'];?>"></i> <?php
+}
+echo $fieldSet['form']['submit']['title'];?>
+</button>
+<?php }foreach($fieldSet['form']['buttons'] ?? [] as $btn) {if (isset($btn['href'])) {?>
+<a href="<?php echo $btn['href'];?>"<?php
+if (isset($btn['id'])) {echo ' id="'.$btn['id'].'"';
+}?> class="btn btn-default <?php echo $btn['class'] ?? '';?>"<?php
+if (isset($btn['js'])) {?> onclick="<?php echo $btn['js'];?>"<?php }?>>
+<?php if (isset($btn['icon'])) {?><i class="<?php echo $btn['icon'];?>" ></i> <?php }echo $btn['title'];?>
+</a>
+<?php } else { ?>
+<button type="<?php echo $btn['type'] ?? 'button';?>"<?php
+if (isset($btn['id'])) {echo ' id="'.$btn['id'].'"';}
+?> class="btn btn-default <?php echo $btn['class'] ?? '';
+?>" name="<?php echo $btn['name'] ?? 'submitOptions'.$this->controller;?>"<?php
+if (isset($btn['js'])) {?> onclick="<?php echo $btn['js'];?>"<?php }?>>
+<?php if (isset($btn['icon'])) {?><i class="<?php echo $btn['icon'];?>" ></i> <?php }echo $btn['title'];?>
+</button>
+<?php }}?>
+</div>
+<?php }?>
+</div>
+<?php }?>
+</form>
+<script type="text/javascript"></script>

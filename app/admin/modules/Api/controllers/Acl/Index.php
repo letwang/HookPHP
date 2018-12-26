@@ -4,7 +4,7 @@ class Acl_IndexController extends AbstractController
     public function init()
     {
         parent::init();
-        $this->model = new Acl\IndexModel($this->getRequest()->get('id'));
+        $this->model = new Acl\IndexModel($this->getRequest()->getParam('id'));
     }
     
     public function GETAction()

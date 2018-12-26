@@ -4,7 +4,7 @@ class Hook_ModuleController extends AbstractController
     public function init()
     {
         parent::init();
-        $this->model = new Hook\ModuleModel($this->getRequest()->get('id'));
+        $this->model = new Hook\ModuleModel($this->getRequest()->getParam('id'));
     }
     
     public function GETAction()

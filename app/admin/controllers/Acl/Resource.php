@@ -23,9 +23,13 @@ class Acl_ResourceController extends AbstractController
         $this->_view->assign(['fieldsList' => $this->fieldsList]);
     }
 
-    public function postAction()
+    public function addAction()
     {
-        $resource = new Acl\ResourceModel();
-        $resource->add();
+        //
+    }
+
+    public function editAction()
+    {
+        $this->_view->assign(['id' => (int) $this->getRequest()->getParam('id')]);
     }
 }

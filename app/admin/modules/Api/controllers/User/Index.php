@@ -4,7 +4,7 @@ class User_IndexController extends AbstractController
     public function init()
     {
         parent::init();
-        $this->model = new \User\IndexModel($this->getRequest()->get('id'));
+        $this->model = new \User\IndexModel($this->getRequest()->getParam('id'));
     }
 
     public function GETAction()

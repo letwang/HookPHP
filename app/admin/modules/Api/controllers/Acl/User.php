@@ -4,7 +4,7 @@ class Acl_UserController extends AbstractController
     public function init()
     {
         parent::init();
-        $this->model = new Acl\UserModel($this->getRequest()->get('id'));
+        $this->model = new Acl\UserModel($this->getRequest()->getParam('id'));
     }
     
     public function GETAction()

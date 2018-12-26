@@ -3,15 +3,16 @@ class IndexController extends AbstractController
 {
     public function indexAction()
     {
-        $this->_view->assign(
-            ['test' => 'Index']
-       );
+        $this->_view->assign(['fieldsList' => $this->fieldsList]);
     }
 
-    public function listAction()
+    public function addAction()
     {
-        $this->_view->assign(
-            ['test' => 'List']
-        );
+        //
+    }
+
+    public function editAction()
+    {
+        $this->_view->assign(['id' => (int) $this->getRequest()->getParam('id')]);
     }
 }

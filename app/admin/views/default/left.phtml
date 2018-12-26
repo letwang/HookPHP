@@ -37,7 +37,7 @@
           </a>
         </li>
         <?php foreach ($this->menus as $menu){?>
-        <li class="menu-item has-child"><a href="" class="menu-link"><span class="menu-icon oi oi-<?php echo $menu['icon'];?>"></span><span class="menu-text"><?php echo $menu['name'];?></span></a><ul class="menu"><?php foreach ($menu['childs'] as $menu){$active = strpos($this->uri, $menu['url']) ? ' has-active': '';?><li class="menu-item<?php echo $active;?>"><a href="<?php echo $menu['url'];?>" class="menu-link"><?php echo $menu['name'];?></a></li><?php }?></ul></li><?php }?><script>$('#stacked-menu').find('.has-active').parent().parent().addClass('has-active');</script>
+        <li class="menu-item has-child"><a href="" class="menu-link"><span class="menu-icon oi oi-<?php echo $menu['icon'];?>"></span><span class="menu-text"><?php echo $menu['name'];?></span></a><ul class="menu"><?php foreach ($menu['childs'] as $menu){$active = strpos($this->uri, $menu['url']) ? ' has-active': '';?><li class="menu-item<?php echo $active;?>"><a href="/<?php echo $menu['url'];?>" class="menu-link"><?php echo $menu['name'];?></a></li><?php }?></ul></li><?php }?><script>$('#stacked-menu').find('.has-active').parent().parent().addClass('has-active');</script>
       </ul>
     </nav>
   </section>

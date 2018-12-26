@@ -4,7 +4,7 @@ class Acl_RoleController extends AbstractController
     public function init()
     {
         parent::init();
-        $this->model = new Acl\RoleModel($this->getRequest()->get('id'));
+        $this->model = new Acl\RoleModel($this->getRequest()->getParam('id'));
     }
     
     public function GETAction()

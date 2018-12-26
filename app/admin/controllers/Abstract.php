@@ -37,7 +37,16 @@ abstract class AbstractController extends Yaf\Controller_Abstract
             }
         }
         //初始化模板变量
-        $this->_view->assign(['uri' => $this->_request->getRequestUri(), 'menus' => MenuModel::classify()]);
+        $this->_view->assign(
+            [
+                'module' => $this->_request->module,
+                'controller' => strtolower($this->_request->controller),
+                'action' => $this->_request->action,
+                'languages' => LangModel::read(LangModel::$table),
+                'uri' => $this->_request->getRequestUri(),
+                'menus' => MenuModel::classify()
+            ]
+        );
     }
 
     public function send($data = [], int $status = 200, int $code = 10000, string $msg = '')

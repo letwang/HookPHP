@@ -4,7 +4,7 @@ class ManagerController extends AbstractController
     public function init()
     {
         parent::init();
-        $this->model = new \ManagerModel($this->getRequest()->get('id'));
+        $this->model = new \ManagerModel($this->getRequest()->getParam('id'));
     }
 
     public function GETAction()
