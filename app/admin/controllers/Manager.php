@@ -11,7 +11,6 @@ class ManagerController extends AbstractController
             'date_add' => ['data' => 'date_add', 'className' => 'align-middle', 'title' => l('app.date_add')],
             'date_upd' => ['data' => 'date_upd', 'className' => 'align-middle', 'title' => l('app.date_upd')],
             'user' => ['data' => 'user', 'className' => 'align-middle', 'title' => l('Manager.user')],
-            'pass' => ['data' => 'pass', 'className' => 'align-middle', 'title' => l('Manager.pass')],
             'email' => ['data' => 'email', 'className' => 'align-middle', 'title' => l('Manager.email')],
             'phone' => ['data' => 'phone', 'className' => 'align-middle', 'title' => l('Manager.phone')],
             'firstname' => ['data' => 'firstname', 'className' => 'align-middle', 'title' => l('Manager.firstname')],

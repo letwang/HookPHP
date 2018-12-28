@@ -5,7 +5,7 @@ use Hook\Sql\Acl;
 
 class IndexModel extends \AbstractModel
 {
-    public static $table = '';
+    public static $table = 'hp_acl_group_resource';
 
     public function __construct(int $id = null, int $appId = null, int $langId = null)
     {

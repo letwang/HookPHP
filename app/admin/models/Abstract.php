@@ -258,17 +258,17 @@ abstract class AbstractModel
 
     protected function afterCreate(int $id): bool
     {
-        $table = Orm::getInstance($this->table);
+        $table = Orm::getInstance(static::$table);
         $redis = RedisConnect::getInstance()->redis;
         $redis->hSet(
-            'table:'.$this->table,
+            'table:'.static::$table,
             $this->id,
             $table->select(['*'])->where(['id' => $this->id])->fetch()
         );
 
-        if (isset(APP_TABLE[$this->table.'_lang'])) {
+        if (isset(APP_TABLE[static::$table.'_lang'])) {
             $redis->hSet(
-                'table:'.$this->table.'_lang',
+                'table:'.static::$table.'_lang',
                 $this->id.'_'.$this->langId,
                 $table->select(['*'])->where(['id' => $this->id, 'lang_id' => $this->langId])->fetch()
             );
@@ -296,7 +296,7 @@ abstract class AbstractModel
         $redis = RedisConnect::getInstance()->redis;
         $redis->hDel('table:'.static::$table, $this->id);
 
-        if (isset(APP_TABLE[$this->table.'_lang'])) {
+        if (isset(APP_TABLE[static::$table.'_lang'])) {
             foreach (LangModel::getIds() as $langId) {
                 $redis->hDel('table:'.static::$table.'_lang', $this->id.'_'.$langId);
             }
