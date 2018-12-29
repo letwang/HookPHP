@@ -61,7 +61,7 @@ abstract class AbstractModel
         }
     }
 
-    public static function read(string $table, int $id = 0, int $langId = 0)
+    public static function get(string $table, int $id = 0, int $langId = 0)
     {
         $data = &Cache::static(__METHOD__);
         if (isset($data[$table][$id][$langId])) {

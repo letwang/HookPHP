@@ -12,7 +12,7 @@ class UserModel extends \AbstractModel
         parent::__construct($id, $appId, $langId);
     }
 
-    public function get(int $id = 0, int $langId = 0): array
+    public static function get(string $table = null, int $id = 0, int $langId = 0): array
     {
         return PdoConnect::getInstance()->fetchAll(Acl::GET_USER, [$_SESSION[APP_NAME]['lang_id'], 1]);
     }

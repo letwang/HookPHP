@@ -21,7 +21,7 @@ abstract class AbstractController extends Yaf\Controller_Abstract
         //登录检测
         if (!isset($_SESSION[APP_NAME])) {
             if ($this->_request->controller !== 'Login') {
-                $this->forward('Login', 'index', ['referer' => $this->_request->getServer('REQUEST_URI', APP_CONFIG['http']['uri'])]);
+                $this->forward('Login', 'get', ['referer' => $this->_request->getServer('REQUEST_URI', APP_CONFIG['http']['uri'])]);
             }
             return false;
         }
@@ -42,7 +42,7 @@ abstract class AbstractController extends Yaf\Controller_Abstract
                 'module' => $this->_request->module,
                 'controller' => strtolower($this->_request->controller),
                 'action' => $this->_request->action,
-                'languages' => LangModel::read(LangModel::$table),
+                'languages' => LangModel::get(),
                 'uri' => $this->_request->getRequestUri(),
                 'menus' => MenuModel::classify()
             ]

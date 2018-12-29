@@ -1,6 +1,6 @@
 <?php echo \Hook\Hook\Hook::run('displayTop');?>
 <!DOCTYPE html>
-<html lang="<?php echo AbstractModel::read('hp_lang', $_SESSION[APP_NAME]['lang_id'] ?? APP_LANG)['lang'];?>">
+<html lang="<?php echo AbstractModel::get('hp_lang', $_SESSION[APP_NAME]['lang_id'] ?? APP_LANG)['lang'];?>">
 <head>
 <meta charset="utf-8" /><meta name="theme-color" content="#3063A0"><meta http-equiv="X-UA-Compatible" content="IE=edge" /><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/apple-touch-icon.png"><link rel="shortcut icon" href="/assets/favicon.ico">

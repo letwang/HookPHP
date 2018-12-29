@@ -6,7 +6,7 @@ if (isset($this->fields['title'])) {?><h3><?php echo $this->fields['title'];?></
 ?>" action="/api/<?php echo $this->controller;?>/v1/<?php echo $this->id ? 'id/'.$this->id: '';
 ?>" method="<?php echo $this->id ? 'PUT' : 'POST';
 ?>" enctype="multipart/form-data" novalidate>
-<?php foreach($this->fields['data'] as $index => $fieldSet) {?>
+<?php foreach($this->fields['data'] ?? [] as $index => $fieldSet) {?>
 <div class="panel" id="fieldSet_<?php echo $index;?>_0_0">
 <?php foreach($fieldSet['form'] as $key => $field) {
 
