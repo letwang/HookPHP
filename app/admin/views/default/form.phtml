@@ -447,48 +447,66 @@ if (isset($input['desc'])) {?>
 }}
 
 //#################################################### COMMON BUTTON
-if (isset($fieldSet['form']['submit']) || isset($fieldSet['form']['buttons'])) {
-?>
-<div class="panel-footer">
-    <?php if (isset($fieldSet['form']['submit'])) {?>
-<button type="submit" value="1" id="<?php echo $this->controller.'_form_submit_btn';
-?>_1" name="<?php echo $fieldSet['form']['submit']['name'];
-?>" class="<?php echo $fieldSet['form']['submit']['class'] ?? 'btn btn-default pull-right';?>">
-<i class="<?php echo $fieldSet['form']['submit']['icon'] ?? 'process-icon-save';?>"></i> <?php
-echo $fieldSet['form']['submit']['title'];?>
-</button>
-<?php }if (isset($this->showCancelButton)) {?>
-<a href="#" class="btn btn-default"<?php
-if ($this->controller) {echo ' id="'.$this->controller.'_form_cancel_btn"';}
-?> onclick="window.history.back();">
-<i class="process-icon-cancel"></i>Cancel</a>
-<?php }if (isset($fieldSet['form']['reset'])) {?>
-<button type="reset" id="<?php echo $fieldSet['form']['reset']['id'] ?? $this->controller.'_form_reset_btn';
-?>" class="<?php echo $fieldSet['form']['reset']['class'] ?? 'btn btn-default';?>">
-<?php if (isset($fieldSet['form']['reset']['icon'])) {
-?><i class="<?php echo $fieldSet['form']['reset']['icon'];?>"></i> <?php
-}
-echo $fieldSet['form']['submit']['title'];?>
-</button>
-<?php }foreach($fieldSet['form']['buttons'] ?? [] as $btn) {if (isset($btn['href'])) {?>
+if (isset($fieldSet['form']['submit']) || isset($fieldSet['form']['buttons'])) {?>
+<div class="panel-footer"><?php
+    if (isset($fieldSet['form']['submit'])) {
+?><button type="submit" value="1" id="<?php
+        echo $this->controller.'_form_submit_btn';
+?>_1" name="<?php
+        echo $fieldSet['form']['submit']['name'];
+?>" class="<?php
+        echo $fieldSet['form']['submit']['class'] ?? 'btn btn-default pull-right';
+?>"><i class="<?php
+        echo $fieldSet['form']['submit']['icon'] ?? 'process-icon-save';?>"></i><?php
+        echo $fieldSet['form']['submit']['title'];
+?></button>
+<?php
+    }
+    if (!empty($this->showCancelButton)) {
+?><a href="#" class="btn btn-default"<?php
+        if ($this->controller) {echo ' id="'.$this->controller.'_form_cancel_btn"';}
+?> onclick="window.history.back();"><i class="process-icon-cancel"></i>Cancel</a>
+<?php
+    }
+    if (isset($fieldSet['form']['reset'])) {
+?><button type="reset" id="<?php
+        echo $fieldSet['form']['reset']['id'] ?? $this->controller.'_form_reset_btn';
+?>" class="<?php
+        echo $fieldSet['form']['reset']['class'] ?? 'btn btn-default';?>"><?php
+        if (isset($fieldSet['form']['reset']['icon'])) {
+?><i class="<?php
+            echo $fieldSet['form']['reset']['icon'];?>"></i><?php
+        }
+        echo $fieldSet['form']['reset']['title'];
+?></button>
+<?php
+    }
+    foreach($fieldSet['form']['buttons'] ?? [] as $btn) {
+        if (isset($btn['href'])) {?>
 <a href="<?php echo $btn['href'];?>"<?php
-if (isset($btn['id'])) {echo ' id="'.$btn['id'].'"';
-}?> class="btn btn-default <?php echo $btn['class'] ?? '';?>"<?php
-if (isset($btn['js'])) {?> onclick="<?php echo $btn['js'];?>"<?php }?>>
-<?php if (isset($btn['icon'])) {?><i class="<?php echo $btn['icon'];?>" ></i> <?php }echo $btn['title'];?>
-</a>
-<?php } else { ?>
-<button type="<?php echo $btn['type'] ?? 'button';?>"<?php
-if (isset($btn['id'])) {echo ' id="'.$btn['id'].'"';}
-?> class="btn btn-default <?php echo $btn['class'] ?? '';
-?>" name="<?php echo $btn['name'] ?? 'submitOptions'.$this->controller;?>"<?php
-if (isset($btn['js'])) {?> onclick="<?php echo $btn['js'];?>"<?php }?>>
-<?php if (isset($btn['icon'])) {?><i class="<?php echo $btn['icon'];?>" ></i> <?php }echo $btn['title'];?>
-</button>
-<?php }}?>
-</div>
-<?php }?>
-</div>
-<?php }?>
-</form>
+            if (isset($btn['id'])) {?> id="<?php echo $btn['id'];?>"<?php }
+?> class="btn btn-default <?php echo $btn['class'] ?? '';?>"<?php
+            if (isset($btn['js'])) {?> onclick="<?php echo $btn['js'];?>"<?php }
+?>><?php
+            if (isset($btn['icon'])) {?><i class="<?php echo $btn['icon'];?>" ></i><?php }
+            echo $btn['title'];
+?></a>
+<?php
+        } else {
+?><button type="<?php
+            echo $btn['type'] ?? 'button';?>"<?php
+            if (isset($btn['id'])) {?> id="<?php echo $btn['id'];?>"<?php }
+?> class="btn btn-default <?php echo $btn['class'] ?? '';?>" name="<?php
+            echo $btn['name'] ?? 'submitOptions'.$this->controller;?>"<?php
+            if (isset($btn['js'])) {?> onclick="<?php echo $btn['js'];?>"<?php }
+?>><?php
+            if (isset($btn['icon'])) {?><i class="<?php echo $btn['icon'];?>" ></i><?php }
+            echo $btn['title'];
+?></button>
+<?php
+        }
+    }
+?></div><?php
+}
+?></div><?php }?></form>
 <script type="text/javascript"></script>

@@ -7,7 +7,7 @@ class ManagerController extends AbstractController
         $this->model = new \ManagerModel($this->getRequest()->getParam('id'));
     }
 
-    public function GETAction()
+    public function getAction()
     {
         $data = $this->model->get();
         foreach ($data as &$v) {
@@ -19,17 +19,17 @@ class ManagerController extends AbstractController
         return $this->send($data);
     }
 
-    public function POSTAction()
+    public function postAction()
     {
-        return $this->send($this->model->create());
+        return $this->send($this->model->post());
     }
 
-    public function PUTAction()
+    public function putAction()
     {
-        return $this->send($this->model->update());
+        return $this->send($this->model->put());
     }
 
-    public function DELETEAction()
+    public function deleteAction()
     {
         return $this->send($this->model->delete());
     }

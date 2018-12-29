@@ -7,22 +7,22 @@ class TranslationController extends AbstractController
         $this->model = new TranslationModel($this->getRequest()->getParam('id'));
     }
 
-    public function GETAction()
+    public function getAction()
     {
         return $this->send($this->model->get());
     }
 
-    public function POSTAction()
+    public function postAction()
     {
-        return $this->send($this->model->create());
+        return $this->send($this->model->post());
     }
 
-    public function PUTAction()
+    public function putAction()
     {
-        return $this->send($this->model->update());
+        return $this->send($this->model->put());
     }
 
-    public function DELETEAction()
+    public function deleteAction()
     {
         return $this->send($this->model->delete());
     }

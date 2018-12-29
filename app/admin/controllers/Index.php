@@ -1,17 +1,17 @@
 <?php
 class IndexController extends AbstractController
 {
-    public function indexAction()
+    public function getAction()
     {
         $this->_view->assign(['fieldsList' => $this->fieldsList]);
     }
 
-    public function addAction()
+    public function postAction()
     {
         //
     }
 
-    public function editAction()
+    public function putAction()
     {
         $this->_view->assign(['id' => (int) $this->getRequest()->getParam('id')]);
     }

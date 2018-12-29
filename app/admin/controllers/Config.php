@@ -15,12 +15,12 @@ class ConfigController extends AbstractController
         ];
     }
 
-    public function indexAction()
+    public function getAction()
     {
         $this->_view->assign(['fieldsList' => $this->fieldsList]);
     }
 
-    public function addAction()
+    public function postAction()
     {
         $this->_view->assign(
             [
@@ -31,7 +31,7 @@ class ConfigController extends AbstractController
                             'form' => [
                                 'legend' => [
                                     'image' => '/assets/vendor/jstree/themes/default/throbber.gif',
-                                    'icon' => 'menu-link',
+                                    'icon' => 'menu-icon oi oi-infinity',
                                     'title' => 'legend...',
                                 ],
                                 'description' => 'description...',
@@ -191,11 +191,11 @@ class ConfigController extends AbstractController
                                             'default' => 'show',// hide
                                             'total' => '',
                                             'hide' => [
-                                                'icon' => 'menu-link',
+                                                'icon' => 'menu-icon oi oi-infinity',
                                                 'text' => 'hide...'
                                             ],
                                             'show' => [
-                                                'icon' => 'menu-text',
+                                                'icon' => 'menu-icon oi oi-infinity',
                                                 'text' => 'show...'
                                             ]
                                         ],
@@ -271,6 +271,37 @@ class ConfigController extends AbstractController
                                         'col' => 6,
                                         'id' => 'datetime12'
                                     ]
+                                ],
+                                'submit' => [
+                                    'name' => 'submit1',
+                                    'class' => 'submitDemoClass',
+                                    'icon' => 'menu-icon oi oi-infinity',
+                                    'title' => 'Submit'
+                                ],
+                                'reset' => [
+                                    'id' => 'reset1',
+                                    'class' => 'resetDemoClass',
+                                    'icon' => 'menu-icon oi oi-resize-both',
+                                    'title' => 'Reset'
+                                ],
+                                'buttons' => [
+                                    [
+                                        'href' => 'javascript:void(0);',
+                                        'id' => 'href1',
+                                        'class' => 'hrefDemoClass',
+                                        'js' => 'javascript:alert(2);',
+                                        'icon' => 'menu-icon oi oi-wrench',
+                                        'title' => 'Href'
+                                    ],
+                                    [
+                                        'type' => 'button',
+                                        'id' => 'button1',
+                                        'name' => 'button1',
+                                        'class' => 'buttonDemoClass',
+                                        'js' => 'javascript:alert(3);',
+                                        'icon' => 'menu-icon oi oi-infinity',
+                                        'title' => 'Button'
+                                    ]
                                 ]
                             ]
                         ],
@@ -285,7 +316,7 @@ class ConfigController extends AbstractController
         );
     }
 
-    public function editAction()
+    public function putAction()
     {
         $this->_view->assign(['id' => (int) $this->getRequest()->getParam('id')]);
     }

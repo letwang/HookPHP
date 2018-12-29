@@ -31,7 +31,7 @@ abstract class AbstractModel
         $this->ignore = ['id' => true, 'app_id' => true, 'date_add' => true, 'date_upd' => true, 'lang_id' => true, static::$foreign => true];
     }
 
-    public function create(): int
+    public function post(): int
     {
         $this->beforeCreate();
         $this->copyFromPost();
@@ -78,7 +78,7 @@ abstract class AbstractModel
         return $data[$table][$id][$langId];
     }
 
-    public function update(): bool
+    public function put(): bool
     {
         $this->beforeUpdate();
         $this->copyFromPost();

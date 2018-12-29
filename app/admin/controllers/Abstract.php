@@ -15,7 +15,7 @@ abstract class AbstractController extends Yaf\Controller_Abstract
             return false;
         }
         //全局模板路径
-        $this->_view->setScriptPath(APP_ROOT.($this->_request->module === 'Index' ? '' : '/modules/'.$this->_request->module).'/views/'.APP_THEME.'/');
+        $this->_view->setScriptPath(APP_ROOT.($this->_request->module === 'Index' ? '' : '/modules/'.$this->_request->module).'/views/'.APP_THEME);
         //全局META SEO
         $this->_view->assign(['title' => l('app.title'), 'keywords' => l('app.keywords'), 'description' => l('app.description')]);
         //登录检测

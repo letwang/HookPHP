@@ -1,7 +1,7 @@
 <?php
 class IndexController extends AbstractController
 {
-    public function indexAction()
+    public function getAction()
     {
         $this->_view->assign(
             ['test' => 'PAAS']

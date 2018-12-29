@@ -3,7 +3,7 @@ use Hook\Http\Header, Hook\Db\PdoConnect, Hook\Crypt\PassWord;
 
 class LoginController extends AbstractController
 {
-    public function indexAction()
+    public function getAction()
     {
         $this->_view->referer = $this->getRequest()->getParam('referer', '/');
     }
