@@ -33,7 +33,7 @@ abstract class AbstractModel
 
     public function post(): int
     {
-        $this->beforeCreate();
+        $this->beforePost();
         $this->copyFromPost();
         try {
             PdoConnect::getInstance()->pdo->beginTransaction();
@@ -54,7 +54,7 @@ abstract class AbstractModel
                 }
             }
 
-            return PdoConnect::getInstance()->pdo->commit() && $this->afterCreate($result['lastInsertId']) ? $result['lastInsertId']: 0;
+            return PdoConnect::getInstance()->pdo->commit() && $this->afterPost($result['lastInsertId']) ? $result['lastInsertId']: 0;
         } catch (Throwable $e) {
             PdoConnect::getInstance()->pdo->rollBack();
             throw new Exception($e->getMessage());
@@ -80,23 +80,23 @@ abstract class AbstractModel
 
     public function put(): bool
     {
-        $this->beforeUpdate();
+        $this->beforePut();
         $this->copyFromPost();
         try {
             PdoConnect::getInstance()->pdo->beginTransaction();
 
             $table = Orm::getInstance(static::$table);
-            $table->update($this->getFields(), ['id' => $this->id]);
+            $table->where(['id' => $this->id])->update($this->getFields());
 
             $lang = $this->getFieldsLang();
             if ($lang) {
                 $table = Orm::getInstance(static::$table.'_lang');
                 foreach ($lang as $langId => $parameter) {
-                    $table->update($parameter, [static::$foreign => $this->id, 'lang_id' => $langId]);
+                    $table->where([static::$foreign => $this->id, 'lang_id' => $langId])->update($parameter);
                 }
             }
 
-            return PdoConnect::getInstance()->pdo->commit() && $this->afterUpdate();
+            return PdoConnect::getInstance()->pdo->commit() && $this->afterPut();
         } catch (Throwable $e) {
             PdoConnect::getInstance()->pdo->rollBack();
             throw new Exception($e->getMessage());
@@ -107,7 +107,7 @@ abstract class AbstractModel
     {
         $this->beforeDelete();
         $table = Orm::getInstance(static::$table);
-        return $table->delete(['id' => $this->id]) === 1 && $this->afterDelete();
+        return $table->where(['id' => $this->id])->delete() === 1 && $this->afterDelete();
     }
 
     private function getFields(): array
@@ -251,39 +251,39 @@ abstract class AbstractModel
         return $data[$table] = isset(APP_TABLE[$table]) ? array_keys(array_diff_key(APP_TABLE[$table], $this->ignore)) : [];
     }
 
-    protected function beforeCreate(): bool
+    protected function beforePost(): bool
     {
         return true;
     }
 
-    protected function afterCreate(int $id): bool
+    protected function afterPost(int $id): bool
     {
         $table = Orm::getInstance(static::$table);
         $redis = RedisConnect::getInstance()->redis;
         $redis->hSet(
             'table:'.static::$table,
-            $this->id,
-            $table->select(['*'])->where(['id' => $this->id])->fetch()
+            $id,
+            $table->select(['*'])->where(['id' => $id])->fetch()
         );
 
         if (isset(APP_TABLE[static::$table.'_lang'])) {
             $redis->hSet(
                 'table:'.static::$table.'_lang',
-                $this->id.'_'.$this->langId,
-                $table->select(['*'])->where(['id' => $this->id, 'lang_id' => $this->langId])->fetch()
+                $id.'_'.$this->langId,
+                $table->select(['*'])->where(['id' => $id, 'lang_id' => $this->langId])->fetch()
             );
         }
         return true;
     }
 
-    protected function beforeUpdate(): bool
+    protected function beforePut(): bool
     {
         return true;
     }
 
-    protected function afterUpdate(): bool
+    protected function afterPut(): bool
     {
-        return $this->afterCreate($this->id);
+        return $this->afterPost($this->id);
     }
 
     protected function beforeDelete(): bool
