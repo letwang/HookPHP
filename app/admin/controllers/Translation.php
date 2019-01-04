@@ -1,5 +1,5 @@
 <?php
-class TranslationController extends AbstractController
+class TranslationController extends Base\ViewController
 {
     public function init()
     {
@@ -13,20 +13,5 @@ class TranslationController extends AbstractController
             'data' => ['data' => 'data', 'className' => 'align-middle', 'title' => l('Translation.data')],
             'idx' => ['data' => 'id', 'className' => 'align-middle text-right', 'orderable' => false, 'searchable' => false]
         ];
-    }
-
-    public function getAction()
-    {
-        $this->_view->assign(['fieldsList' => $this->fieldsList]);
-    }
-
-    public function postAction()
-    {
-        //
-    }
-
-    public function putAction()
-    {
-        $this->_view->assign(['id' => (int) $this->getRequest()->getParam('id')]);
     }
 }

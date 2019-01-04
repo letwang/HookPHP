@@ -1,12 +1,6 @@
 <?php
-class User_IndexController extends AbstractController
+class User_IndexController extends Base\ApiController
 {
-    public function init()
-    {
-        parent::init();
-        $this->model = new \User\IndexModel($this->getRequest()->getParam('id'));
-    }
-
     public function getAction()
     {
         $data = $this->model->get();
@@ -17,20 +11,5 @@ class User_IndexController extends AbstractController
             $v['date_upd'] = date('Y-m-d H:i:s', $v['date_upd']);
         }
         return $this->send($data);
-    }
-
-    public function postAction()
-    {
-        return $this->send($this->model->post());
-    }
-
-    public function putAction()
-    {
-        return $this->send($this->model->put());
-    }
-
-    public function deleteAction()
-    {
-        return $this->send($this->model->delete());
     }
 }

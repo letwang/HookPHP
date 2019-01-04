@@ -1,5 +1,5 @@
 <?php
-class Acl_UserController extends AbstractController
+class Acl_UserController extends Base\ViewController
 {
     public function init()
     {
@@ -12,20 +12,5 @@ class Acl_UserController extends AbstractController
             'date_add' => ['data' => 'date_add', 'className' => 'align-middle', 'title' => l('app.date_add')],
             'idx' => ['data' => 'id', 'className' => 'align-middle text-right', 'orderable' => false, 'searchable' => false]
         ];
-    }
-
-    public function getAction()
-    {
-        $this->_view->assign(['fieldsList' => $this->fieldsList]);
-    }
-
-    public function postAction()
-    {
-        //
-    }
-
-    public function putAction()
-    {
-        $this->_view->assign(['id' => (int) $this->getRequest()->getParam('id')]);
     }
 }

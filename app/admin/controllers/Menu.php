@@ -1,5 +1,5 @@
 <?php
-class MenuController extends AbstractController
+class MenuController extends Base\ViewController
 {
     public function init()
     {
@@ -17,20 +17,5 @@ class MenuController extends AbstractController
             'date_upd' => ['data' => 'date_upd', 'className' => 'align-middle', 'title' => l('app.date_upd')],
             'idx' => ['data' => 'id', 'className' => 'align-middle text-right', 'orderable' => false, 'searchable' => false]
         ];
-    }
-
-    public function getAction()
-    {
-        $this->_view->assign(['fieldsList' => $this->fieldsList]);
-    }
-
-    public function postAction()
-    {
-        //
-    }
-
-    public function putAction()
-    {
-        $this->_view->assign(['id' => (int) $this->getRequest()->getParam('id')]);
     }
 }

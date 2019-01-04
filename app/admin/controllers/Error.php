@@ -1,5 +1,5 @@
 <?php
-class ErrorController extends AbstractController
+class ErrorController extends Base\ViewController
 {
     public function errorAction($exception)
     {

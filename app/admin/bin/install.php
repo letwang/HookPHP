@@ -29,8 +29,8 @@ $app->execute('main', $pdo);
 function main($pdo) {
     $data = '';
     foreach ($pdo->fetchAll(\Hook\Sql\Table::GET_ALL, [], PDO::FETCH_NUM) as list($tableName)) {
-        $table = Orm::getInstance($tableName);
-        $table->synData();
+        $orm = Orm::getInstance($tableName);
+        $orm->synData();
         $data .= '['.$tableName.']'.PHP_EOL;
         foreach ($pdo->fetchAll('DESC `'.$tableName.'`') as $field) {
             $data .= $field['Field'].'.type='.substr($field['Type'], 0, strpos($field['Type'], '(')).PHP_EOL;
@@ -39,7 +39,7 @@ function main($pdo) {
             $data .= $field['Field'].'.default='.$field['Default'].PHP_EOL;
             $data .= $field['Field'].'.extra='.$field['Extra'].PHP_EOL;
 
-            $validate = $table->validate($field['Type']);
+            $validate = $orm->validate($field['Type']);
             $data .= $field['Field'].'.min='.$validate['min'].PHP_EOL;
             $data .= $field['Field'].'.max='.$validate['max'].PHP_EOL;
         }

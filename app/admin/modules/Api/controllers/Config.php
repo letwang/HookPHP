@@ -1,12 +1,6 @@
 <?php
-class ConfigController extends AbstractController
+class ConfigController extends Base\ApiController
 {
-    public function init()
-    {
-        parent::init();
-        $this->model = new ConfigModel($this->getRequest()->getParam('id'));
-    }
-
     public function getAction()
     {
         $data = $this->model->get();
@@ -16,20 +10,5 @@ class ConfigController extends AbstractController
             $v['date_upd'] = date('Y-m-d H:i:s', $v['date_upd']);
         }
         return $this->send($data);
-    }
-
-    public function postAction()
-    {
-        return $this->send($this->model->post());
-    }
-
-    public function putAction()
-    {
-        return $this->send($this->model->put());
-    }
-
-    public function deleteAction()
-    {
-        return $this->send($this->model->delete());
     }
 }

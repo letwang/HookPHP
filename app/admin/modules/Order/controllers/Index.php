@@ -1,12 +1,5 @@
 <?php
-class IndexController extends AbstractController
+class IndexController extends Base\ViewController
 {
-    public function getAction()
-    {
-        $this->_view->assign(
-            [
-                'test' => 'Order'
-            ]
-        );
-    }
+    
 }

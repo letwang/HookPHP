@@ -1,5 +1,5 @@
 <?php
-class ManagerController extends AbstractController
+class ManagerController extends Base\ViewController
 {
     public function init()
     {
@@ -17,20 +17,5 @@ class ManagerController extends AbstractController
             'lastname' => ['data' => 'lastname', 'className' => 'align-middle', 'title' => l('Manager.lastname')],
             'idx' => ['data' => 'id', 'className' => 'align-middle text-right', 'orderable' => false, 'searchable' => false]
         ];
-    }
-
-    public function getAction()
-    {
-        $this->_view->assign(['fieldsList' => $this->fieldsList]);
-    }
-
-    public function postAction()
-    {
-        //
-    }
-
-    public function putAction()
-    {
-        $this->_view->assign(['id' => (int) $this->getRequest()->getParam('id')]);
     }
 }

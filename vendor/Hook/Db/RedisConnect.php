@@ -25,4 +25,11 @@ class RedisConnect extends Cache
         $this->redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_PHP);
         $this->redis->setOption(Redis::OPT_PREFIX, APP_CONFIG['application']['name'].':');
     }
+
+    public function multi(callable $callback, int $type = Redis::MULTI)
+    {
+        $redis = $this->redis->multi($type);
+        $callback($redis);
+        return $redis->exec();
+    }
 }

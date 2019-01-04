@@ -42,15 +42,15 @@ abstract class AbstractModel
             $parameter += isset(APP_TABLE[static::$table]['app_id']) ? ['app_id' => $this->appId]: [];
             $parameter += isset(APP_TABLE[static::$table]['date_add']) ? ['date_add' => time()] : [];
 
-            $table = Orm::getInstance(static::$table);
-            $result = $table->insert($parameter);
+            $orm = Orm::getInstance(static::$table);
+            $result = $orm->insert($parameter);
 
             $lang = $this->getFieldsLang();
             if ($lang) {
-                $table = Orm::getInstance(static::$table.'_lang');
+                $orm = Orm::getInstance(static::$table.'_lang');
                 foreach ($lang as $langId => $parameter) {
                     $parameter += ['lang_id' => $langId, static::$foreign => $result['lastInsertId']];
-                    $table->insert($parameter);
+                    $orm->insert($parameter);
                 }
             }
 
@@ -85,14 +85,14 @@ abstract class AbstractModel
         try {
             PdoConnect::getInstance()->pdo->beginTransaction();
 
-            $table = Orm::getInstance(static::$table);
-            $table->where(['id' => $this->id])->update($this->getFields());
+            $orm = Orm::getInstance(static::$table);
+            $orm->where(['id' => $this->id])->update($this->getFields());
 
             $lang = $this->getFieldsLang();
             if ($lang) {
-                $table = Orm::getInstance(static::$table.'_lang');
+                $orm = Orm::getInstance(static::$table.'_lang');
                 foreach ($lang as $langId => $parameter) {
-                    $table->where([static::$foreign => $this->id, 'lang_id' => $langId])->update($parameter);
+                    $orm->where([static::$foreign => $this->id, 'lang_id' => $langId])->update($parameter);
                 }
             }
 
@@ -106,8 +106,8 @@ abstract class AbstractModel
     public function delete(): bool
     {
         $this->beforeDelete();
-        $table = Orm::getInstance(static::$table);
-        return $table->where(['id' => $this->id])->delete() === 1 && $this->afterDelete();
+        $orm = Orm::getInstance(static::$table);
+        return $orm->where(['id' => $this->id])->delete() === 1 && $this->afterDelete();
     }
 
     private function getFields(): array
@@ -258,21 +258,20 @@ abstract class AbstractModel
 
     protected function afterPost(int $id): bool
     {
-        $table = Orm::getInstance(static::$table);
-        $redis = RedisConnect::getInstance()->redis;
-        $redis->hSet(
-            'table:'.static::$table,
-            $id,
-            $table->select(['*'])->where(['id' => $id])->fetch()
-        );
-
-        if (isset(APP_TABLE[static::$table.'_lang'])) {
+        $orm = Orm::getInstance(static::$table);
+        $callback = function(Redis $redis) use ($orm) {
             $redis->hSet(
-                'table:'.static::$table.'_lang',
-                $id.'_'.$this->langId,
-                $table->select(['*'])->where(['id' => $id, 'lang_id' => $this->langId])->fetch()
+                'table:'.$orm->table, $id,
+                $orm->select(['*'])->where(['id' => $id])->fetch()
             );
-        }
+            if (isset(APP_TABLE[$orm->table.'_lang'])) {
+                $redis->hSet(
+                    'table:'.$orm->table.'_lang', $id.'_'.$this->langId,
+                    $orm->select(['*'])->where(['id' => $id, 'lang_id' => $this->langId])->fetch()
+                );
+            }
+        };
+        RedisConnect::getInstance()->multi($callback);
         return true;
     }
 
@@ -293,14 +292,18 @@ abstract class AbstractModel
 
     protected function afterDelete(): bool
     {
-        $redis = RedisConnect::getInstance()->redis;
-        $redis->hDel('table:'.static::$table, $this->id);
-
-        if (isset(APP_TABLE[static::$table.'_lang'])) {
-            foreach (LangModel::getIds() as $langId) {
-                $redis->hDel('table:'.static::$table.'_lang', $this->id.'_'.$langId);
+        $lang = LangModel::getIds();
+        $callback = function(Redis $redis) use ($lang) {
+            $redis->hDel('table:'.static::$table, $this->id);
+            if (isset(APP_TABLE[static::$table.'_lang'])) {
+                $param = ['table:'.static::$table.'_lang'];
+                foreach ($lang as $langId) {
+                    $param[] = $this->id.'_'.$langId;
+                }
+                call_user_func_array(array($redis, 'hDel'), $param);
             }
-        }
+        };
+        RedisConnect::getInstance()->multi($callback);
         return true;
     }
 }

@@ -1,5 +1,5 @@
 <?php
-class ConfigController extends AbstractController
+class ConfigController extends Base\ViewController
 {
     public function init()
     {
@@ -13,11 +13,6 @@ class ConfigController extends AbstractController
             'value' => ['data' => 'value', 'className' => 'align-middle', 'title' => l('Config.value')],
             'idx' => ['data' => 'id', 'className' => 'align-middle text-right', 'orderable' => false, 'searchable' => false]
         ];
-    }
-
-    public function getAction()
-    {
-        $this->_view->assign(['fieldsList' => $this->fieldsList]);
     }
 
     public function postAction()
@@ -314,10 +309,5 @@ class ConfigController extends AbstractController
                 'showCancelButton' => true
             ]
         );
-    }
-
-    public function putAction()
-    {
-        $this->_view->assign(['id' => (int) $this->getRequest()->getParam('id')]);
     }
 }
