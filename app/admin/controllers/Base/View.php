@@ -4,7 +4,7 @@ abstract class ViewController extends InitController
 {
     protected $fieldsList = [];
 
-    public function init()
+    protected function init()
     {
         parent::init();
         //全局模板路径
@@ -17,16 +17,11 @@ abstract class ViewController extends InitController
                 'module' => $this->_request->module,
                 'controller' => strtolower($this->_request->controller),
                 'action' => $this->_request->action,
-                'languages' => \LangModel::get(),
+                'languages' => \LangModel::getData(),
                 'uri' => $this->_request->getRequestUri(),
-                'menus' => \MenuModel::classify()
+                'menus' => \MenuModel::getClassify()
             ]
         );
-    }
-
-    protected function getAction()
-    {
-        $this->_view->assign(['fieldsList' => $this->fieldsList]);
     }
 
     protected function postAction()
@@ -37,5 +32,10 @@ abstract class ViewController extends InitController
     protected function putAction()
     {
         $this->_view->assign(['id' => (int) $this->getRequest()->getParam('id')]);
+    }
+
+    protected function getAction()
+    {
+        $this->_view->assign(['fieldsList' => $this->fieldsList]);
     }
 }

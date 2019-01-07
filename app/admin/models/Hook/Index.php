@@ -21,7 +21,7 @@ class IndexModel extends \AbstractModel
         parent::__construct($id, $appId, $langId);
     }
 
-    public static function get(string $table = null, int $id = 0, int $langId = 0): array
+    public function get(): array
     {
         return PdoConnect::getInstance()->fetchAll(Hook::GET_ALL, [$_SESSION[APP_NAME]['lang_id']]);
     }

@@ -23,7 +23,7 @@ class MenuModel extends AbstractModel
         parent::__construct($id, $appId, $langId);
     }
 
-    public static function classify(): array
+    public static function getClassify(): array
     {
         $data = &Cache::static(__METHOD__);
         if ($data !== null) {
@@ -41,10 +41,5 @@ class MenuModel extends AbstractModel
         }
         $data = $redis->get($key);
         return $data;
-    }
-
-    public static function get(string $table = null, int $id = 0, int $langId = 0): array
-    {
-        return parent::get($table ?? self::$table, $id, $langId);
     }
 }

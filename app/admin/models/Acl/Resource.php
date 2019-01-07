@@ -22,7 +22,7 @@ class ResourceModel extends \AbstractModel
         parent::__construct($id, $appId, $langId);
     }
 
-    public static function get(string $table = null, int $id = 0, int $langId = 0): array
+    public function get(): array
     {
         return PdoConnect::getInstance()->fetchAll(Acl::GET_RESOURCE, [$_SESSION[APP_NAME]['lang_id'], 1]);
     }

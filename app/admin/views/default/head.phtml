@@ -225,7 +225,8 @@
             <img src="/assets/images/avatars/profile.jpg" alt="">
           </span>
           <span class="account-summary pr-lg-4 d-none d-lg-block">
-            <span class="account-name"><?php echo AbstractModel::get('hp_manager', $_SESSION[APP_NAME]['id'])['firstname'];?> <?php echo AbstractModel::get('hp_manager', $_SESSION[APP_NAME]['id'])['lastname'];?></span>
+            <span class="account-name"><?php echo AbstractModel::getData('hp_manager', $_SESSION[APP_NAME]['id'])['firstname'];
+            ?> <?php echo AbstractModel::getData('hp_manager', $_SESSION[APP_NAME]['id'])['lastname'];?></span>
             <span class="account-description">Marketing Manager</span>
           </span>
         </button>

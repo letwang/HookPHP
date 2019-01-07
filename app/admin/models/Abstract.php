@@ -3,6 +3,7 @@ use Hook\Db\{PdoConnect,RedisConnect,Orm};
 use Hook\Cache\Cache;
 use Hook\Validate\Validate;
 use Hook\Tools\Tools;
+use Base\InitController;
 
 abstract class AbstractModel
 {
@@ -13,6 +14,7 @@ abstract class AbstractModel
     public $appId;
     public $langId;
 
+    public $fields = [];
     public $ignore = [];
 
     const INT = 1;
@@ -29,6 +31,22 @@ abstract class AbstractModel
         $this->langId = $langId;
 
         $this->ignore = ['id' => true, 'app_id' => true, 'date_add' => true, 'date_upd' => true, 'lang_id' => true, static::$foreign => true];
+    }
+
+    public static function getData(string $table = null, int $id = null, int $langId = null)
+    {
+        $table = $table ?? static::$table;
+        $id = $id && $langId ? ($id.'_'.$langId) : $id;
+
+        $data = &Cache::static(__METHOD__);
+        if (isset($data[$table][$id])) {
+            return $data[$table][$id];
+        }
+
+        $key = 'table:'.$table;
+        $redis = RedisConnect::getInstance()->redis;
+        $data[$table][$id] = $id ? $redis->hGet($key, $id) : array_values($redis->hGetAll($key));
+        return $data[$table][$id];
     }
 
     public function post(): int
@@ -57,25 +75,23 @@ abstract class AbstractModel
             return PdoConnect::getInstance()->pdo->commit() && $this->afterPost($result['lastInsertId']) ? $result['lastInsertId']: 0;
         } catch (Throwable $e) {
             PdoConnect::getInstance()->pdo->rollBack();
-            throw new Exception($e->getMessage());
+            InitController::send([], 100003, $e->getMessage(), 500);
         }
     }
 
-    public static function get(string $table, int $id = 0, int $langId = 0)
+    public function delete(): bool
     {
-        $data = &Cache::static(__METHOD__);
-        if (isset($data[$table][$id][$langId])) {
-            return $data[$table][$id][$langId];
-        }
+        $this->beforeDelete();
+        try {
+            PdoConnect::getInstance()->pdo->beginTransaction();
 
-        if ($langId > 0) {
-            $id .= '_'.$langId;
+            $orm = Orm::getInstance(static::$table);
+            $orm->where(['id' => $this->id])->delete();
+            return PdoConnect::getInstance()->pdo->commit() && $this->afterDelete();
+        } catch (Throwable $e) {
+            PdoConnect::getInstance()->pdo->rollBack();
+            InitController::send([], 100005, $e->getMessage(), 500);
         }
-
-        $key = 'table:'.$table;
-        $redis = RedisConnect::getInstance()->redis;
-        $data[$table][$id][$langId]  = strpos($id, '0') === 0 ? array_values($redis->hGetAll($key)) : $redis->hGet($key, $id);
-        return $data[$table][$id][$langId];
     }
 
     public function put(): bool
@@ -99,15 +115,22 @@ abstract class AbstractModel
             return PdoConnect::getInstance()->pdo->commit() && $this->afterPut();
         } catch (Throwable $e) {
             PdoConnect::getInstance()->pdo->rollBack();
-            throw new Exception($e->getMessage());
+            InitController::send([], 100004, $e->getMessage(), 500);
         }
     }
 
-    public function delete(): bool
+    public function get()
     {
-        $this->beforeDelete();
-        $orm = Orm::getInstance(static::$table);
-        return $orm->where(['id' => $this->id])->delete() === 1 && $this->afterDelete();
+        $data = self::getData(static::$table, $this->id, $this->langId);
+        foreach ($data as &$v) {
+            if (isset($v['date_add'])) {
+                $v['date_add'] = date('Y-m-d H:i:s', $v['date_add']);
+            }
+            if (isset($v['date_upd'])) {
+                $v['date_upd'] = date('Y-m-d H:i:s', $v['date_upd']);
+            }
+        }
+        return $data;
     }
 
     private function getFields(): array

@@ -14,13 +14,8 @@ class LangModel extends AbstractModel
         parent::__construct($id, $appId, $langId);
     }
 
-    public static function get(string $table = null, int $id = 0, int $langId = 0): array
-    {
-        return parent::get($table ?? self::$table, $id, $langId);
-    }
-
     public static function getIds(): array
     {
-        return array_column(parent::get(self::$table), 'id');
+        return array_column(parent::getData(), 'id');
     }
 }
