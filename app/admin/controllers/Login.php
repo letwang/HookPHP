@@ -43,7 +43,7 @@ class LoginController extends Base\ViewController
     {
         unset($_SESSION[APP_NAME]);
         session_regenerate_id(true);
-
-        return !$this->forward('index');
+        Header::redirect('/');
+        return true;
     }
 }

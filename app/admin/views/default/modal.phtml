@@ -35,6 +35,9 @@ $(function(){
                         return true;
                     }
                     alert(data.id +':'+ data.msg);
+                },
+                error: function(data){
+                    alert('异常：' + data.responseJSON.id +':'+ data.responseJSON.msg);
                 }
             });
         });
