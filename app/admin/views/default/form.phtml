@@ -104,28 +104,28 @@ if ($input['type'] === 'text') {
     }
     foreach($this->languages as $language) {
         if ($langCount > 1) {?>
-<div class="translatable-field lang-<?php echo $language['id'];
+<div class="row lang-<?php echo $language['id'];
 ?>" <?php if ((int) $language['id'] !== APP_LANG) {?>style="display:none"<?php }?>>
 <div class="col-lg-9"><?php
         }
         if (isset($input['maxchar']) || isset($input['prefix']) || isset($input['suffix'])) {?>
-<div class="input-group <?php echo $input['class'] ?? '';?>">
+<div class="input-group input-group-alt <?php echo $input['class'] ?? '';?>">
 <?php
         }
         if (isset($input['maxchar'])) {?>
-<span id="<?php echo ($input['id'] ?? $input['name']).'_'.$language['id'];?>_counter" class="input-group-addon">
-	<span class="text-count-down"><?php echo $input['maxchar'];?></span>
+<span id="<?php echo ($input['id'] ?? $input['name']).'_'.$language['id'];?>_counter" class="input-group-prepend">
+	<span class="input-group-text"><?php echo $input['maxchar'];?></span>
 </span>
 <?php
         }
         if (isset($input['prefix'])) {?>
-<span class="input-group-addon"><?php echo $input['prefix'];?></span>
+<div class="input-group-prepend"><span class="input-group-text"><?php echo $input['prefix'];?></span></div>
 <?php
         }
 ?>
 <input type="text" id="<?php echo ($input['id'] ?? $input['name']).$language['id'];
         ?>" name="<?php echo $input['name'].$language['id'];
-        ?>" class="<?php echo $input['class'] ?? '';
+        ?>" class="form-control <?php echo $input['class'] ?? '';
         ?>" value="<?php echo $this->fieldsValue[$input['name']][$language['id']] ?? '';?>" <?php
         if (isset($input['size'])) {?> size="<?php echo $input['size'];?>"<?php }
         if (isset($input['maxchar'])) {?> data-maxchar="<?php echo $input['maxchar'];?>"<?php }
@@ -137,7 +137,7 @@ if ($input['type'] === 'text') {
         if (isset($input['placeholder'])) {?> placeholder="<?php echo $input['placeholder'];?>"<?php }?> />
 <?php
         if (isset($input['suffix'])) {?>
-<span class="input-group-addon"><?php echo $input['suffix'];?></span>
+<div class="input-group-append"><span class="input-group-text"><?php echo $input['suffix'];?></span></div>
 <?php
         }
         if (isset($input['maxchar']) || isset($input['prefix']) || isset($input['suffix'])) {?>
@@ -147,16 +147,20 @@ if ($input['type'] === 'text') {
         if ($langCount > 1) {
     ?>
 </div>
-<div class="col-lg-2">
-<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown"><?php
-            echo $language['iso'];?><i class="icon-caret-down"></i></button>
-<ul class="dropdown-menu"><?php
+<div class="col-lg-3">
+<div class="input-group-prepend dropdown">
+  <button class="btn btn-default" type="button" data-toggle="dropdown"><?php
+            echo $language['iso'];?> <span class="caret"></span></button>
+  <div class="dropdown-arrow"></div>
+  <div class="dropdown-menu"><?php
             foreach($this->languages as $language) {?>
-<li><a href="javascript:hideOtherLanguage(<?php echo $language['id'];?>);" tabindex="-1"><?php
-                echo $language['name'];?></a></li>
-<?php
+<a class="dropdown-item" href="javascript:hideOtherLanguage(<?php echo $language['id'];?>);" tabindex="-1"><?php
+                echo $language['name'];?></a><?php
             }
-?></ul></div>
+?>
+  </div>
+</div>
+</div>
 </div>
 <?php
         }
@@ -241,7 +245,7 @@ if ($input['type'] === 'text') {
 } elseif ($input['type'] === 'textarea') {
     foreach($this->languages as $language) {
         if ($langCount > 1) {?>
-<div class="form-group translatable-field lang-<?php echo $language['id'];?>"<?php
+<div class="form-group row lang-<?php echo $language['id'];?>"<?php
             if ((int) $language['id'] !== APP_LANG) {?> style="display:none;"<?php }?>>
 <div class="col-lg-9">
 <?php
@@ -273,7 +277,7 @@ if ($input['type'] === 'text') {
         }
         if ($langCount > 1) {?>
 </div>
-<div class="col-lg-2">
+<div class="col-lg-3">
 <button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown"><?php
             echo $language['iso'];?>
 <span class="caret"></span>
@@ -336,11 +340,11 @@ if ($input['type'] === 'text') {
 
 //**************************************************** 8
 } elseif ($input['type'] === 'password') {?>
-<div class="input-group fixed-width-lg">
-<span class="input-group-addon"><i class="icon-key"></i></span>
+<div class="input-group input-group-alt">
+<span class="input-group-prepend"><span class="input-group-text"><span class="oi oi-eye"></span></span></span>
 <input type="password" id="<?php echo $input['id'] ?? $input['name'];
 ?>" name="<?php echo $input['name'];
-?>" class="<?php echo $input['class'] ?? '';
+?>" class="form-control <?php echo $input['class'] ?? '';
 ?>" value=""<?php
 if (empty($input['autocomplete'])) {?> autocomplete="off"<?php }
 if (!empty($input['required'])) {?> required="required"<?php }?> />
@@ -416,8 +420,8 @@ if (!empty($input['required'])) {?> required="required"<?php }?> />
 }
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ ALL INPUT COMMON
-if (isset($input['desc'])) {?>	
-<p class="help-block">
+if (isset($input['desc'])) {?>
+<p class="form-text text-muted">
 <?php
     if (is_array($input['desc'])) {
         foreach($input['desc'] as $value) {

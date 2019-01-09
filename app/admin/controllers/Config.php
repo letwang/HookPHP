@@ -62,7 +62,7 @@ class ConfigController extends Base\ViewController
                                         'name' => 'text2',
                                         'label' => 'Name',
                                         'hint' => 'Invalid characters: <;#',// ['A...','B...','C...']
-                                        'col' => 8,
+                                        'col' => 9,
                                         'id' => 'text2',
                                         'size' => 90,
                                         'maxchar' => 10,
@@ -72,8 +72,8 @@ class ConfigController extends Base\ViewController
                                         'autocomplete' => false,
                                         'required' => true,
                                         'placeholder' => 'Pls input your name',
-                                        'prefix' => '',
-                                        'suffix' => 'kg',
+                                        'prefix' => 'https://',
+                                        'suffix' => '@domain.com',
                                         'desc' => [
                                             ['id' => 'desc9', 'text' => 'desc9...'],
                                             ['id' => 'desc10', 'text' => 'desc10...'],
