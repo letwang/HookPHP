@@ -89,8 +89,9 @@ class ConfigController extends Base\ViewController
                                         'hint' => 'select3 hint...',
                                         'col' => 7,
                                         'id' => 'select3',
-                                        'multiple' => true,
-                                        'size' => 10,
+                                        'required' => true,
+                                        'multiple' => false,
+                                        'size' => 0,
                                         'onchange' => 'onchange',
                                         'disabled' => false,
                                         'values' => [
@@ -122,13 +123,13 @@ class ConfigController extends Base\ViewController
                                         'col' => 6,
                                         'values' => [
                                             [
-                                                'label' => 'enable',
-                                                'tips' => 'enable...',
+                                                'label' => 'Credit card',
+                                                'tips' => 'This is a help text to guide users to explain the choice you will be making.',
                                                 'disabled' => false,
                                                 'value' => 0,
                                             ],
                                             [
-                                                'label' => 'disable',
+                                                'label' => 'Paypal',
                                                 'tips' => 'disable...',
                                                 'disabled' => false,
                                                 'value' => 1,
@@ -143,17 +144,7 @@ class ConfigController extends Base\ViewController
                                         'name' => 'disable',
                                         'label' => 'Disable',
                                         'hint' => 'switch5 hint...',
-                                        'col' => 5,
-                                        'values' => [
-                                            [
-                                                'disabled' => false,
-                                                'value' => 0,
-                                            ],
-                                            [
-                                                'disabled' => false,
-                                                'value' => 1,
-                                            ]
-                                        ]
+                                        'col' => 5
                                     ],
 
                                     //demo 6:textarea
@@ -163,12 +154,12 @@ class ConfigController extends Base\ViewController
                                         'name' => 'textarea6',
                                         'label' => 'Description',
                                         'hint' => 'Length is not recommended too long...',// ['A...','B...','C...']
-                                        'col' => 4,
+                                        'col' => 9,
                                         'id' => 'textarea6',
-                                        'autoload_rte' => true,
+                                        'required' => true,
                                         'readonly' => false,
                                         'cols' => 50,
-                                        'rows' => 10,
+                                        'rows' => 3,
                                         'maxlength' => 10,
                                         'maxchar' => 10
                                     ],

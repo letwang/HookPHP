@@ -174,9 +174,9 @@ if ($input['type'] === 'text') {
 } elseif ($input['type'] === 'select') {?>
 <select id="<?php echo $input['id'] ?? $input['name'];
     ?>" name="<?php echo $input['name'];
-    ?>" class="<?php echo $input['class'] ?? '';?> fixed-width-xl"<?php
+    ?>" class="custom-select <?php echo $input['class'] ?? '';?>"<?php
     if (!empty($input['multiple'])) {?> multiple="multiple"<?php }
-    if (isset($input['size'])) {?> size="<?php echo $input['size'];?>"<?php }
+    if (!empty($input['size'])) {?> size="<?php echo $input['size'];?>"<?php }
     if (isset($input['onchange'])) {?> onchange="<?php echo $input['onchange'];?>"<?php }
     if (!empty($input['disabled'])) {?> disabled="disabled"<?php }?>>
 <?php
@@ -208,37 +208,32 @@ if ($input['type'] === 'text') {
 //**************************************************** 4
 } elseif ($input['type'] === 'radio') {
     foreach($input['values'] as $value) {?>
-<div class="radio <?php echo $input['class'] ?? '';?>">
-<label><input type="radio" name="<?php echo $input['name'];
-        ?>" id="<?php echo $input['name'].'_'.$value['value'];
+<div class="custom-control custom-radio <?php
+        echo (empty($value['tips']) ? 'custom-control-inline' : '').' '.$input['class'] ?? '';?>">
+    <input type="radio" name="<?php echo $input['name'];
+        ?>" class="custom-control-input" id="<?php echo $input['name'].'_'.$value['value'];
         ?>" value="<?php echo $value['value'];
         ?>"<?php
         if ($this->fieldsValue[$input['name']] ?? '' === $value['value']) {?> checked="checked"<?php }
-        if (!empty($value['disabled'])) {?> disabled="disabled"<?php }?>/><?php
+        if (!empty($value['disabled'])) {?> disabled="disabled"<?php }
+        ?>/> <label class="custom-control-label" for="<?php
+        echo $input['name'].'_'.$value['value'];?>"><?php
         echo $value['label'] ?? '';?></label>
 </div>
 <?php
-        if (isset($value['tips'])) {?><p class="help-block"><?php echo $value['tips'];?></p><?php }
+        if (isset($value['tips'])) {?><div class="text-muted"><?php echo $value['tips'];?></div><?php }
     }
 
 //**************************************************** 5
 } elseif ($input['type'] === 'switch') {?>
-<span class="switch fixed-width-lg">
-<?php
-    foreach($input['values'] as $value) {?>
-<input type="radio" name="<?php echo $input['name'];
-        ?>" id="<?php echo $input['name'].'_'.$value['value'];
-        ?>" value="<?php echo $value['value'];?>"<?php
-        if ($this->fieldsValue[$input['name']] ?? '' === $value['value']) {?> checked="checked"<?php }
-        if (!empty($value['disabled'])) {?> disabled="disabled"<?php }?>/>
-<label for="<?php echo $input['name'].'_'.$value['value'];?>"><?php
-        echo $value['value'] ? 'Yes' : 'No';?>
+<label class="switcher-control" for="<?php echo $input['name'];?>">
+        <input class="switcher-input <?php echo $input['class'] ?? '';
+        ?>" type="checkbox" name="<?php echo $input['name'];
+        ?>" id="<?php echo $input['name'];
+        ?>" value="1"<?php
+        if (!empty($this->fieldsValue[$input['name']])) {?> checked="checked"<?php }?>/>
+<span class="switcher-indicator"></span>
 </label>
-<?php
-    }
-?>
-    <a class="slide-button btn"></a>
-</span>
 <?php
 
 //**************************************************** 6
@@ -251,17 +246,16 @@ if ($input['type'] === 'text') {
 <?php
         }
         if (isset($input['maxchar'])) {?>
-<div class="input-group">
-<span id="<?php echo ($input['id'] ?? $input['name']).'_'.$language['id'];?>_counter" class="input-group-addon">
-<span class="text-count-down"><?php echo $input['maxchar'];?></span>
+<div class="input-group input-group-alt">
+<span id="<?php echo ($input['id'] ?? $input['name']).'_'.$language['id'];?>_counter" class="input-group-prepend">
+    <span class="input-group-text"><?php echo $input['maxchar'];?></span>
 </span>
 <?php
         }
 ?>
 <textarea name="<?php echo $input['name'].'_'.$language['id'];
         ?>" id="<?php echo ($input['id'] ?? $input['name']).'_'.$language['id'];
-        ?>" class="<?php echo (!empty($input['autoload_rte']) ? 'rte autoload_rte ' : 'textarea-autosize ').
-                              ($input['class'] ?? '');
+        ?>" class="form-control <?php echo $input['class'] ?? '';
         ?>" <?php
         if (!empty($input['readonly'])) {?> readonly="readonly"<?php }
         if (isset($input['cols'])) {?> cols="<?php echo $input['cols'];?>"<?php }
@@ -278,19 +272,18 @@ if ($input['type'] === 'text') {
         if ($langCount > 1) {?>
 </div>
 <div class="col-lg-3">
-<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown"><?php
-            echo $language['iso'];?>
-<span class="caret"></span>
-</button>
-<ul class="dropdown-menu">
-<?php
+<div class="input-group-prepend dropdown">
+  <button class="btn btn-default" type="button" data-toggle="dropdown"><?php
+            echo $language['iso'];?> <span class="caret"></span></button>
+  <div class="dropdown-arrow"></div>
+  <div class="dropdown-menu"><?php
             foreach($this->languages as $language) {?>
-<li><a href="javascript:hideOtherLanguage(<?php echo $language['id'];?>);" tabindex="-1"><?php
-                echo $language['name'];?></a></li>
-<?php
+<a class="dropdown-item" href="javascript:hideOtherLanguage(<?php echo $language['id'];?>);" tabindex="-1"><?php
+                echo $language['name'];?></a><?php
             }
 ?>
-</ul>
+  </div>
+</div>
 </div>
 </div>
 <?php
