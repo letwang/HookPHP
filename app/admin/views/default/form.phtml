@@ -292,43 +292,21 @@ if ($input['type'] === 'text') {
 
 //**************************************************** 7
 } elseif ($input['type'] === 'checkbox') {
-    if (isset($input['expand'])) {?>
-<a class="btn btn-default show_checkbox<?php if ($input['expand']['default'] === 'hide') {?> hidden<?php }?>" href="#">
-<i class="icon-<?php echo $input['expand']['show']['icon'];?>"></i>
-<?php
-        echo $input['expand']['show']['text'];
-        if (!empty($input['expand']['total'])) {?>
-<span class="badge"><?php echo $input['expand']['total'];?></span>
-<?php
-        }
-?>
-</a>
-<a class="btn btn-default hide_checkbox<?php if ($input['expand']['default'] === 'show') {?> hidden<?php }?>" href="#">
-<i class="icon-<?php echo $input['expand']['hide']['icon'];?>"></i>
-<?php
-        echo $input['expand']['hide']['text'];
-        if (!empty($input['expand']['total'])) {?>
-<span class="badge"><?php echo $input['expand']['total'];?></span>
-<?php
-        }
-?>
-</a>
-<?php
-    }
-    foreach($input['values'] as $value) {
-        $idCheckbox = $input['name'].'_'.$value['value'];
-?>
-<div class="checkbox<?php if ($input['expand']['default'] ?? '' === 'show') {?> hidden<?php }?>">
-<label for="<?php echo $idCheckbox;?>">
-<input type="checkbox" name="<?php echo $input['name'].'[]';
-        ?>" id="<?php echo $idCheckbox;
-        ?>" class="<?php echo $input['class'] ?? '';
+    foreach($input['values'] as $value) {?>
+<div class="custom-control custom-checkbox <?php
+        echo (empty($value['tips']) ? 'custom-control-inline' : '').' '.$input['class'] ?? '';?>">
+    <input type="checkbox" name="<?php echo $input['name'];
+        ?>" class="custom-control-input" id="<?php echo $input['name'].'_'.$value['value'];
         ?>" value="<?php echo $value['value'];
         ?>"<?php
-        if (isset($this->fieldsValue[$idCheckbox])) {?> checked="checked"<?php }?> />
+        if ($this->fieldsValue[$input['name']] ?? '' === $value['value']) {?> checked="checked"<?php }
+        if (!empty($value['disabled'])) {?> disabled="disabled"<?php }
+        ?>/> <label class="custom-control-label" for="<?php
+        echo $input['name'].'_'.$value['value'];?>"><?php
+        echo $value['label'] ?? '';?></label>
+</div>
 <?php
-        echo $value['label'];?></label></div>
-<?php
+        if (isset($value['tips'])) {?><div class="text-muted"><?php echo $value['tips'];?></div><?php }
     }
 
 //**************************************************** 8
@@ -346,10 +324,10 @@ if (!empty($input['required'])) {?> required="required"<?php }?> />
 
 //**************************************************** 9
 } elseif ($input['type'] === 'birthday') {?>
-<div class="form-group">
+<div class="form-group row">
 <?php foreach($input['values'] as $key => $select) {?>
 <div class="col-lg-2">
-<select name="<?php echo $key;?>" class="fixed-width-lg <?php echo $input['class'] ?? '';?>">
+<select name="<?php echo $key;?>" class="custom-select <?php echo $input['class'] ?? '';?>">
 <option value="">-</option>
 <?php if ($key === 'month') {
           foreach($select as $k => $v) {
@@ -366,48 +344,63 @@ if (!empty($input['required'])) {?> required="required"<?php }?> />
       }
 ?></select></div>
 <?php }?>
+<div class="col-lg-2">
+<select name="day" class="custom-select <?php echo $input['class'] ?? '';?>">
+<option value="">-</option>
+<?php foreach(range(1, 28) as $v) {
+?><option value="<?php echo $v;?>"<?php if ($this->fieldsValue[$key] ?? '' === $v) {?> selected="selected"<?php }
+?>><?php echo $v;?></option><?php }?>
+</select>
+</div>
+</div>
 </div>
 <?php
 
 //**************************************************** 10
 } elseif ($input['type'] === 'color') {?>
 <div class="form-group">
-<div class="col-lg-2">
-<div class="row">
-<div class="input-group">
-<input type="color" data-hex="true" class="<?php echo $input['class'] ?? 'color mColorPickerInput';
-?>" id="<?php echo $input['id'];
-?>" name="<?php echo $input['name'];
-?>" value="<?php echo $this->fieldsValue[$input['name']] ?? '';?>" />
-</div>
-</div>
-</div>
+  <div class="input-group input-group-alt" data-toggle="colorpicker">
+    <input id="<?php echo $input['id'];
+    ?>" name="<?php echo $input['name'];
+    ?>" type="text" class="form-control <?php echo $input['class'] ?? '';
+    ?>" value="<?php echo $this->fieldsValue[$input['name']] ?? '';
+    ?>">
+    <span class="input-group-append"><span class="input-group-text colorpicker-input-addon"><i class="align-self-center"></i></span></span>
+  </div>
 </div>
 <?php
 
 //**************************************************** 11
 } elseif ($input['type'] === 'date') {?>
-<div class="row">
-<div class="input-group col-lg-4">
-<input id="<?php echo $input['id'] ?? $input['name'];
-?>" type="text" data-hex="true" class="<?php echo $input['class'] ?? 'datepicker';
-?>" name="<?php echo $input['name'];
-?>" value="<?php echo $this->fieldsValue[$input['name']] ?? '';?>" />
-<span class="input-group-addon"><i class="icon-calendar-empty"></i></span>
-</div>
+<div class="form-group">
+  <div class="input-group input-group-alt flatpickr" data-toggle="flatpickr" data-wrap="true">
+    <input id="<?php echo $input['id'] ?? $input['name'];
+    ?>" name="<?php echo $input['name'];
+    ?>" class="form-control <?php echo $input['class'] ?? '';
+    ?>" value="<?php echo $this->fieldsValue[$input['name']] ?? '';
+    ?>" type="text" data-input="" />
+    <div class="input-group-append">
+      <button type="button" class="btn btn-secondary" data-toggle=""><i class="far fa-calendar"></i></button>
+      <button type="button" class="btn btn-secondary" data-clear=""><i class="fa fa-times"></i></button>
+    </div>
+  </div>
 </div>
 <?php
 
 //**************************************************** 12
 } elseif ($input['type'] === 'datetime') {?>
-<div class="row">
-<div class="input-group col-lg-4">
-<input id="<?php echo $input['id'] ?? $input['name'];
-?>" type="text" data-hex="true" class="<?php echo $input['class'] ?? 'datetimepicker';
-?>" name="<?php echo $input['name'];
-?>" value="<?php echo $this->fieldsValue[$input['name']] ?? '';?>" />
-<span class="input-group-addon"><i class="icon-calendar-empty"></i></span>
-</div>
+<div class="form-group">
+  <div class="input-group input-group-alt flatpickr" data-toggle="flatpickr" data-wrap="true" data-enable-time="true" data-date-format="Y-m-d H:i">
+    <input id="<?php echo $input['id'] ?? $input['name'];
+    ?>" name="<?php echo $input['name'];
+    ?>" class="form-control <?php echo $input['class'] ?? '';
+    ?>" value="<?php echo $this->fieldsValue[$input['name']] ?? '';
+    ?>" type="text" data-input="" />
+    <div class="input-group-append">
+      <button type="button" class="btn btn-secondary" data-toggle=""><i class="far fa-calendar"></i></button>
+      <button type="button" class="btn btn-secondary" data-clear=""><i class="fa fa-times"></i></button>
+    </div>
+  </div>
 </div>
 <?php
 }

@@ -168,31 +168,22 @@ class ConfigController extends Base\ViewController
                                     [
                                         'class' => 'checkboxDemoClass',
                                         'type' => 'checkbox',
-                                        'name' => 'checkbox7',
+                                        'name' => 'checkbox',
                                         'label' => 'Like',
                                         'hint' => 'What do you like...',// ['A...','B...','C...']
-                                        'col' => 3,
-                                        'id' => 'checkbox7',
-                                        'expand' => [
-                                            'default' => 'show',// hide
-                                            'total' => '',
-                                            'hide' => [
-                                                'icon' => 'menu-icon oi oi-infinity',
-                                                'text' => 'hide...'
-                                            ],
-                                            'show' => [
-                                                'icon' => 'menu-icon oi oi-infinity',
-                                                'text' => 'show...'
-                                            ]
-                                        ],
+                                        'col' => 7,
                                         'values' => [
                                             [
+                                                'label' => 'apple',
+                                                'tips' => 'This is a help text to guide users to explain the choice you will be making.',
+                                                'disabled' => false,
                                                 'value' => 8,
-                                                'label' => 'eight',
                                             ],
                                             [
+                                                'label' => 'banana',
+                                                'tips' => 'disable...',
+                                                'disabled' => false,
                                                 'value' => 9,
-                                                'label' => 'nine',
                                             ]
                                         ]
                                     ],
@@ -220,7 +211,7 @@ class ConfigController extends Base\ViewController
                                         'col' => 9,
                                         'id' => 'birthday9',
                                         'values' => [
-                                            'year' => range(1940, 2040),
+                                            'year' => range(date('Y', strtotime('-100 year')), date('Y')),
                                             'month' => range(1, 12)
                                         ]
                                     ],
