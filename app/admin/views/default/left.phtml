@@ -1,45 +1,60 @@
-<aside class="app-aside">
-<div class="aside-content">
-  <header class="aside-header d-block d-md-none">
-    <button class="btn-account" type="button" data-toggle="collapse" data-target="#dropdown-aside">
-      <span class="user-avatar user-avatar-lg">
-        <img src="/assets/images/avatars/profile.jpg" alt="">
-      </span>
-      <span class="account-icon">
-        <span class="fa fa-caret-down fa-lg"></span>
-      </span>
-      <span class="account-summary">
-        <span class="account-name">Beni Arisandi</span>
-        <span class="account-description">Marketing Manager</span>
-      </span>
-    </button>
-    <div id="dropdown-aside" class="dropdown-aside collapse">
-      <div class="pb-3">
-        <a class="dropdown-item" href="">
-          <span class="dropdown-icon oi oi-person"></span> Profile</a>
-        <a class="dropdown-item" href="login/out/">
-          <span class="dropdown-icon oi oi-account-logout"></span> Logout</a>
-        <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="#">Help Center</a>
-        <a class="dropdown-item" href="#">Ask Forum</a>
-        <a class="dropdown-item" href="#">Keyboard Shortcuts</a>
+<aside class="app-aside app-aside-expand-md app-aside-light">
+  <div class="aside-content">
+    <header class="aside-header d-block d-md-none">
+      <button class="btn-account" type="button" data-toggle="collapse" data-target="#dropdown-aside">
+        <span class="user-avatar user-avatar-lg">
+          <img src="/assets/images/avatars/profile.jpg" alt=""></span>
+        <span class="account-icon">
+          <span class="fa fa-caret-down fa-lg"></span>
+        </span>
+        <span class="account-summary">
+          <span class="account-name">Beni Arisandi</span>
+          <span class="account-description">Marketing Manager</span></span>
+      </button>
+      <div id="dropdown-aside" class="dropdown-aside collapse">
+        <div class="pb-3">
+          <a class="dropdown-item" href="#">
+            <span class="dropdown-icon oi oi-person"></span>Profile</a>
+          <a class="dropdown-item" href="/login/out/">
+            <span class="dropdown-icon oi oi-account-logout"></span>Logout</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#!">Help Center</a>
+          <a class="dropdown-item" href="#!">Ask Forum</a>
+          <a class="dropdown-item" href="#!">Keyboard Shortcuts</a></div>
       </div>
+    </header>
+    <section class="aside-menu overflow-hidden">
+      <nav id="stacked-menu" class="stacked-menu">
+        <ul class="menu">
+          <li class="menu-item">
+            <a href="/" class="menu-link">
+              <span class="menu-icon fa fa-home"></span>
+              <span class="menu-text">Dashboard</span>
+              <span class="badge badge-success">20+</span>
+            </a>
+          </li>
+          <?php
+          foreach ($this->menus as $menu)
+          {
+          ?><li class="menu-item has-child"><a href="#" class="menu-link"><span class="menu-icon oi oi-<?php
+          echo $menu['icon'];
+          ?>"></span><span class="menu-text"><?php
+          echo $menu['name'];?></span></a><ul class="menu"><?php
+              foreach ($menu['childs'] as $menu)
+              {
+                  $active = strpos($this->uri, $menu['url']) ? ' has-active': '';
+              ?><li class="menu-item<?php echo $active;
+              ?>"><a href="/<?php echo $menu['url'];?>" class="menu-link"><?php echo $menu['name'];
+              ?></a></li><?php
+              }
+              ?></ul></li><?php
+          }?><script>$('#stacked-menu').find('.has-active').parent().parent().addClass('has-active');</script>
+        </ul>
+      </nav>
+    </section>
+    <div class="aside-footer border-top p-3">
+      <button class="btn btn-light btn-block" data-toggle="skin">Night mode
+        <i class="fas fa-moon ml-1"></i></button>
     </div>
-  </header>
-  <section class="aside-menu has-scrollable">
-    <nav id="stacked-menu" class="stacked-menu">
-      <ul class="menu">
-        <li class="menu-item">
-          <a href="/" class="menu-link">
-            <span class="menu-icon oi oi-dashboard"></span>
-            <span class="menu-text">Dashboard</span>
-            <span class="badge badge-success">20+</span>
-          </a>
-        </li>
-        <?php foreach ($this->menus as $menu){?>
-        <li class="menu-item has-child"><a href="" class="menu-link"><span class="menu-icon oi oi-<?php echo $menu['icon'];?>"></span><span class="menu-text"><?php echo $menu['name'];?></span></a><ul class="menu"><?php foreach ($menu['childs'] as $menu){$active = strpos($this->uri, $menu['url']) ? ' has-active': '';?><li class="menu-item<?php echo $active;?>"><a href="/<?php echo $menu['url'];?>" class="menu-link"><?php echo $menu['name'];?></a></li><?php }?></ul></li><?php }?><script>$('#stacked-menu').find('.has-active').parent().parent().addClass('has-active');</script>
-      </ul>
-    </nav>
-  </section>
-</div>
+  </div>
 </aside>
