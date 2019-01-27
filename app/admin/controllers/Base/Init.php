@@ -4,8 +4,12 @@ use Hook\Http\Header;
 
 abstract class InitController extends \Yaf\Controller_Abstract
 {
+    protected $id = 0;
+
     protected function init()
     {
+        $this->id = (int) $this->getRequest()->getParam('id');
+
         $apiModule = $this->_request->module === 'Api';
         //登录检测
         if (!isset($_SESSION[APP_NAME])) {

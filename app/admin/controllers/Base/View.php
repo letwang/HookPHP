@@ -3,6 +3,7 @@ namespace Base;
 abstract class ViewController extends InitController
 {
     protected $fieldsList = [];
+    protected $formList = [];
 
     protected function init()
     {
@@ -31,7 +32,7 @@ abstract class ViewController extends InitController
 
     protected function putAction()
     {
-        $this->_view->assign(['id' => (int) $this->getRequest()->getParam('id')]);
+        $this->_view->assign(['id' => $this->id]);
     }
 
     protected function getAction()

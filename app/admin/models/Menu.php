@@ -29,7 +29,7 @@ class MenuModel extends AbstractModel
         if ($data !== null) {
             return $data;
         }
-        $redis = RedisConnect::getInstance()->redis;
+        $redis = RedisConnect::getInstance('default', 's')->redis;
         $key = 'cache:'.md5(Menu::GET_ALL);
         if (!$redis->exists($key)) {
             $utils = new ArrayUtils();

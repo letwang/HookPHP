@@ -186,19 +186,21 @@ abstract class AbstractModel
 
     private function validateField(string $field, $value, $langId = null): string
     {
-        if (!empty($this->fields[$field]['require']) && Validate::isEmpty($value)) {
-            return sprintf('The %s field is required.', $field);
-        }
-
         if (!isset($this->fields[$field]['type'])) {
             return sprintf('The %s field type is required.', $field);
         }
 
         $desc = APP_TABLE[static::$table][$field] ?? APP_TABLE[static::$table.'_lang'][$field];
 
-        if (Validate::isEmpty($value)) {
-            $value = $desc['default'];
-            $langId ? $this->{$field}[$langId] = $value : $this->$field = $value;
+        if (!empty($this->fields[$field]['require']) && Validate::isEmpty($value)) {
+            if ($langId) {
+                $value = $this->{$field}[$langId] = $this->{$field}[APP_LANG] ?: $desc['default'];
+            } else {
+                $value = $this->$field = $desc['default'];
+            }
+            if (Validate::isEmpty($value)) {
+                return sprintf('The %s field is required.', $field);
+            }
         }
 
         if (strpos($desc['type'], 'int') === false) {
@@ -255,12 +257,12 @@ abstract class AbstractModel
     protected function copyFromPost()
     {
         foreach ($this->getDefinition(static::$table) as $field) {
-            $this->{$field} = $_GET[$field] ?? null;
+            $this->{$field} = $_POST[$field] ?? null;
         }
 
         foreach ($this->getDefinition(static::$table.'_lang') as $field) {
             foreach ($this->langId ? [$this->langId] : LangModel::getIds() as $langId) {
-                $this->{$field}[$langId] = $_GET[$field.'_'.$langId] ?? null;
+                $this->{$field}[$langId] = $_POST[$field.'_'.$langId] ?? null;
             }
         }
     }
@@ -281,15 +283,16 @@ abstract class AbstractModel
 
     protected function afterPost(int $id): bool
     {
-        $orm = Orm::getInstance(static::$table);
-        $callback = function(Redis $redis) use ($orm) {
+        $callback = function(Redis $redis) use ($id) {
+            $orm = Orm::getInstance(static::$table);
             $redis->hSet(
                 'table:'.$orm->table, $id,
                 $orm->select(['*'])->where(['id' => $id])->fetch()
             );
-            if (isset(APP_TABLE[$orm->table.'_lang'])) {
+            if (isset(APP_TABLE[static::$table.'_lang'])) {
+                $orm = Orm::getInstance(static::$table.'_lang');
                 $redis->hSet(
-                    'table:'.$orm->table.'_lang', $id.'_'.$this->langId,
+                    'table:'.$orm->table, $id.'_'.$this->langId,
                     $orm->select(['*'])->where(['id' => $id, 'lang_id' => $this->langId])->fetch()
                 );
             }

@@ -344,7 +344,7 @@ class Orm extends Cache
                 throw new \Exception('db hack~');
              }
          }
-         $this->statement = str_replace(['` (`', '?`', '``'], ['` WHERE (`', '? WHERE `', '` WHERE `'], $this->statement, $count);
+         $this->statement = str_replace(['` (`', '?`', '` `'], ['` WHERE (`', '? WHERE `', '` WHERE `'], $this->statement, $count);
          $this->statement = $count > 0 ? substr($this->statement, 0, -4) : $this->statement;
          $data = [$this->statement, $this->parameter];
          $this->__destruct();

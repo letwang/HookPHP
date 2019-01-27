@@ -44,18 +44,17 @@
                                         'name' => 'text2',
                                         'label' => 'Name',
                                         'hint' => 'Invalid characters: <;#',// ['A...','B...','C...']
-                                        'col' => 8,
+                                        'col' => 9,
                                         'id' => 'text2',
                                         'size' => 90,
                                         'maxchar' => 10,
-                                        'maxlength' => 10,
                                         'readonly' => false,
                                         'disabled' => false,
                                         'autocomplete' => false,
                                         'required' => true,
                                         'placeholder' => 'Pls input your name',
-                                        'prefix' => '',
-                                        'suffix' => 'kg',
+                                        'prefix' => 'https://',
+                                        'suffix' => '@domain.com',
                                         'desc' => [
                                             ['id' => 'desc9', 'text' => 'desc9...'],
                                             ['id' => 'desc10', 'text' => 'desc10...'],
@@ -71,8 +70,9 @@
                                         'hint' => 'select3 hint...',
                                         'col' => 7,
                                         'id' => 'select3',
-                                        'multiple' => true,
-                                        'size' => 10,
+                                        'required' => true,
+                                        'multiple' => false,
+                                        'size' => 0,
                                         'onchange' => 'onchange',
                                         'disabled' => false,
                                         'values' => [
@@ -104,13 +104,13 @@
                                         'col' => 6,
                                         'values' => [
                                             [
-                                                'label' => 'enable',
-                                                'tips' => 'enable...',
+                                                'label' => 'Credit card',
+                                                'tips' => 'This is a help text to guide users to explain the choice you will be making.',
                                                 'disabled' => false,
                                                 'value' => 0,
                                             ],
                                             [
-                                                'label' => 'disable',
+                                                'label' => 'Paypal',
                                                 'tips' => 'disable...',
                                                 'disabled' => false,
                                                 'value' => 1,
@@ -125,17 +125,7 @@
                                         'name' => 'disable',
                                         'label' => 'Disable',
                                         'hint' => 'switch5 hint...',
-                                        'col' => 5,
-                                        'values' => [
-                                            [
-                                                'disabled' => false,
-                                                'value' => 0,
-                                            ],
-                                            [
-                                                'disabled' => false,
-                                                'value' => 1,
-                                            ]
-                                        ]
+                                        'col' => 5
                                     ],
 
                                     //demo 6:textarea
@@ -145,13 +135,12 @@
                                         'name' => 'textarea6',
                                         'label' => 'Description',
                                         'hint' => 'Length is not recommended too long...',// ['A...','B...','C...']
-                                        'col' => 4,
+                                        'col' => 9,
                                         'id' => 'textarea6',
-                                        'autoload_rte' => true,
+                                        'required' => true,
                                         'readonly' => false,
                                         'cols' => 50,
-                                        'rows' => 10,
-                                        'maxlength' => 10,
+                                        'rows' => 3,
                                         'maxchar' => 10
                                     ],
 
@@ -159,31 +148,22 @@
                                     [
                                         'class' => 'checkboxDemoClass',
                                         'type' => 'checkbox',
-                                        'name' => 'checkbox7',
+                                        'name' => 'checkbox',
                                         'label' => 'Like',
                                         'hint' => 'What do you like...',// ['A...','B...','C...']
-                                        'col' => 3,
-                                        'id' => 'checkbox7',
-                                        'expand' => [
-                                            'default' => 'show',// hide
-                                            'total' => '',
-                                            'hide' => [
-                                                'icon' => 'menu-icon oi oi-infinity',
-                                                'text' => 'hide...'
-                                            ],
-                                            'show' => [
-                                                'icon' => 'menu-icon oi oi-infinity',
-                                                'text' => 'show...'
-                                            ]
-                                        ],
+                                        'col' => 7,
                                         'values' => [
                                             [
+                                                'label' => 'apple',
+                                                'tips' => 'This is a help text to guide users to explain the choice you will be making.',
+                                                'disabled' => false,
                                                 'value' => 8,
-                                                'label' => 'eight',
                                             ],
                                             [
+                                                'label' => 'banana',
+                                                'tips' => 'disable...',
+                                                'disabled' => false,
                                                 'value' => 9,
-                                                'label' => 'nine',
                                             ]
                                         ]
                                     ],
@@ -211,7 +191,7 @@
                                         'col' => 9,
                                         'id' => 'birthday9',
                                         'values' => [
-                                            'year' => range(1940, 2040),
+                                            'year' => range(date('Y', strtotime('-100 year')), date('Y')),
                                             'month' => range(1, 12)
                                         ]
                                     ],
@@ -250,33 +230,33 @@
                                     ]
                                 ],
                                 'submit' => [
-                                    'name' => 'submit1',
-                                    'class' => 'submitDemoClass',
-                                    'icon' => 'menu-icon oi oi-infinity',
+                                    'name' => 'submit',
+                                    'class' => 'btn btn-secondary',
+                                    'icon' => 'oi oi-data-transfer-download mr-1',
                                     'title' => 'Submit'
                                 ],
                                 'reset' => [
-                                    'id' => 'reset1',
-                                    'class' => 'resetDemoClass',
-                                    'icon' => 'menu-icon oi oi-resize-both',
+                                    'id' => 'reset',
+                                    'class' => 'btn btn-secondary',
+                                    'icon' => 'oi oi-data-transfer-download mr-1',
                                     'title' => 'Reset'
                                 ],
                                 'buttons' => [
                                     [
                                         'href' => 'javascript:void(0);',
-                                        'id' => 'href1',
-                                        'class' => 'hrefDemoClass',
+                                        'id' => 'href',
+                                        'class' => 'btn btn-secondary',
                                         'js' => 'javascript:alert(2);',
-                                        'icon' => 'menu-icon oi oi-wrench',
+                                        'icon' => 'oi oi-data-transfer-download mr-1',
                                         'title' => 'Href'
                                     ],
                                     [
                                         'type' => 'button',
-                                        'id' => 'button1',
-                                        'name' => 'button1',
-                                        'class' => 'buttonDemoClass',
+                                        'id' => 'button',
+                                        'name' => 'button',
+                                        'class' => 'btn btn-secondary',
                                         'js' => 'javascript:alert(3);',
-                                        'icon' => 'menu-icon oi oi-infinity',
+                                        'icon' => 'oi oi-data-transfer-download mr-1',
                                         'title' => 'Button'
                                     ]
                                 ]

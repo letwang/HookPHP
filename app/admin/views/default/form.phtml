@@ -1,11 +1,30 @@
 <?php
 $langCount = count($this->languages);
-if (isset($this->fields['title'])) {?><h3><?php echo $this->fields['title'];?></h3><?php }?>
-<form id="<?php echo $this->controller;
+?>
+<header class="page-title-bar">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item active">
+          <a href="#!"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i>Forms</a>
+        </li>
+      </ol>
+    </nav>
+    <h1 class="page-title"> Basic Elements </h1>
+</header>
+<div class="page-section">
+    <div class="d-xl-none">
+      <button class="btn btn-danger btn-floated" type="button" data-toggle="sidebar"><i class="fa fa-th-list"></i></button>
+    </div>
+    <section id="base-style" class="card">
+      <div class="card-body">
+      <form id="<?php echo $this->controller;
 ?>_form" class="defaultForm form-horizontal <?php echo $this->controller;
 ?>" action="/api/<?php echo $this->controller;?>/v1/<?php echo $this->id ? 'id/'.$this->id: '';
 ?>" method="<?php echo $this->id ? 'PUT' : 'POST';
 ?>" enctype="multipart/form-data" novalidate>
+<fieldset>
+<?php if (isset($this->fields['title'])) {?><legend><?php echo $this->fields['title'];?></legend><?php }?>
+<input type="hidden" name="token" value="<?php echo $_SESSION[APP_NAME]['security']['token'];?>" />
 <?php foreach($this->fields['data'] ?? [] as $index => $fieldSet) {?>
 <div class="panel" id="fieldSet_<?php echo $index;?>_0_0">
 <?php foreach($fieldSet['form'] as $key => $field) {
@@ -83,15 +102,18 @@ if ($input['type'] === 'hidden') {?>
 <?php
 } else {
     if (isset($input['label'])) {?>
-<label class="control-label col-lg-3<?php
-if (!empty($input['required']) && $input['type'] !== 'radio') {?> required<?php }?>"><?php
-if (isset($input['hint'])) {?><span class="label-tooltip" data-toggle="tooltip" data-html="true" title="<?php
-    foreach((array) $input['hint'] as $value) {
-        echo $value;
-    }?>"><?php
-}
+<label class="control-label col-lg-3"><?php
+    if (isset($input['hint'])) {
+?><span class="label-tooltip" data-toggle="tooltip" data-html="true" title="<?php
+        foreach((array) $input['hint'] as $value) {
+            echo $value;
+        }?>"><?php
+    }
 echo $input['label'];
-if (isset($input['hint'])) {?></span><?php }?></label>
+if (isset($input['hint'])) {?></span><?php }
+if (!empty($input['required']) && $input['type'] !== 'radio') {
+?> <span class="badge badge-danger">Required</span><?php
+}?></label>
 <?php }?>
 <div class="col-lg-<?php echo $input['col'] ?? 9;if (!isset($input['label'])) {?> col-lg-offset-3<?php }?>">
 <?php
@@ -123,17 +145,16 @@ if ($input['type'] === 'text') {
 <?php
         }
 ?>
-<input type="text" id="<?php echo ($input['id'] ?? $input['name']).$language['id'];
-        ?>" name="<?php echo $input['name'].$language['id'];
+<input type="text" id="<?php echo ($input['id'] ?? $input['name']).'_'.$language['id'];
+?>" name="<?php echo $input['name'].'_'.$language['id'];
         ?>" class="form-control <?php echo $input['class'] ?? '';
         ?>" value="<?php echo $this->fieldsValue[$input['name']][$language['id']] ?? '';?>" <?php
         if (isset($input['size'])) {?> size="<?php echo $input['size'];?>"<?php }
-        if (isset($input['maxchar'])) {?> data-maxchar="<?php echo $input['maxchar'];?>"<?php }
-        if (isset($input['maxlength'])) {?> maxlength="<?php echo $input['maxlength'];?>"<?php }
+        if (isset($input['maxchar'])) {?> maxlength="<?php echo $input['maxchar'];?>"<?php }
         if (!empty($input['readonly'])) {?> readonly="readonly"<?php }
         if (!empty($input['disabled'])) {?> disabled="disabled"<?php }
         if (empty($input['autocomplete'])) {?> autocomplete="off"<?php }
-        if (!empty($input['required'])) {?> required="required"<?php }
+        if (!empty($input['required'])) {?> required<?php }
         if (isset($input['placeholder'])) {?> placeholder="<?php echo $input['placeholder'];?>"<?php }?> />
 <?php
         if (isset($input['suffix'])) {?>
@@ -260,8 +281,7 @@ if ($input['type'] === 'text') {
         if (!empty($input['readonly'])) {?> readonly="readonly"<?php }
         if (isset($input['cols'])) {?> cols="<?php echo $input['cols'];?>"<?php }
         if (isset($input['rows'])) {?> rows="<?php echo $input['rows'];?>"<?php }
-        if (isset($input['maxlength'])) {?> maxlength="<?php echo $input['maxlength'];?>"<?php }
-        if (isset($input['maxchar'])) {?> data-maxchar="<?php echo $input['maxchar'];?>"<?php }?>><?php
+        if (isset($input['maxchar'])) {?> maxlength="<?php echo $input['maxchar'];?>"<?php }?>><?php
         echo $this->fieldsValue[$input['name']][$language['id']] ?? '';?></textarea>
 <?php
         if (isset($input['maxchar'])) {
@@ -318,7 +338,7 @@ if ($input['type'] === 'text') {
 ?>" class="form-control <?php echo $input['class'] ?? '';
 ?>" value=""<?php
 if (empty($input['autocomplete'])) {?> autocomplete="off"<?php }
-if (!empty($input['required'])) {?> required="required"<?php }?> />
+if (!empty($input['required'])) {?> required<?php }?> />
 </div>
 <?php
 
@@ -440,31 +460,33 @@ if (isset($input['desc'])) {?>
 if (isset($fieldSet['form']['submit']) || isset($fieldSet['form']['buttons'])) {?>
 <div class="panel-footer"><?php
     if (isset($fieldSet['form']['submit'])) {
-?><button type="submit" value="1" id="<?php
-        echo $this->controller.'_form_submit_btn';
-?>_1" name="<?php
-        echo $fieldSet['form']['submit']['name'];
-        ?>" class="btn btn-secondary <?php
-        echo $fieldSet['form']['submit']['class'] ?? '';
-?>"><i class="<?php
-        echo $fieldSet['form']['submit']['icon'] ?? 'process-icon-save';?>"></i><?php
+?><button type="submit" id="<?php
+        echo $this->controller.'_submit';
+        ?>" name="<?php
+        echo $fieldSet['form']['submit']['name'] ?? $this->controller.'_submit';
+        ?>" class="<?php
+        echo $fieldSet['form']['submit']['class'] ?? 'btn btn-secondary';?>"><?php
+        if (isset($fieldSet['form']['submit']['icon'])) {
+        ?><i class="<?php
+            echo $fieldSet['form']['submit']['icon'];?>"></i><?php
+        }
         echo $fieldSet['form']['submit']['title'];
 ?></button>
 <?php
     }
     if (!empty($this->showCancelButton)) {
-?><a href="#" class="btn btn-secondary"<?php
-        if ($this->controller) {echo ' id="'.$this->controller.'_form_cancel_btn"';}
-?> onclick="window.history.back();"><i class="process-icon-cancel"></i>Cancel</a>
+?><a href="javascript:window.history.back();" id="<?php
+        echo $this->controller.'_cancel';
+    ?>" class="btn btn-danger"><?php echo l('app.cancel');?></a>
 <?php
     }
     if (isset($fieldSet['form']['reset'])) {
 ?><button type="reset" id="<?php
-        echo $fieldSet['form']['reset']['id'] ?? $this->controller.'_form_reset_btn';
-        ?>" class="btn btn-secondary <?php
-        echo $fieldSet['form']['reset']['class'] ?? '';?>"><?php
+        echo $this->controller.'_reset';
+        ?>" class="<?php
+        echo $fieldSet['form']['reset']['class'] ?? 'btn btn-secondary';?>"><?php
         if (isset($fieldSet['form']['reset']['icon'])) {
-?><i class="<?php
+        ?><i class="<?php
             echo $fieldSet['form']['reset']['icon'];?>"></i><?php
         }
         echo $fieldSet['form']['reset']['title'];
@@ -475,7 +497,7 @@ if (isset($fieldSet['form']['submit']) || isset($fieldSet['form']['buttons'])) {
         if (isset($btn['href'])) {?>
 <a href="<?php echo $btn['href'];?>"<?php
             if (isset($btn['id'])) {?> id="<?php echo $btn['id'];?>"<?php }
-?> class="btn btn-secondary <?php echo $btn['class'] ?? '';?>"<?php
+?> class="<?php echo $btn['class'] ?? 'btn btn-secondary';?>"<?php
             if (isset($btn['js'])) {?> onclick="<?php echo $btn['js'];?>"<?php }
 ?>><?php
             if (isset($btn['icon'])) {?><i class="<?php echo $btn['icon'];?>" ></i><?php }
@@ -486,8 +508,8 @@ if (isset($fieldSet['form']['submit']) || isset($fieldSet['form']['buttons'])) {
 ?><button type="<?php
             echo $btn['type'] ?? 'button';?>"<?php
             if (isset($btn['id'])) {?> id="<?php echo $btn['id'];?>"<?php }
-?> class="btn btn-secondary <?php echo $btn['class'] ?? '';?>" name="<?php
-            echo $btn['name'] ?? 'submitOptions'.$this->controller;?>"<?php
+?> class="<?php echo $btn['class'] ?? 'btn btn-secondary';?>" name="<?php
+            echo $btn['name'] ?? 'submit'.$this->controller;?>"<?php
             if (isset($btn['js'])) {?> onclick="<?php echo $btn['js'];?>"<?php }
 ?>><?php
             if (isset($btn['icon'])) {?><i class="<?php echo $btn['icon'];?>" ></i><?php }
@@ -498,5 +520,8 @@ if (isset($fieldSet['form']['submit']) || isset($fieldSet['form']['buttons'])) {
     }
 ?></div><?php
 }
-?></div><?php }?></form>
+?></div><?php }?></fieldset></form>
+      </div>
+    </section>
+</div>
 <script type="text/javascript"></script>
