@@ -5,7 +5,14 @@ foreach (APP_CONFIG['regexp']['core'] as $key => $value) {
     $data[] = $key.':/'.$value.'/';
 }
 echo 'var config = {regexp:{',join(',', $data),'}};';
-?></script>
+?>
+
+function hideOtherLanguage(id)
+{
+	$('.lang').hide();
+	$('.lang-' + id).show();
+}
+</script>
 <script src="https://cdn.bootcss.com/popper.js/1.14.4/umd/popper.min.js"></script>
 <script src="https://cdn.bootcss.com/twitter-bootstrap/4.1.3/js/bootstrap.min.js"></script>
 <script src="https://cdn.bootcss.com/jquery.perfect-scrollbar/1.4.0/perfect-scrollbar.min.js"></script>

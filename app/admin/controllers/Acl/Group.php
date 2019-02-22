@@ -1,6 +1,12 @@
 <?php
 class Acl_GroupController extends Base\ViewController
 {
+    /**
+     *
+     * @var Acl\GroupModel
+     */
+    protected $model;
+
     public function init()
     {
         parent::init();
@@ -58,12 +64,13 @@ class Acl_GroupController extends Base\ViewController
 
     public function putAction()
     {
+        $name = [];
+        foreach (array_keys($this->languages) as $langId) {
+            $name[$langId] = $this->model->getData(null, $this->id, $langId)['name'];
+        }
         $this->formList['fieldsValue'] = [
-            'status' => AbstractModel::getData(Acl\GroupModel::$table, $this->id)['status'],
-            'name' => [
-                1 => AbstractModel::getData(Acl\GroupModel::$table.'_lang', $this->id, 1)['name'],
-                2 => AbstractModel::getData(Acl\GroupModel::$table.'_lang', $this->id, 2)['name']
-            ]
+            'status' => $this->model->getData(null, $this->id)['status'],
+            'name' => $name
         ];
         $this->_view->assign($this->formList);
     }

@@ -28,7 +28,7 @@ CREATE TABLE `hp_acl_group_lang` (
   CONSTRAINT `FK_000009` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `FK_000012` FOREIGN KEY (`group_id`) REFERENCES `hp_acl_group` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-INSERT INTO `hp_acl_group_lang` VALUES (1,1,1,'华东地区订单授权');
+INSERT INTO `hp_acl_group_lang` VALUES (1,1,1,'华东地区订单授权'),(2,2,1,'East China order authorization');
 
 CREATE TABLE `hp_acl_group_resource` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,

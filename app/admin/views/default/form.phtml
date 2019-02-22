@@ -126,7 +126,7 @@ if ($input['type'] === 'text') {
     }
     foreach($this->languages as $language) {
         if ($langCount > 1) {?>
-<div class="row lang-<?php echo $language['id'];
+<div class="row lang lang-<?php echo $language['id'];
 ?>" <?php if ((int) $language['id'] !== APP_LANG) {?>style="display:none"<?php }?>>
 <div class="col-lg-9"><?php
         }
@@ -261,7 +261,7 @@ if ($input['type'] === 'text') {
 } elseif ($input['type'] === 'textarea') {
     foreach($this->languages as $language) {
         if ($langCount > 1) {?>
-<div class="form-group row lang-<?php echo $language['id'];?>"<?php
+<div class="form-group row lang lang-<?php echo $language['id'];?>"<?php
             if ((int) $language['id'] !== APP_LANG) {?> style="display:none;"<?php }?>>
 <div class="col-lg-9">
 <?php

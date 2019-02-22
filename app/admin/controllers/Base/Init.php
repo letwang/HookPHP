@@ -4,11 +4,17 @@ use Hook\Http\Header;
 
 abstract class InitController extends \Yaf\Controller_Abstract
 {
-    protected $id = 0;
+    protected $id;
+    protected $languages;
+    protected $model;
 
     protected function init()
     {
         $this->id = (int) $this->getRequest()->getParam('id');
+        $this->languages = \LangModel::getData();
+
+        $class = str_replace('_', '\\', $this->_request->controller).'Model';
+        $this->model = class_exists($class) ? new $class($this->id) : null;
 
         $apiModule = $this->_request->module === 'Api';
         //登录检测

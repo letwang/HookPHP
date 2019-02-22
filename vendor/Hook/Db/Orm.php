@@ -229,7 +229,7 @@ class Orm extends Cache
      */
     public function delete(): int
     {
-        $this->statement = 'DELETE FROM `'.$this->table.'`'.$this->statement;
+        $this->statement = 'DELETE FROM `'.$this->table.'` '.$this->statement;
         list($statement, $parameter) = $this->checkAndClear();
         return PdoConnect::getInstance()->delete($statement, $parameter);
     }

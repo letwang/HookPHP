@@ -36,7 +36,10 @@ abstract class AbstractModel
     public static function getData(string $table = null, int $id = null, int $langId = null)
     {
         $table = $table ?? static::$table;
-        $id = $id && $langId ? ($id.'_'.$langId) : $id;
+        if ($langId) {
+            $table .= '_lang';
+            $id .= '_'.$langId;
+        }
 
         $data = &Cache::static(__METHOD__);
         if (isset($data[$table][$id])) {
@@ -45,7 +48,7 @@ abstract class AbstractModel
 
         $key = 'table:'.$table;
         $redis = RedisConnect::getInstance()->redis;
-        $data[$table][$id] = $id ? $redis->hGet($key, $id) : array_values($redis->hGetAll($key));
+        $data[$table][$id] = $id ? $redis->hGet($key, $id) : $redis->hGetAll($key);
         return $data[$table][$id];
     }
 
@@ -291,10 +294,12 @@ abstract class AbstractModel
             );
             if (isset(APP_TABLE[static::$table.'_lang'])) {
                 $orm = Orm::getInstance(static::$table.'_lang');
-                $redis->hSet(
-                    'table:'.$orm->table, $id.'_'.$this->langId,
-                    $orm->select(['*'])->where(['id' => $id, 'lang_id' => $this->langId])->fetch()
-                );
+                foreach (LangModel::getIds() as $langId) {
+                    $redis->hSet(
+                        'table:'.$orm->table, $id.'_'.$langId,
+                        $orm->select(['*'])->where([static::$foreign => $id, 'lang_id' => $langId])->fetch()
+                    );
+                }
             }
         };
         RedisConnect::getInstance()->multi($callback);
@@ -318,12 +323,11 @@ abstract class AbstractModel
 
     protected function afterDelete(): bool
     {
-        $lang = LangModel::getIds();
-        $callback = function(Redis $redis) use ($lang) {
+        $callback = function(Redis $redis) {
             $redis->hDel('table:'.static::$table, $this->id);
             if (isset(APP_TABLE[static::$table.'_lang'])) {
                 $param = ['table:'.static::$table.'_lang'];
-                foreach ($lang as $langId) {
+                foreach (LangModel::getIds() as $langId) {
                     $param[] = $this->id.'_'.$langId;
                 }
                 call_user_func_array(array($redis, 'hDel'), $param);

@@ -15,11 +15,12 @@ abstract class ViewController extends InitController
         //初始化模板变量
         $this->_view->assign(
             [
+                'id' => $this->id,
                 'module' => $this->_request->module,
                 'controller' => strtolower($this->_request->controller),
                 'action' => $this->_request->action,
-                'languages' => \LangModel::getData(),
                 'uri' => $this->_request->getRequestUri(),
+                'languages' => $this->languages,
                 'menus' => \MenuModel::getClassify()
             ]
         );
