@@ -21,7 +21,7 @@ $langCount = count($this->languages);
 ?>_form" class="defaultForm form-horizontal <?php echo $this->controller;
 ?>" action="/api/<?php echo $this->controller;?>/v1/<?php echo $this->id ? 'id/'.$this->id: '';
 ?>" method="<?php echo $this->id ? 'PUT' : 'POST';
-?>" enctype="multipart/form-data" novalidate>
+?>" novalidate>
 <fieldset>
 <?php if (isset($this->fields['title'])) {?><legend><?php echo $this->fields['title'];?></legend><?php }?>
 <input type="hidden" name="token" value="<?php echo $_SESSION[APP_NAME]['security']['token'];?>" />
@@ -489,7 +489,7 @@ if (isset($fieldSet['form']['submit']) || isset($fieldSet['form']['buttons'])) {
         ?><i class="<?php
             echo $fieldSet['form']['reset']['icon'];?>"></i><?php
         }
-        echo $fieldSet['form']['reset']['title'];
+        echo $fieldSet['form']['reset']['title'] ?? l('app.reset');
 ?></button>
 <?php
     }

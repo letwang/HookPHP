@@ -15,7 +15,7 @@ class MenuModel extends AbstractModel
         'position' => array('type' => parent::INT, 'require' => true, 'validate' => 'isInt'),
         'url' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isUrl'),
         'icon' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isGenericName'),
-        'name' => array('type' => parent::HTML, 'require' => true, 'validate' => 'isGenericName'),
+        'name' => array('require' => true, 'validate' => 'isGenericName'),
     ];
 
     public function __construct(int $id = null, int $appId = null, int $langId = null)

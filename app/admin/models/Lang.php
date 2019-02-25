@@ -6,7 +6,7 @@ class LangModel extends AbstractModel
         'status' => array('type' => parent::BOOL, 'require' => true, 'validate' => 'isBool'),
         'iso' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isIsoCode'),
         'lang' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isLanguageCode'),
-        'name' => array('type' => parent::HTML, 'require' => true, 'validate' => 'isGenericName'),
+        'name' => array('require' => true, 'validate' => 'isGenericName'),
     ];
 
     public function __construct(int $id = null, int $appId = null, int $langId = null)

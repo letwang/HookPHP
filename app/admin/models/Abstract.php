@@ -21,7 +21,6 @@ abstract class AbstractModel
     const BOOL = 2;
     const FLOAT = 3;
     const DATE = 4;
-    const HTML = 5;
     const NOTHING = 6;
 
     public function __construct(int $id = null, int $appId = null, int $langId = null)
@@ -189,10 +188,6 @@ abstract class AbstractModel
 
     private function validateField(string $field, $value, $langId = null): string
     {
-        if (!isset($this->fields[$field]['type'])) {
-            return sprintf('The %s field type is required.', $field);
-        }
-
         $desc = APP_TABLE[static::$table][$field] ?? APP_TABLE[static::$table.'_lang'][$field];
 
         if (!empty($this->fields[$field]['require']) && Validate::isEmpty($value)) {
@@ -227,31 +222,30 @@ abstract class AbstractModel
         $fields = [];
         if ($langId) {
             foreach ($this->getDefinition(static::$table.'_lang') as $field) {
-                $fields[$field] = $this->formatValue($this->{$field}[$langId], $this->fields[$field]['type']);
+                $fields[$field] = $this->formatValue($this->{$field}[$langId], $this->fields[$field]['type'] ?? null);
             }
         } else {
             foreach ($this->getDefinition(static::$table) as $field) {
-                $fields[$field] = $this->formatValue($this->$field, $this->fields[$field]['type']);
+                $fields[$field] = $this->formatValue($this->$field, $this->fields[$field]['type'] ?? null);
             }
             $fields += isset(APP_TABLE[static::$table]['date_upd']) ? ['date_upd' => time()] : [];
         }
         return $fields;
     }
 
-    private function formatValue($value, int $type)
+    private function formatValue($value, int $type = null)
     {
         switch ($type) {
             case self::INT:
                 return (int) $value;
             case self::BOOL:
-                return (int) (bool) $value;
+                return (int) $value;
             case self::FLOAT:
                 return (float) $value;
             case self::DATE:
-                return strtotime(Tools::dateFormat($value));
+                return Tools::dateFormat($value);
             case self::NOTHING:
                 return $value;
-            case self::HTML:
             default:
                 return Tools::safeOutPut($value);
         }

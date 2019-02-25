@@ -10,7 +10,7 @@ class GroupModel extends \AbstractModel
 
     public $fields = [
         'status' => array('type' => parent::BOOL, 'require' => true, 'validate' => 'isBool'),
-        'name' => array('type' => parent::HTML, 'require' => true, 'validate' => 'isGenericName'),
+        'name' => array('require' => true, 'validate' => 'isGenericName'),
     ];
 
     public function __construct(int $id = null, int $appId = null, int $langId = null)

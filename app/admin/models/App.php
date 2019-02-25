@@ -10,7 +10,7 @@ class AppModel extends AbstractModel
     public $fields = [
         'status' => array('type' => parent::BOOL, 'require' => true, 'validate' => 'isBool'),
         'key' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isGenericName'),
-        'description' => array('type' => parent::HTML, 'require' => true),
+        'description' => array('require' => true),
     ];
 
     public function __construct(int $id = null, int $appId = null, int $langId = null)

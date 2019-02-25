@@ -34,6 +34,7 @@ abstract class InitController extends \Yaf\Controller_Abstract
         //跨站攻击
         if (!$this->_request->isGet()) {
             mb_parse_str(file_get_contents('php://input'), $result);
+            $_POST += $result;
             if ($_SESSION[APP_NAME]['security']['token'] !== $this->_request->getPost('token', $result['token'] ?? null)) {
                 return $this->send([], 100002, l('security.csrf'), 403);
             }

@@ -40,7 +40,7 @@ class Validate
 
     public static function isBool(string $value): bool
     {
-        return $value === '1';
+        return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) !== null;
     }
 
     public static function isInt(string $value): bool

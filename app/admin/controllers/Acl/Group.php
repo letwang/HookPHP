@@ -35,18 +35,20 @@ class Acl_GroupController extends Base\ViewController
                                     'name' => 'name',
                                     'label' => l('Acl_Group.name'),
                                     'required' => true,
-                                    'maxchar' => APP_TABLE[Acl\GroupModel::$table.'_lang']['name']['max'],
+                                    'maxchar' => APP_TABLE[$this->model::$table.'_lang']['name']['max'],
                                 ]
                             ],
-                            'submit' => [
-                                'name' => 'submit',
-                                'class' => 'btn btn-primary',
-                                'title' => 'Submit'
+                            'buttons' => [
+                                [
+                                    'id' => 'submit',
+                                    'class' => 'btn btn-primary',
+                                    'title' => l('app.submit'),
+                                    'js' => 'beforeSubmit();'
+                                ]
                             ],
                             'reset' => [
                                 'id' => 'reset',
                                 'class' => 'btn btn-warning',
-                                'title' => 'Reset'
                             ]
                         ]
                     ]

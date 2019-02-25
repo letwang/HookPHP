@@ -11,9 +11,9 @@ class IndexModel extends \AbstractModel
     public $fields = [
         'position' => array('type' => parent::INT, 'require' => true, 'validate' => 'isInt'),
         'key' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isGenericName'),
-        'name' => array('type' => parent::HTML, 'require' => true, 'validate' => 'isGenericName'),
-        'title' => array('type' => parent::HTML, 'require' => true, 'validate' => 'isGenericName'),
-        'description' => array('type' => parent::HTML, 'require' => true),
+        'name' => array('require' => true, 'validate' => 'isGenericName'),
+        'title' => array('require' => true, 'validate' => 'isGenericName'),
+        'description' => array('require' => true),
     ];
 
     public function __construct(int $id = null, int $appId = null, int $langId = null)
