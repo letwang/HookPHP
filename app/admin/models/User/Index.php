@@ -1,6 +1,9 @@
 <?php
 namespace User;
 
+use Hook\Db\PdoConnect;
+use Hook\Sql\User;
+
 class IndexModel extends \AbstractModel
 {
     public static $table = 'hp_user';
@@ -17,5 +20,10 @@ class IndexModel extends \AbstractModel
     public function __construct(int $id = null, int $appId = null, int $langId = null)
     {
         parent::__construct($id, $appId, $langId);
+    }
+
+    public function get(): array
+    {
+        return PdoConnect::getInstance()->fetchAll(User::GET_ALL);
     }
 }

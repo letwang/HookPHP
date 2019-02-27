@@ -123,16 +123,7 @@ abstract class AbstractModel
 
     public function get()
     {
-        $data = self::getData(static::$table, $this->id, $this->langId);
-        foreach ($data as &$v) {
-            if (isset($v['date_add'])) {
-                $v['date_add'] = date('Y-m-d H:i:s', $v['date_add']);
-            }
-            if (isset($v['date_upd'])) {
-                $v['date_upd'] = date('Y-m-d H:i:s', $v['date_upd']);
-            }
-        }
-        return $data;
+        return array_values(self::getData(null, $this->id, $this->langId));
     }
 
     private function getFields(): array

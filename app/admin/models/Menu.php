@@ -23,19 +23,24 @@ class MenuModel extends AbstractModel
         parent::__construct($id, $appId, $langId);
     }
 
-    public static function getClassify(): array
+    public function get(): array
+    {
+        return PdoConnect::getInstance()->fetchAll(Menu::GET_ALL, [$_SESSION[APP_NAME]['lang_id']]);
+    }
+
+    public static function getMenu(): array
     {
         $data = &Cache::static(__METHOD__);
         if ($data !== null) {
             return $data;
         }
         $redis = RedisConnect::getInstance('default', 's')->redis;
-        $key = 'cache:'.md5(Menu::GET_ALL);
+        $key = 'cache:'.md5(Menu::GET_SHOW_ALL);
         if (!$redis->exists($key)) {
             $utils = new ArrayUtils();
             $utils->idKey = 'id';
             $utils->parentIdKey = 'parent';
-            $data = $utils->classify(PdoConnect::getInstance()->fetchAll(Menu::GET_ALL));
+            $data = $utils->classify(PdoConnect::getInstance()->fetchAll(Menu::GET_SHOW_ALL));
             $redis->set($key, $data);
             return $data;
         }

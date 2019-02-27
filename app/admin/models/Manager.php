@@ -1,6 +1,8 @@
 <?php
+use Hook\Db\PdoConnect;
+use Hook\Sql\Manager;
 
-class ManagerModel extends AbstractModel
+class ManagerModel extends \AbstractModel
 {
     public static $table = 'hp_manager';
     public $fields = [
@@ -16,5 +18,10 @@ class ManagerModel extends AbstractModel
     public function __construct(int $id = null, int $appId = null, int $langId = null)
     {
         parent::__construct($id, $appId, $langId);
+    }
+
+    public function get(): array
+    {
+        return PdoConnect::getInstance()->fetchAll(Manager::GET_ALL);
     }
 }
