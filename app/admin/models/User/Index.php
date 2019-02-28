@@ -17,13 +17,18 @@ class IndexModel extends \AbstractModel
         'firstname' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isGenericName'),
     ];
 
-    public function __construct(int $id = null, int $appId = null, int $langId = null)
+    public function __construct(int $id = null, int $langId = null)
     {
-        parent::__construct($id, $appId, $langId);
+        parent::__construct($id, $langId);
     }
 
     public function get(): array
     {
         return PdoConnect::getInstance()->fetchAll(User::GET_ALL);
+    }
+
+    public function getSelect(): array
+    {
+        return PdoConnect::getInstance()->fetchAll(User::GET_SHOW_SELECT, [$_SESSION[APP_NAME]['app_id'], $_SESSION[APP_NAME]['lang_id']], \PDO::FETCH_COLUMN | \PDO::FETCH_UNIQUE);
     }
 }

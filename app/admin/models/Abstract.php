@@ -11,7 +11,6 @@ abstract class AbstractModel
     public static $foreign;
 
     public $id;
-    public $appId;
     public $langId;
 
     public $fields = [];
@@ -23,10 +22,9 @@ abstract class AbstractModel
     const DATE = 4;
     const NOTHING = 6;
 
-    public function __construct(int $id = null, int $appId = null, int $langId = null)
+    public function __construct(int $id = null, int $langId = null)
     {
         $this->id = $id;
-        $this->appId = $appId ?? 1;
         $this->langId = $langId;
 
         $this->ignore = ['id' => true, 'app_id' => true, 'date_add' => true, 'date_upd' => true, 'lang_id' => true, static::$foreign => true];
@@ -59,7 +57,7 @@ abstract class AbstractModel
             PdoConnect::getInstance()->pdo->beginTransaction();
 
             $parameter = $this->getFields();
-            $parameter += isset(APP_TABLE[static::$table]['app_id']) ? ['app_id' => $this->appId]: [];
+            $parameter += isset(APP_TABLE[static::$table]['app_id']) ? ['app_id' => $_SESSION[APP_NAME]['app_id']]: [];
             $parameter += isset(APP_TABLE[static::$table]['date_add']) ? ['date_add' => time()] : [];
 
             $orm = Orm::getInstance(static::$table);

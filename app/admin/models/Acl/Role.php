@@ -13,13 +13,18 @@ class RoleModel extends \AbstractModel
         'name' => array('require' => true, 'validate' => 'isGenericName'),
     ];
 
-    public function __construct(int $id = null, int $appId = null, int $langId = null)
+    public function __construct(int $id = null, int $langId = null)
     {
-        parent::__construct($id, $appId, $langId);
+        parent::__construct($id, $langId);
     }
 
     public function get(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Acl::GET_ROLE, [$_SESSION[APP_NAME]['lang_id'], 1]);
+        return PdoConnect::getInstance()->fetchAll(Acl::GET_ROLE, [$_SESSION[APP_NAME]['app_id'], $_SESSION[APP_NAME]['lang_id']]);
+    }
+
+    public function getSelect(): array
+    {
+        return PdoConnect::getInstance()->fetchAll(Acl::GET_SHOW_SELECT, [$_SESSION[APP_NAME]['app_id'], $_SESSION[APP_NAME]['lang_id']], \PDO::FETCH_COLUMN | \PDO::FETCH_UNIQUE);
     }
 }

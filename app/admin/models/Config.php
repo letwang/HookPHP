@@ -1,4 +1,5 @@
 <?php
+use Hook\Db\{Orm};
 
 class ConfigModel extends AbstractModel
 {
@@ -8,8 +9,14 @@ class ConfigModel extends AbstractModel
         'value' => array('require' => true),
     ];
 
-    public function __construct(int $id = null, int $appId = null, int $langId = null)
+    public function __construct(int $id = null, int $langId = null)
     {
-        parent::__construct($id, $appId, $langId);
+        parent::__construct($id, $langId);
+    }
+
+    public function get(): array
+    {
+        return Orm::getInstance('hp_config')->select(['id', 'date_add', 'date_upd', 'key', 'value'])
+        ->where(['app_id' => $_SESSION[APP_NAME]['app_id']])->fetchAll();
     }
 }

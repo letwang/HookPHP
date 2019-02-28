@@ -15,9 +15,9 @@ class ManagerModel extends \AbstractModel
         'firstname' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isGenericName'),
     ];
 
-    public function __construct(int $id = null, int $appId = null, int $langId = null)
+    public function __construct(int $id = null, int $langId = null)
     {
-        parent::__construct($id, $appId, $langId);
+        parent::__construct($id, $langId);
     }
 
     public function get(): array

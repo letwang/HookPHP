@@ -18,14 +18,19 @@ class MenuModel extends AbstractModel
         'name' => array('require' => true, 'validate' => 'isGenericName'),
     ];
 
-    public function __construct(int $id = null, int $appId = null, int $langId = null)
+    public function __construct(int $id = null, int $langId = null)
     {
-        parent::__construct($id, $appId, $langId);
+        parent::__construct($id, $langId);
     }
 
     public function get(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Menu::GET_ALL, [$_SESSION[APP_NAME]['lang_id']]);
+        return PdoConnect::getInstance()->fetchAll(Menu::GET_ALL, [$_SESSION[APP_NAME]['app_id'], $_SESSION[APP_NAME]['lang_id']]);
+    }
+
+    public function getSelect(): array
+    {
+        return PdoConnect::getInstance()->fetchAll(Menu::GET_SHOW_SELECT, [$_SESSION[APP_NAME]['app_id'], $_SESSION[APP_NAME]['lang_id']], PDO::FETCH_COLUMN | PDO::FETCH_UNIQUE);
     }
 
     public static function getMenu(): array
@@ -40,7 +45,7 @@ class MenuModel extends AbstractModel
             $utils = new ArrayUtils();
             $utils->idKey = 'id';
             $utils->parentIdKey = 'parent';
-            $data = $utils->classify(PdoConnect::getInstance()->fetchAll(Menu::GET_SHOW_ALL));
+            $data = $utils->classify(PdoConnect::getInstance()->fetchAll(Menu::GET_SHOW_ALL, [$_SESSION[APP_NAME]['app_id'], $_SESSION[APP_NAME]['lang_id']]));
             $redis->set($key, $data);
             return $data;
         }

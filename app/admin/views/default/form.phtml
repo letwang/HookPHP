@@ -93,267 +93,28 @@ echo $field['title'];?></div>
 <div class="form-group <?php echo $input['class'] ?? '';
 if ($input['type'] === 'hidden') {?> hide<?php }?>">
 <?php
-
-//**************************************************** 1
-if ($input['type'] === 'hidden') {?>
-<input type="hidden" name="<?php echo $input['name'];
-?>" id="<?php echo $input['name'];
-?>" value="<?php echo $this->fieldsValue[$input['name']] ?? '';?>" />
-<?php
+if ($input['type'] === 'hidden') {
+    require APP_ROOT.'/views/'.APP_THEME.'/form/hidden.phtml';
 } else {
     if (isset($input['label'])) {?>
-<label class="control-label col-lg-3"><?php
-    if (isset($input['hint'])) {
-?><span class="label-tooltip" data-toggle="tooltip" data-html="true" title="<?php
-        foreach((array) $input['hint'] as $value) {
-            echo $value;
-        }?>"><?php
+        <label class="control-label col-lg-3"><?php
+            if (isset($input['hint'])) {
+        ?><span class="label-tooltip" data-toggle="tooltip" data-html="true" title="<?php
+                foreach((array) $input['hint'] as $value) {
+                    echo $value;
+                }?>"><?php
+            }
+        echo $input['label'];
+        if (isset($input['hint'])) {?></span><?php }
+        if (!empty($input['required']) && $input['type'] !== 'radio') {
+        ?> <span class="badge badge-danger">Required</span><?php
+        }?></label>
+        <?php
     }
-echo $input['label'];
-if (isset($input['hint'])) {?></span><?php }
-if (!empty($input['required']) && $input['type'] !== 'radio') {
-?> <span class="badge badge-danger">Required</span><?php
-}?></label>
-<?php }?>
+?>
 <div class="col-lg-<?php echo $input['col'] ?? 9;if (!isset($input['label'])) {?> col-lg-offset-3<?php }?>">
 <?php
-
-//**************************************************** 2
-if ($input['type'] === 'text') {
-    require APP_ROOT.'/views/'.APP_THEME.'/form/text.phtml';
-//**************************************************** 3
-} elseif ($input['type'] === 'select') {?>
-<select id="<?php echo $input['id'] ?? $input['name'];
-    ?>" name="<?php echo $input['name'];
-    ?>" class="custom-select <?php echo $input['class'] ?? '';?>"<?php
-    if (!empty($input['multiple'])) {?> multiple="multiple"<?php }
-    if (!empty($input['size'])) {?> size="<?php echo $input['size'];?>"<?php }
-    if (isset($input['onchange'])) {?> onchange="<?php echo $input['onchange'];?>"<?php }
-    if (!empty($input['disabled'])) {?> disabled="disabled"<?php }?>>
-<?php
-    foreach($input['values'] as $options) {
-        if (isset($options['label'])) {?>
-<optgroup label="<?php echo $options['label'];?>">
-<?php
-        }
-        foreach($options['options'] as $key => $value) {?>
-<option value="<?php echo $key;?>"<?php
-            foreach($this->fieldsValue[$input['name']] ?? [] as $fieldValue) {
-                if ($fieldValue === $key) {
-?> selected="selected"<?php
-                }
-            }
-?>><?php
-            echo $value;?></option><?php
-        }
-        if (isset($options['label'])) {
-?>
-</optgroup>
-<?php
-        }
-    }
-?>
-</select>
-<?php
-
-//**************************************************** 4
-} elseif ($input['type'] === 'radio') {
-    foreach($input['values'] as $value) {?>
-<div class="custom-control custom-radio <?php
-        echo (empty($value['tips']) ? 'custom-control-inline' : '').' '.$input['class'] ?? '';?>">
-    <input type="radio" name="<?php echo $input['name'];
-        ?>" class="custom-control-input" id="<?php echo $input['name'].'_'.$value['value'];
-        ?>" value="<?php echo $value['value'];
-        ?>"<?php
-        if ($this->fieldsValue[$input['name']] ?? '' === $value['value']) {?> checked="checked"<?php }
-        if (!empty($value['disabled'])) {?> disabled="disabled"<?php }
-        ?>/> <label class="custom-control-label" for="<?php
-        echo $input['name'].'_'.$value['value'];?>"><?php
-        echo $value['label'] ?? '';?></label>
-</div>
-<?php
-        if (isset($value['tips'])) {?><div class="text-muted"><?php echo $value['tips'];?></div><?php }
-    }
-
-//**************************************************** 5
-} elseif ($input['type'] === 'switch') {?>
-<label class="switcher-control" for="<?php echo $input['name'];?>">
-        <input class="switcher-input <?php echo $input['class'] ?? '';
-        ?>" type="checkbox" name="<?php echo $input['name'];
-        ?>" id="<?php echo $input['name'];
-        ?>" value="1"<?php
-        if (!empty($this->fieldsValue[$input['name']])) {?> checked="checked"<?php }?>/>
-<span class="switcher-indicator"></span>
-</label>
-<?php
-
-//**************************************************** 6
-} elseif ($input['type'] === 'textarea') {
-    foreach($this->languages as $language) {
-        if ($langCount > 1) {?>
-<div class="form-group row lang lang-<?php echo $language['id'];?>"<?php
-            if ((int) $language['id'] !== APP_LANG) {?> style="display:none;"<?php }?>>
-<div class="col-lg-9">
-<?php
-        }
-        if (isset($input['maxchar'])) {?>
-<div class="input-group input-group-alt">
-<span id="<?php echo ($input['id'] ?? $input['name']).'_'.$language['id'];?>_counter" class="input-group-prepend">
-    <span class="input-group-text"><?php echo $input['maxchar'];?></span>
-</span>
-<?php
-        }
-?>
-<textarea name="<?php echo $input['name'].'_'.$language['id'];
-        ?>" id="<?php echo ($input['id'] ?? $input['name']).'_'.$language['id'];
-        ?>" class="form-control <?php echo $input['class'] ?? '';
-        ?>" <?php
-        if (!empty($input['readonly'])) {?> readonly="readonly"<?php }
-        if (isset($input['cols'])) {?> cols="<?php echo $input['cols'];?>"<?php }
-        if (isset($input['rows'])) {?> rows="<?php echo $input['rows'];?>"<?php }
-        if (isset($input['maxchar'])) {?> maxlength="<?php echo $input['maxchar'];?>"<?php }?>><?php
-        echo $this->fieldsValue[$input['name']][$language['id']] ?? '';?></textarea>
-<?php
-        if (isset($input['maxchar'])) {
-?>
-</div>
-<?php
-        }
-        if ($langCount > 1) {?>
-</div>
-<div class="col-lg-3">
-<div class="input-group-prepend dropdown">
-  <button class="btn btn-secondary" type="button" data-toggle="dropdown"><?php
-            echo $language['iso'];?> <span class="caret"></span></button>
-  <div class="dropdown-arrow"></div>
-  <div class="dropdown-menu"><?php
-            foreach($this->languages as $language) {?>
-<a class="dropdown-item" href="javascript:hideOtherLanguage(<?php echo $language['id'];?>);" tabindex="-1"><?php
-                echo $language['name'];?></a><?php
-            }
-?>
-  </div>
-</div>
-</div>
-</div>
-<?php
-        }
-    }
-
-//**************************************************** 7
-} elseif ($input['type'] === 'checkbox') {
-    foreach($input['values'] as $value) {?>
-<div class="custom-control custom-checkbox <?php
-        echo (empty($value['tips']) ? 'custom-control-inline' : '').' '.$input['class'] ?? '';?>">
-    <input type="checkbox" name="<?php echo $input['name'];
-        ?>" class="custom-control-input" id="<?php echo $input['name'].'_'.$value['value'];
-        ?>" value="<?php echo $value['value'];
-        ?>"<?php
-        if ($this->fieldsValue[$input['name']] ?? '' === $value['value']) {?> checked="checked"<?php }
-        if (!empty($value['disabled'])) {?> disabled="disabled"<?php }
-        ?>/> <label class="custom-control-label" for="<?php
-        echo $input['name'].'_'.$value['value'];?>"><?php
-        echo $value['label'] ?? '';?></label>
-</div>
-<?php
-        if (isset($value['tips'])) {?><div class="text-muted"><?php echo $value['tips'];?></div><?php }
-    }
-
-//**************************************************** 8
-} elseif ($input['type'] === 'password') {?>
-<div class="input-group input-group-alt">
-<span class="input-group-prepend"><span class="input-group-text"><span class="oi oi-eye"></span></span></span>
-<input type="password" id="<?php echo $input['id'] ?? $input['name'];
-?>" name="<?php echo $input['name'];
-?>" class="form-control <?php echo $input['class'] ?? '';
-?>" value=""<?php
-if (empty($input['autocomplete'])) {?> autocomplete="off"<?php }
-if (!empty($input['required'])) {?> required<?php }?> />
-</div>
-<?php
-
-//**************************************************** 9
-} elseif ($input['type'] === 'birthday') {?>
-<div class="form-group row">
-<?php foreach($input['values'] as $key => $select) {?>
-<div class="col-lg-2">
-<select name="<?php echo $key;?>" class="custom-select <?php echo $input['class'] ?? '';?>">
-<option value="">-</option>
-<?php if ($key === 'month') {
-          foreach($select as $k => $v) {
-?><option value="<?php echo $k;?>"<?php if ($this->fieldsValue[$key] ?? '' === $k) {?> selected="selected"<?php }
-?>><?php
-              echo $v;?></option><?php
-          }
-      } else {
-          foreach($select as $v) {
-?><option value="<?php echo $v;?>"<?php if ($this->fieldsValue[$key] ?? '' === $v) {?> selected="selected"<?php }
-?>><?php
-              echo $v;?></option><?php
-          }
-      }
-?></select></div>
-<?php }?>
-<div class="col-lg-2">
-<select name="day" class="custom-select <?php echo $input['class'] ?? '';?>">
-<option value="">-</option>
-<?php foreach(range(1, 28) as $v) {
-?><option value="<?php echo $v;?>"<?php if ($this->fieldsValue[$key] ?? '' === $v) {?> selected="selected"<?php }
-?>><?php echo $v;?></option><?php }?>
-</select>
-</div>
-</div>
-</div>
-<?php
-
-//**************************************************** 10
-} elseif ($input['type'] === 'color') {?>
-<div class="form-group">
-  <div class="input-group input-group-alt" data-toggle="colorpicker">
-    <input id="<?php echo $input['id'];
-    ?>" name="<?php echo $input['name'];
-    ?>" type="text" class="form-control <?php echo $input['class'] ?? '';
-    ?>" value="<?php echo $this->fieldsValue[$input['name']] ?? '';
-    ?>">
-    <span class="input-group-append"><span class="input-group-text colorpicker-input-addon"><i class="align-self-center"></i></span></span>
-  </div>
-</div>
-<?php
-
-//**************************************************** 11
-} elseif ($input['type'] === 'date') {?>
-<div class="form-group">
-  <div class="input-group input-group-alt flatpickr" data-toggle="flatpickr" data-wrap="true">
-    <input id="<?php echo $input['id'] ?? $input['name'];
-    ?>" name="<?php echo $input['name'];
-    ?>" class="form-control <?php echo $input['class'] ?? '';
-    ?>" value="<?php echo $this->fieldsValue[$input['name']] ?? '';
-    ?>" type="text" data-input="" />
-    <div class="input-group-append">
-      <button type="button" class="btn btn-secondary" data-toggle=""><i class="far fa-calendar"></i></button>
-      <button type="button" class="btn btn-secondary" data-clear=""><i class="fa fa-times"></i></button>
-    </div>
-  </div>
-</div>
-<?php
-
-//**************************************************** 12
-} elseif ($input['type'] === 'datetime') {?>
-<div class="form-group">
-  <div class="input-group input-group-alt flatpickr" data-toggle="flatpickr" data-wrap="true" data-enable-time="true" data-date-format="Y-m-d H:i">
-    <input id="<?php echo $input['id'] ?? $input['name'];
-    ?>" name="<?php echo $input['name'];
-    ?>" class="form-control <?php echo $input['class'] ?? '';
-    ?>" value="<?php echo $this->fieldsValue[$input['name']] ?? '';
-    ?>" type="text" data-input="" />
-    <div class="input-group-append">
-      <button type="button" class="btn btn-secondary" data-toggle=""><i class="far fa-calendar"></i></button>
-      <button type="button" class="btn btn-secondary" data-clear=""><i class="fa fa-times"></i></button>
-    </div>
-  </div>
-</div>
-<?php
-}
+require APP_ROOT.'/views/'.APP_THEME.'/form/'.$input['type'].'.phtml';
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ ALL INPUT COMMON
 if (isset($input['desc'])) {?>

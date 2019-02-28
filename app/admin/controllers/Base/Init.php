@@ -6,6 +6,11 @@ abstract class InitController extends \Yaf\Controller_Abstract
 {
     protected $id;
     protected $languages;
+
+    /**
+     *
+     * @var \AbstractModel
+     */
     protected $model;
 
     protected function init()

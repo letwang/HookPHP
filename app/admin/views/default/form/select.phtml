@@ -1,0 +1,29 @@
+<select id="<?php echo $input['id'] ?? $input['name'];
+?>" name="<?php echo $input['name'];
+?>" class="custom-select <?php echo $input['class'] ?? '';?>"<?php
+if (!empty($input['multiple'])) {?> multiple="multiple"<?php }
+if (!empty($input['size'])) {?> size="<?php echo $input['size'];?>"<?php }
+if (isset($input['onchange'])) {?> onchange="<?php echo $input['onchange'];?>"<?php }
+if (!empty($input['disabled'])) {?> disabled="disabled"<?php }?>>
+<?php
+    foreach($input['values'] as $options) {
+        if (isset($options['label'])) {?>
+<optgroup label="<?php echo $options['label'];?>">
+<?php
+        }
+        foreach($options['options'] as $key => $value) {?>
+<option value="<?php echo $key;?>"<?php
+            if ($this->fieldsValue[$input['name']] ?? [] === $key) {
+?> selected="selected"<?php
+            }
+?>><?php
+            echo $value;?></option><?php
+        }
+        if (isset($options['label'])) {
+?>
+</optgroup>
+<?php
+        }
+    }
+?>
+</select>

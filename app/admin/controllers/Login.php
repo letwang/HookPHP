@@ -1,5 +1,6 @@
 <?php
-use Hook\Http\Header, Hook\Db\PdoConnect, Hook\Crypt\PassWord;
+use Hook\Http\Header, Hook\Crypt\PassWord;
+use Hook\Db\{PdoConnect, Orm};
 
 class LoginController extends Base\ViewController
 {
@@ -27,6 +28,7 @@ class LoginController extends Base\ViewController
                 'agent' => $this->getRequest()->getServer('HTTP_USER_AGENT'),
                 'time' => time()
             ];
+            $login['app_id'] = Orm::getInstance('hp_app')->select()->where(['key' => APP_NAME])->fetchColumn();
 
             $_SESSION = [];
             $_SESSION[APP_NAME] = $login;

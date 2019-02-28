@@ -21,9 +21,16 @@ abstract class ViewController extends InitController
                 'action' => $this->_request->action,
                 'uri' => $this->_request->getRequestUri(),
                 'languages' => $this->languages,
-                'menus' => \MenuModel::getMenu()
             ]
         );
+
+        if (isset($_SESSION[APP_NAME])) {
+            $this->_view->assign(
+                [
+                    'menus' => \MenuModel::getMenu()
+                ]
+            );
+        }
     }
 
     protected function postAction()
@@ -35,16 +42,7 @@ abstract class ViewController extends InitController
     protected function putAction()
     {
         $this->renderForm();
-        foreach ($this->fieldsForm['fieldsValue'] as $field => &$value) {
-            if ($value) {
-                $value = [];
-                foreach (array_keys($this->languages) as $langId) {
-                    $value[$langId] = $this->model->getData(null, $this->id, $langId)[$field];
-                }
-            } else {
-                $value = $this->model->getData(null, $this->id)[$field];
-            }
-        }
+        $this->setFieldsValue();
         $this->_view->assign($this->fieldsForm);
     }
 
@@ -54,7 +52,20 @@ abstract class ViewController extends InitController
         $this->_view->assign(['fieldsList' => $this->fieldsList]);
     }
 
-    protected function getDefinition(array $ignore = null): array
+    protected function setFieldsValue(): void
+    {
+        foreach ($this->fieldsForm['fields']['data'][0]['form']['input'] as $field => $input) {
+            if ($input['lang']) {
+                foreach (array_keys($this->languages) as $langId) {
+                    $this->fieldsForm['fieldsValue'][$field][$langId] = $this->model->getData(null, $this->id, $langId)[$field];
+                }
+            } else {
+                $this->fieldsForm['fieldsValue'][$field] = $this->model->getData(null, $this->id)[$field];
+            }
+        }
+    }
+
+    protected function getDefinition(array $ignore = []): array
     {
         $data = APP_TABLE[$this->model::$table];
         foreach (APP_TABLE[$this->model::$table.'_lang'] ?? [] as $field => $desc) {
@@ -63,52 +74,51 @@ abstract class ViewController extends InitController
         return array_diff_key($data, $ignore);
     }
 
-    protected function renderList()
+    protected function renderList(): void
     {
-        $ignore = ['status' => true, 'date_add' => true, 'date_upd' => true];
+        $white = ['status' => true, 'date_add' => true, 'date_upd' => true];
         $this->fieldsList['id'] = ['data' => 'id', 'className' => 'col-checker align-middle', 'orderable' => false, 'searchable' => false];
         if ($this->model) {
-            foreach (array_keys($this->getDefinition(['id' => true, 'app_id' => true, 'lang_id' => true, $this->model::$foreign => true])) as $field) {
+            $ignore = $this->model->ignore;
+            unset($ignore['date_add'], $ignore['date_upd']);
+            foreach (array_keys($this->getDefinition($ignore)) as $field) {
                 $this->fieldsList[$field] = [
                     'data' => $field,
                     'className' => 'align-middle',
-                    'title' => l((isset($ignore[$field]) ? 'app' : $this->_request->controller).'.'.$field)
+                    'title' => l((isset($white[$field]) ? 'app' : $this->_request->controller).'.'.$field)
                 ];
             }
         }
         $this->fieldsList['idx'] = ['className' => 'align-middle text-right'] + $this->fieldsList['id'];
     }
 
-    protected function renderForm()
+    protected function renderForm(): void
     {
         $input = [];
-        $fieldsValue = [];
         foreach ($this->getDefinition($this->model->ignore) as $field => $desc) {
-            $config = [
+            $input[$field] = [
                 'name' => $field,
                 'label' => l($this->_request->controller.'.'.$field),
                 'lang' => isset($desc['lang']),
                 'required' => $desc['default'] === ''
             ];
-            $table = $config['lang'] ? $this->model::$table.'_lang' : $this->model::$table;
-            $fieldsValue[$field] = $config['lang'];
+            $table = $input[$field]['lang'] ? $this->model::$table.'_lang' : $this->model::$table;
             switch (1) {
                 case $desc['type'] === 'tinyint':
-                    $config += [
+                    $input[$field] += [
                     'type' => 'switch',
                     ];
                     break;
                 case strpos($desc['type'], 'char') !== false:
                 default:
-                    $config += [
+                    $input[$field] += [
                     'type' => 'text',
                     'maxchar' => APP_TABLE[$table][$field]['max']
                     ];
                     break;
             }
-            $input[$field] = $config;
         }
-        $this->fieldsForm += [
+        $this->fieldsForm = [
             'fields' => [
                 'title' => l($this->_request->controller.'.'.$this->_request->action),
                 'data' => [
@@ -131,7 +141,7 @@ abstract class ViewController extends InitController
                     ]
                 ]
             ],
-            'fieldsValue' => $fieldsValue,
+            'fieldsValue' => [],
             'showCancelButton' => true
         ];
     }
