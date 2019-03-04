@@ -1,5 +1,5 @@
 <?php
-class User_IndexController extends Base\ApiController
+class User_UserController extends Base\ApiController
 {
     public function getAction()
     {

@@ -106,7 +106,7 @@ abstract class ViewController extends InitController
             switch (1) {
                 case $desc['type'] === 'tinyint':
                     $input[$field] += [
-                    'type' => 'switch',
+                    'type' => (int) $desc['max'] === 1 ? 'switch' : 'number',
                     ];
                     break;
                 case strpos($desc['type'], 'char') !== false:

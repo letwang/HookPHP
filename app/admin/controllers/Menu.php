@@ -22,11 +22,5 @@ class MenuController extends Base\ViewController
             'lang' => false,
             'values' => [['options' => $this->model->getSelect()]]
         ];
-        $this->fieldsForm['fields']['data'][0]['form']['input']['position'] = [
-            'type' => 'number',
-            'name' => 'position',
-            'label' => l($this->_request->controller.'.position'),
-            'lang' => false,
-        ];
     }
 }

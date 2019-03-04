@@ -1,5 +1,5 @@
 <?php
-class User_IndexController extends Base\ViewController
+class Hook_HookController extends Base\ViewController
 {
     public function init()
     {

@@ -1,7 +1,7 @@
 <?php
 namespace Acl;
 use Hook\Db\PdoConnect;
-use Hook\Sql\Acl;
+use Hook\Sql\Acl\Resource;
 
 class ResourceModel extends \AbstractModel
 {
@@ -24,6 +24,11 @@ class ResourceModel extends \AbstractModel
 
     public function get(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Acl::GET_RESOURCE, [$_SESSION[APP_NAME]['app_id'], $_SESSION[APP_NAME]['lang_id']]);
+        return PdoConnect::getInstance()->fetchAll(Resource::GET_ALL, [$_SESSION[APP_NAME]['app_id'], $_SESSION[APP_NAME]['lang_id']]);
+    }
+
+    public function getSelect(): array
+    {
+        return PdoConnect::getInstance()->fetchAll(Resource::GET_SHOW_SELECT, [$_SESSION[APP_NAME]['app_id'], $_SESSION[APP_NAME]['lang_id']], \PDO::FETCH_COLUMN | \PDO::FETCH_UNIQUE);
     }
 }

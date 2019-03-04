@@ -1,7 +1,7 @@
 <?php
 namespace Acl;
 use Hook\Db\PdoConnect;
-use Hook\Sql\Acl;
+use Hook\Sql\Acl\Role;
 
 class RoleModel extends \AbstractModel
 {
@@ -20,11 +20,11 @@ class RoleModel extends \AbstractModel
 
     public function get(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Acl::GET_ROLE, [$_SESSION[APP_NAME]['app_id'], $_SESSION[APP_NAME]['lang_id']]);
+        return PdoConnect::getInstance()->fetchAll(Role::GET_ALL, [$_SESSION[APP_NAME]['app_id'], $_SESSION[APP_NAME]['lang_id']]);
     }
 
     public function getSelect(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Acl::GET_SHOW_SELECT, [$_SESSION[APP_NAME]['app_id'], $_SESSION[APP_NAME]['lang_id']], \PDO::FETCH_COLUMN | \PDO::FETCH_UNIQUE);
+        return PdoConnect::getInstance()->fetchAll(Role::GET_SHOW_SELECT, [$_SESSION[APP_NAME]['app_id'], $_SESSION[APP_NAME]['lang_id']], \PDO::FETCH_COLUMN | \PDO::FETCH_UNIQUE);
     }
 }

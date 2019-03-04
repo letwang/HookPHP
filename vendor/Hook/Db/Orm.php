@@ -247,7 +247,7 @@ class Orm extends Cache
             case strpos($type, 'tinyint') === 0:
                 $data = ['min' => -128, 'max' => 127];
                 if ($unsigned) {
-                    $data = ['min' => 0, 'max' => 255];
+                    $data = ['min' => 0, 'max' => strpos($type, '1') > 0 ? 1 : 255];
                 }
                 break;
             case strpos($type, 'smallint') === 0:

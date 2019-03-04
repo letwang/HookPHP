@@ -1,9 +1,9 @@
 <?php
 namespace Hook;
 use Hook\Db\PdoConnect;
-use Hook\Sql\Hook;
+use Hook\Sql\Hook\Hook;
 
-class IndexModel extends \AbstractModel
+class HookModel extends \AbstractModel
 {
     public static $table = 'hp_hook';
     public static $foreign = 'hook_id';
@@ -24,5 +24,10 @@ class IndexModel extends \AbstractModel
     public function get(): array
     {
         return PdoConnect::getInstance()->fetchAll(Hook::GET_ALL, [$_SESSION[APP_NAME]['lang_id']]);
+    }
+
+    public function getSelect(): array
+    {
+        return PdoConnect::getInstance()->fetchAll(Hook::GET_SHOW_SELECT, [$_SESSION[APP_NAME]['app_id'], $_SESSION[APP_NAME]['lang_id']], \PDO::FETCH_COLUMN | \PDO::FETCH_UNIQUE);
     }
 }

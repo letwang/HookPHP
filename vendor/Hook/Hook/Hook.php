@@ -4,6 +4,7 @@ namespace Hook\Hook;
 use Hook\Db\RedisConnect;
 use Hook\Db\PdoConnect;
 use Hook\Cache\Cache;
+use Hook\Sql\Hook\Module as sqlModule;
 
 class Hook
 {
@@ -14,9 +15,9 @@ class Hook
             return $data;
         }
         $redis = RedisConnect::getInstance()->redis;
-        $key = 'cache:'.md5(\Hook\Sql\Module::GET_ALL);
+        $key = 'cache:'.md5(sqlModule::GET_ALL);
         if (!$redis->exists($key)) {
-            $data = PdoConnect::getInstance()->fetchAll(\Hook\Sql\Module::GET_ALL, [], \PDO::FETCH_COLUMN | \PDO::FETCH_GROUP);
+            $data = PdoConnect::getInstance()->fetchAll(sqlModule::GET_ALL, [], \PDO::FETCH_COLUMN | \PDO::FETCH_GROUP);
             $redis->set($key, $data);
             return $data;
         }

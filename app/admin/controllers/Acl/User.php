@@ -1,12 +1,6 @@
 <?php
 class Acl_UserController extends Base\ViewController
 {
-    /**
-     *
-     * @var Acl\UserModel
-     */
-    protected $model;
-
     public function init()
     {
         parent::init();
@@ -20,7 +14,7 @@ class Acl_UserController extends Base\ViewController
             'name' => 'user_id',
             'label' => l($this->_request->controller.'.user_id'),
             'lang' => false,
-            'values' => [['options' => (new User\IndexModel())->getSelect()]]
+            'values' => [['options' => (new Acl\UserModel())->getSelect()]]
         ];
         $this->fieldsForm['fields']['data'][0]['form']['input']['role_id'] = [
             'type' => 'select',

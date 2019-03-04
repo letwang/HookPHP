@@ -13,7 +13,7 @@ if (!empty($input['disabled'])) {?> disabled="disabled"<?php }?>>
         }
         foreach($options['options'] as $key => $value) {?>
 <option value="<?php echo $key;?>"<?php
-            if ($this->fieldsValue[$input['name']] ?? [] === $key) {
+            if (($this->fieldsValue[$input['name']] ?? '') === (string) $key) {
 ?> selected="selected"<?php
             }
 ?>><?php

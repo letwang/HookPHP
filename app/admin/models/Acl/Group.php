@@ -1,7 +1,7 @@
 <?php
 namespace Acl;
 use Hook\Db\PdoConnect;
-use Hook\Sql\Acl;
+use Hook\Sql\Acl\Group;
 
 class GroupModel extends \AbstractModel
 {
@@ -20,6 +20,11 @@ class GroupModel extends \AbstractModel
 
     public function get(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Acl::GET_GROUP, [$_SESSION[APP_NAME]['app_id'], $_SESSION[APP_NAME]['lang_id']]);
+        return PdoConnect::getInstance()->fetchAll(Group::GET_ALL, [$_SESSION[APP_NAME]['app_id'], $_SESSION[APP_NAME]['lang_id']]);
+    }
+
+    public function getSelect(): array
+    {
+        return PdoConnect::getInstance()->fetchAll(Group::GET_SHOW_SELECT, [$_SESSION[APP_NAME]['app_id'], $_SESSION[APP_NAME]['lang_id']], \PDO::FETCH_COLUMN | \PDO::FETCH_UNIQUE);
     }
 }

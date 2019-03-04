@@ -8,7 +8,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 CREATE TABLE `hp_acl_group` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `app_id` int(10) unsigned NOT NULL,
-  `status` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `date_add` int(10) unsigned NOT NULL,
   `date_upd` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
@@ -34,7 +34,7 @@ CREATE TABLE `hp_acl_group_resource` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `group_id` int(10) unsigned NOT NULL,
   `resource_id` int(10) unsigned NOT NULL,
-  `status` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `date_add` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `group_id` (`group_id`,`resource_id`),
@@ -47,19 +47,18 @@ INSERT INTO `hp_acl_group_resource` VALUES (1,1,1,1,1493439330),(2,1,2,1,1493439
 CREATE TABLE `hp_acl_resource` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `app_id` int(10) unsigned NOT NULL,
-  `status` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `date_add` int(10) unsigned NOT NULL,
   `date_upd` int(10) unsigned NOT NULL,
-  `app` char(16) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   `module` char(16) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   `controller` char(16) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   `action` char(16) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `AMCA` (`app`,`module`,`controller`,`action`) USING BTREE,
+  UNIQUE KEY `MCA` (`module`,`controller`,`action`) USING BTREE,
   KEY `FK_000027` (`app_id`),
   CONSTRAINT `FK_000027` FOREIGN KEY (`app_id`) REFERENCES `hp_app` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-INSERT INTO `hp_acl_resource` VALUES (1,1,1,1493439330,1493439330,'store','order','list','view'),(2,1,1,1493439330,1493439330,'store','order','refund','edit'),(3,1,1,1493439330,1493439330,'store','order','detail','delete');
+INSERT INTO `hp_acl_resource` VALUES (1,1,1,1493439330,1493439330,'order','list','view'),(2,1,1,1493439330,1493439330,'order','refund','edit'),(3,1,1,1493439330,1493439330,'order','detail','delete');
 
 CREATE TABLE `hp_acl_resource_lang` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -77,7 +76,7 @@ INSERT INTO `hp_acl_resource_lang` VALUES (NULL,1,1,'订单列表查看'),(NULL,
 CREATE TABLE `hp_acl_role` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `app_id` int(10) unsigned NOT NULL,
-  `status` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `date_add` int(10) unsigned NOT NULL,
   `date_upd` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
@@ -103,7 +102,7 @@ CREATE TABLE `hp_acl_role_resource` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `role_id` int(10) unsigned NOT NULL,
   `resource_id` int(10) unsigned NOT NULL,
-  `status` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `date_add` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `role_id` (`role_id`,`resource_id`),
@@ -117,7 +116,7 @@ CREATE TABLE `hp_acl_user_resource` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL,
   `resource_id` int(10) unsigned NOT NULL,
-  `status` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `date_add` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`,`resource_id`),
@@ -131,7 +130,7 @@ CREATE TABLE `hp_acl_user_role` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL,
   `role_id` int(10) unsigned NOT NULL,
-  `status` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `date_add` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`,`role_id`),
@@ -143,7 +142,7 @@ INSERT INTO `hp_acl_user_role` VALUES (1,1,1,1,1493439330),(2,1,2,1,1493439330),
 
 CREATE TABLE `hp_app` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `status` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `date_add` int(10) unsigned NOT NULL,
   `date_upd` int(10) unsigned NOT NULL,
   `key` char(16) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
@@ -181,6 +180,7 @@ INSERT INTO `hp_config` VALUES (1,1,1493439330,1493439330,'HP_LANG_DEFAULT','1')
 CREATE TABLE `hp_hook` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `app_id` int(10) unsigned NOT NULL,
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `position` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `date_add` int(10) unsigned NOT NULL,
   `date_upd` int(10) unsigned NOT NULL,
@@ -190,7 +190,7 @@ CREATE TABLE `hp_hook` (
   KEY `FK_000030` (`app_id`),
   CONSTRAINT `FK_000030` FOREIGN KEY (`app_id`) REFERENCES `hp_app` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-INSERT INTO `hp_hook` VALUES (1,1,0,1493439330,1493439330,'displayTop'),(2,1,1,1493439330,1493439330,'displayHead'),(3,1,2,1493439330,1493439330,'displayFoot');
+INSERT INTO `hp_hook` VALUES (1,1,1,0,1493439330,1493439330,'displayTop'),(2,1,1,1,1493439330,1493439330,'displayHead'),(3,1,1,2,1493439330,1493439330,'displayFoot');
 
 CREATE TABLE `hp_hook_lang` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -224,7 +224,7 @@ INSERT INTO `hp_hook_module` VALUES (1,1,1,0,1493439330,1493439330),(2,2,2,0,149
 
 CREATE TABLE `hp_lang` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `status` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `date_add` int(10) unsigned NOT NULL,
   `date_upd` int(10) unsigned NOT NULL,
   `iso` char(2) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
@@ -237,7 +237,7 @@ INSERT INTO `hp_lang` VALUES (1,1,1493439330,1493439330,'cn','zh-cn','简体中�
 CREATE TABLE `hp_manager` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `lang_id` int(10) unsigned DEFAULT NULL,
-  `status` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `date_add` int(10) unsigned NOT NULL,
   `date_upd` int(10) unsigned NOT NULL,
   `user` char(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -256,8 +256,8 @@ CREATE TABLE `hp_menu` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `app_id` int(10) unsigned NOT NULL,
   `parent` int(10) unsigned DEFAULT NULL,
-  `status` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `position` int(10) unsigned NOT NULL DEFAULT '0',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `position` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `date_add` int(10) unsigned NOT NULL,
   `date_upd` int(10) unsigned NOT NULL,
   `url` char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
@@ -268,7 +268,7 @@ CREATE TABLE `hp_menu` (
   CONSTRAINT `FK_000022` FOREIGN KEY (`parent`) REFERENCES `hp_menu` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `FK_000032` FOREIGN KEY (`app_id`) REFERENCES `hp_app` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-INSERT INTO `hp_menu` VALUES (1,1,NULL,1,1,1493439330,1493439330,'','people'),(2,1,1,1,0,1493439330,1493439330,'user_index',''),(3,1,NULL,1,2,1493439330,1493439330,'','grid-two-up'),(4,1,3,1,0,1493439330,1493439330,'acl_index',''),(5,1,3,1,0,1493439330,1493439330,'acl_resource',''),(6,1,3,1,0,1493439330,1493439330,'acl_role',''),(7,1,3,1,0,1493439330,1493439330,'acl_user',''),(8,1,3,1,0,1493439330,1493439330,'acl_group',''),(9,1,NULL,1,3,1493439330,1493439330,'','bar-chart'),(10,1,9,1,0,1493439330,1493439330,'config',''),(11,1,NULL,1,4,1493439330,1493439330,'','list-rich'),(12,1,11,1,0,1493439330,1493439330,'translation',''),(13,1,NULL,1,5,1493439330,1493439330,'','wrench'),(14,1,13,1,0,1493439330,1493439330,'manager',''),(15,1,NULL,1,6,1493439330,1493439330,'','browser'),(16,1,15,1,0,1493439330,1493439330,'menu',''),(17,1,NULL,1,7,1493439330,1493439330,'','infinity'),(18,1,17,1,0,1493439330,1493439330,'lang',''),(19,1,NULL,1,8,1493439330,1493439330,'','media-skip-backward'),(20,1,19,1,0,1493439330,1493439330,'hook_index',''),(21,1,19,1,0,1493439330,1493439330,'hook_module',''),(22,1,NULL,1,9,1493439330,1493439330,'','resize-both'),(23,1,22,1,0,1493439330,1493439330,'theme',''),(24,1,NULL,1,10,1493439330,1493439330,'','calendar'),(25,1,24,1,0,1493439330,1493439330,'app','');
+INSERT INTO `hp_menu` VALUES (1,1,NULL,1,1,1493439330,1493439330,'','people'),(2,1,1,1,0,1493439330,1493439330,'user_user',''),(3,1,NULL,1,2,1493439330,1493439330,'','grid-two-up'),(4,1,3,1,0,1493439330,1493439330,'acl_index',''),(5,1,3,1,0,1493439330,1493439330,'acl_resource',''),(6,1,3,1,0,1493439330,1493439330,'acl_role',''),(7,1,3,1,0,1493439330,1493439330,'acl_user',''),(8,1,3,1,0,1493439330,1493439330,'acl_group',''),(9,1,NULL,1,3,1493439330,1493439330,'','bar-chart'),(10,1,9,1,0,1493439330,1493439330,'config',''),(11,1,NULL,1,4,1493439330,1493439330,'','list-rich'),(12,1,11,1,0,1493439330,1493439330,'translation',''),(13,1,NULL,1,5,1493439330,1493439330,'','wrench'),(14,1,13,1,0,1493439330,1493439330,'manager',''),(15,1,NULL,1,6,1493439330,1493439330,'','browser'),(16,1,15,1,0,1493439330,1493439330,'menu',''),(17,1,NULL,1,7,1493439330,1493439330,'','infinity'),(18,1,17,1,0,1493439330,1493439330,'lang',''),(19,1,NULL,1,8,1493439330,1493439330,'','media-skip-backward'),(20,1,19,1,0,1493439330,1493439330,'hook_hook',''),(21,1,19,1,0,1493439330,1493439330,'hook_module',''),(22,1,NULL,1,9,1493439330,1493439330,'','resize-both'),(23,1,22,1,0,1493439330,1493439330,'theme',''),(24,1,NULL,1,10,1493439330,1493439330,'','calendar'),(25,1,24,1,0,1493439330,1493439330,'app','');
 
 CREATE TABLE `hp_menu_lang` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -286,7 +286,7 @@ INSERT INTO `hp_menu_lang` VALUES (NULL,1,1,'用户管理'),(NULL,2,1,'用户'),
 CREATE TABLE `hp_module` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `app_id` int(10) unsigned NOT NULL,
-  `status` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `date_add` int(10) unsigned NOT NULL,
   `date_upd` int(10) unsigned NOT NULL,
   `version` char(8) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
@@ -312,7 +312,7 @@ CREATE TABLE `hp_translation` (
 CREATE TABLE `hp_user` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `lang_id` int(10) unsigned DEFAULT NULL,
-  `status` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `date_add` int(10) unsigned NOT NULL,
   `date_upd` int(10) unsigned NOT NULL,
   `user` char(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -326,5 +326,18 @@ CREATE TABLE `hp_user` (
   CONSTRAINT `FK_000021` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 INSERT INTO `hp_user` VALUES (1,1,1,1493439330,1493439330,'test@hotmail.com','\$argon2i\$v=19\$m=1024,t=2,p=2\$c2NtWmdCb255NGZZUFBOLw\$Hoi3pZx1vlPKT6nwtcu9/zyAppezbxKAOW2u1EmtxqA','','','Stephen','Bob');
+
+CREATE TABLE `hp_theme` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `app_id` int(10) unsigned NOT NULL,
+  `date_add` int(10) unsigned NOT NULL,
+  `date_upd` int(10) unsigned NOT NULL,
+  `key` char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+  `default` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `FK_000036` (`app_id`),
+  CONSTRAINT `FK_000036` FOREIGN KEY (`app_id`) REFERENCES `hp_app` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `hp_theme` VALUES (1,1,1493439330,1493439330,'Bootstrap','1');
 ";
 }
