@@ -1,5 +1,6 @@
 <?php
-use Hook\Db\{Orm};
+use Hook\Db\{PdoConnect};
+use Hook\Sql\Config;
 
 class ConfigModel extends AbstractModel
 {
@@ -16,7 +17,18 @@ class ConfigModel extends AbstractModel
 
     public function get(): array
     {
-        return Orm::getInstance('hp_config')->select(['id', 'date_add', 'date_upd', 'key', 'value'])
-        ->where(['app_id' => $_SESSION[APP_NAME]['app_id']])->fetchAll();
+        return PdoConnect::getInstance()->fetchAll(
+            Config::GET_All,
+            [1]
+        );
+    }
+
+    public static function getDefined(): array
+    {
+        return PdoConnect::getInstance()->fetchAll(
+            Config::GET_DEFINED,
+            [1],
+            PDO::FETCH_COLUMN | PDO::FETCH_UNIQUE
+        );
     }
 }

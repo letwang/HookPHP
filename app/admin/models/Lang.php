@@ -18,4 +18,9 @@ class LangModel extends AbstractModel
     {
         return array_column(parent::getData(), 'id');
     }
+
+    public static function getIdFromName(string $name = null): int
+    {
+        return array_column(parent::getData(), 'id', 'lang')[$name];
+    }
 }

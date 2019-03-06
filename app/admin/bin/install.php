@@ -46,6 +46,6 @@ function main($pdo) {
         $data .= PHP_EOL;
     }
     
-    file_put_contents(APP_ROOT.'/../../conf/'.APP_NAME.'_table.ini', $data);
+    file_put_contents(getcwd().'/conf/'.APP_NAME.'_table.ini', $data);
     shell_exec('sudo service php7.2-fpm restart');
 }

@@ -44,7 +44,7 @@ if (empty($input['lang'])) {
     foreach($this->languages as $language) {
         if ($langCount > 1) {?>
     <div class="row lang lang-<?php echo $language['id'];
-    ?>" <?php if ((int) $language['id'] !== APP_LANG) {?>style="display:none"<?php }?>>
+    ?>" <?php if ((int) $language['id'] !== APP_LANG_ID) {?>style="display:none"<?php }?>>
         <div class="col-lg-9"><?php
         }
         if (isset($input['maxchar']) || isset($input['prefix']) || isset($input['suffix'])) {?>

@@ -22,4 +22,9 @@ class AppModel extends AbstractModel
     {
         return PdoConnect::getInstance()->fetchAll(App::GET_All, [$_SESSION[APP_NAME]['lang_id']]);
     }
+
+    public static function getIdFromName(string $name = null): int
+    {
+        return array_column(parent::getData(), 'id', 'key')[$name];
+    }
 }

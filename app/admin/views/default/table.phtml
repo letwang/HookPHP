@@ -20,11 +20,11 @@
     <header class="card-header">
       <ul class="nav nav-tabs card-header-tabs">
         <li class="nav-item">
-          <a class="nav-link active show" data-toggle="tab" href="#tab1">All</a></li>
+          <a class="nav-link active show" data-toggle="tab" href="#tab1"><?php echo l('status.-1');?></a></li>
         <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" href="#tab2">Ongoing</a></li>
+          <a class="nav-link" data-toggle="tab" href="#tab2"><?php echo l('status.1');?></a></li>
         <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" href="#tab3">Completed</a></li>
+          <a class="nav-link" data-toggle="tab" href="#tab3"><?php echo l('status.0');?></a></li>
       </ul>
     </header>
     <div class="card-body">
@@ -134,4 +134,4 @@
 <script src="https://cdn.datatables.net/buttons/1.5.4/js/buttons.print.min.js"></script>
 
 <script src="/assets/javascript/pages/datatables-filters.min.js"></script>
-<?php require APP_ROOT.'/views/'.APP_THEME.'/modal.phtml';?>
+<?php require __DIR__.'/modal.phtml';?>

@@ -28,7 +28,6 @@ class LoginController extends Base\ViewController
                 'agent' => $this->getRequest()->getServer('HTTP_USER_AGENT'),
                 'time' => time()
             ];
-            $login['app_id'] = Orm::getInstance('hp_app')->select()->where(['key' => APP_NAME])->fetchColumn();
 
             $_SESSION = [];
             $_SESSION[APP_NAME] = $login;

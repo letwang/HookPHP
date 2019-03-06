@@ -7,7 +7,7 @@ abstract class AbstractController extends Yaf\Controller_Abstract
         if ($this->_request->module !== 'Index') {
             $viewPath = 'modules/'.$this->_request->module;
         }
-        $this->_view->setScriptPath(APP_ROOT.'/'.$viewPath.'/views/'.APP_THEME.'/');
+        $this->_view->setScriptPath(APP_CONFIG['application']['directory'].'/'.$viewPath.'/views/'.APP_THEME_NAME.'/');
 
         $this->_view->assign(['title' => l('app.title'), 'keywords' => l('app.keywords'), 'description' => l('app.description')]);
     }

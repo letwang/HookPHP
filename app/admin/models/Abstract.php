@@ -181,7 +181,7 @@ abstract class AbstractModel
 
         if (!empty($this->fields[$field]['require']) && Validate::isEmpty($value)) {
             if ($langId) {
-                $value = $this->{$field}[$langId] = $this->{$field}[APP_LANG] ?: $desc['default'];
+                $value = $this->{$field}[$langId] = $this->{$field}[APP_LANG_ID] ?: $desc['default'];
             } else {
                 $value = $this->$field = $desc['default'];
             }

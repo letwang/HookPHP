@@ -15,6 +15,13 @@ abstract class InitController extends \Yaf\Controller_Abstract
 
     protected function init()
     {
+        //批量注册用户自定义系统常量
+        foreach (\ConfigModel::getDefined() as $key => $value) {
+            defined($key) || define($key, $value);
+        }
+        defined('APP_ID') || define('APP_ID', \AppModel::getIdFromName(APP_NAME));
+        defined('APP_LANG_ID') || define('APP_LANG_ID', \LangModel::getIdFromName(APP_LANG_NAME));
+
         $this->id = (int) $this->getRequest()->getParam('id');
         $this->languages = \LangModel::getData();
 

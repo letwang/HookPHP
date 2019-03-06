@@ -1,12 +1,12 @@
-<?php require APP_ROOT.'/views/'.APP_THEME.'/top.phtml';?>
+<?php require __DIR__.'/../top.phtml';?>
 <title><?php echo $this->title;?></title>
 <meta name="description" content="<?php echo $this->description;?>" />
 <meta name="keywords" content="<?php echo $this->keywords;?>" />
 </head>
 <body>
 <div class="app">
-  <?php require APP_ROOT.'/views/'.APP_THEME.'/head.phtml';?>
-  <?php require APP_ROOT.'/views/'.APP_THEME.'/left.phtml';?>
+  <?php require __DIR__.'/../head.phtml';?>
+  <?php require __DIR__.'/../left.phtml';?>
   <main class="app-main">
     <div class="wrapper">
       <div class="page">
@@ -20,7 +20,7 @@
         </div>
       </div>
     </div>
-    <?php require APP_ROOT.'/views/'.APP_THEME.'/foot.phtml';?>
+    <?php require __DIR__.'/../foot.phtml';?>
   </main>
 </div>
-<?php require APP_ROOT.'/views/'.APP_THEME.'/bottom.phtml';?>
+<?php require __DIR__.'/../bottom.phtml';?>

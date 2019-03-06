@@ -9,7 +9,7 @@ class Module extends Cache
 
     public function __construct($module)
     {
-        require APP_ROOT.'/hooks/'.$module.'/'.$module.'.php';
+        require APP_CONFIG['application']['directory'].'/hooks/'.$module.'/'.$module.'.php';
         $this->module = new $module;
     }
 }

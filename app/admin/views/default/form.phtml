@@ -94,7 +94,7 @@ echo $field['title'];?></div>
 if ($input['type'] === 'hidden') {?> hide<?php }?>">
 <?php
 if ($input['type'] === 'hidden') {
-    require APP_ROOT.'/views/'.APP_THEME.'/form/hidden.phtml';
+    require __DIR__.'/form/hidden.phtml';
 } else {
     if (isset($input['label'])) {?>
         <label class="control-label col-lg-3"><?php
@@ -114,7 +114,7 @@ if ($input['type'] === 'hidden') {
 ?>
 <div class="col-lg-<?php echo $input['col'] ?? 9;if (!isset($input['label'])) {?> col-lg-offset-3<?php }?>">
 <?php
-require APP_ROOT.'/views/'.APP_THEME.'/form/'.$input['type'].'.phtml';
+require __DIR__.'/form/'.$input['type'].'.phtml';
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ ALL INPUT COMMON
 if (isset($input['desc'])) {?>

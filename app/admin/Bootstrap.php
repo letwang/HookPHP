@@ -13,7 +13,7 @@ class Bootstrap extends Bootstrap_Abstract
     }
 }
 
-function l(string $key, ?int $langId = null)
+function l(string $key, int $langId = null): string
 {
-    return Yaconf::get(APP_NAME.'_lang_'.($langId ?? $_SESSION[APP_NAME]['lang_id'] ?? APP_LANG).'.'.$key, $key);
+    return Yaconf::get(APP_NAME.'_lang_'.APP_LANG_NAME.'.'.$key, $key);
 }
