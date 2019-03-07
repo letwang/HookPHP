@@ -13,18 +13,18 @@ class GroupModel extends \AbstractModel
         'name' => array('require' => true, 'validate' => 'isGenericName'),
     ];
 
-    public function __construct(int $id = null, int $langId = null)
+    public function __construct(int $id = null)
     {
-        parent::__construct($id, $langId);
+        parent::__construct($id);
     }
 
     public function get(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Group::GET_ALL, [$_SESSION[APP_NAME]['app_id'], $_SESSION[APP_NAME]['lang_id']]);
+        return PdoConnect::getInstance()->fetchAll(Group::GET_ALL, [$this->appId, $this->langId]);
     }
 
     public function getSelect(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Group::GET_SHOW_SELECT, [$_SESSION[APP_NAME]['app_id'], $_SESSION[APP_NAME]['lang_id']], \PDO::FETCH_COLUMN | \PDO::FETCH_UNIQUE);
+        return PdoConnect::getInstance()->fetchAll(Group::GET_SHOW_SELECT, [$this->appId, $this->langId], \PDO::FETCH_COLUMN | \PDO::FETCH_UNIQUE);
     }
 }

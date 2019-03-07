@@ -29,8 +29,7 @@ class LoginController extends Base\ViewController
                 'time' => time()
             ];
 
-            $_SESSION = [];
-            $_SESSION[APP_NAME] = $login;
+            $this->session = $login;
             session_regenerate_id(true);
 
             Header::redirect($referer);
@@ -42,7 +41,7 @@ class LoginController extends Base\ViewController
 
     public function outAction()
     {
-        unset($_SESSION[APP_NAME]);
+        unset($this->session);
         session_regenerate_id(true);
         Header::redirect('/');
         return true;

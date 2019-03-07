@@ -16,18 +16,18 @@ class HookModel extends \AbstractModel
         'description' => array('require' => true),
     ];
 
-    public function __construct(int $id = null, int $langId = null)
+    public function __construct(int $id = null)
     {
-        parent::__construct($id, $langId);
+        parent::__construct($id);
     }
 
     public function get(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Hook::GET_ALL, [$_SESSION[APP_NAME]['lang_id']]);
+        return PdoConnect::getInstance()->fetchAll(Hook::GET_ALL, [$this->langId]);
     }
 
     public function getSelect(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Hook::GET_SHOW_SELECT, [$_SESSION[APP_NAME]['app_id'], $_SESSION[APP_NAME]['lang_id']], \PDO::FETCH_COLUMN | \PDO::FETCH_UNIQUE);
+        return PdoConnect::getInstance()->fetchAll(Hook::GET_SHOW_SELECT, [$this->appId, $this->langId], \PDO::FETCH_COLUMN | \PDO::FETCH_UNIQUE);
     }
 }

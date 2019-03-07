@@ -11,7 +11,10 @@ abstract class AbstractModel
     public static $foreign;
 
     public $id;
+    public $appId;
     public $langId;
+
+    public $session;
 
     public $fields = [];
     public $ignore = [];
@@ -22,10 +25,13 @@ abstract class AbstractModel
     const DATE = 4;
     const NOTHING = 6;
 
-    public function __construct(int $id = null, int $langId = null)
+    public function __construct(int $id = null)
     {
         $this->id = $id;
-        $this->langId = $langId;
+        $this->appId = \AppModel::getIdFromName(APP_NAME);
+        $this->langId = \LangModel::getIdFromName(APP_LANG_NAME);
+
+        $this->session = $_SESSION[APP_NAME];
 
         $this->ignore = ['id' => true, 'app_id' => true, 'date_add' => true, 'date_upd' => true, 'lang_id' => true, static::$foreign => true];
     }
@@ -57,7 +63,7 @@ abstract class AbstractModel
             PdoConnect::getInstance()->pdo->beginTransaction();
 
             $parameter = $this->getFields();
-            $parameter += isset(APP_TABLE[static::$table]['app_id']) ? ['app_id' => $_SESSION[APP_NAME]['app_id']]: [];
+            $parameter += isset(APP_TABLE[static::$table]['app_id']) ? ['app_id' => $this->appId]: [];
             $parameter += isset(APP_TABLE[static::$table]['date_add']) ? ['date_add' => time()] : [];
 
             $orm = Orm::getInstance(static::$table);
@@ -181,7 +187,7 @@ abstract class AbstractModel
 
         if (!empty($this->fields[$field]['require']) && Validate::isEmpty($value)) {
             if ($langId) {
-                $value = $this->{$field}[$langId] = $this->{$field}[APP_LANG_ID] ?: $desc['default'];
+                $value = $this->{$field}[$langId] = $this->{$field}[$this->langId] ?: $desc['default'];
             } else {
                 $value = $this->$field = $desc['default'];
             }

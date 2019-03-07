@@ -24,7 +24,7 @@ abstract class ViewController extends InitController
             ]
         );
 
-        if (isset($_SESSION[APP_NAME])) {
+        if (isset($this->session)) {
             $this->_view->assign(
                 [
                     'menus' => \MenuModel::getMenu()

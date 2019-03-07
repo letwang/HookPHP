@@ -13,18 +13,23 @@ class AppModel extends AbstractModel
         'description' => array('require' => true),
     ];
 
-    public function __construct(int $id = null, int $langId = null)
+    public function __construct(int $id = null)
     {
-        parent::__construct($id, $langId);
+        parent::__construct($id);
     }
 
     public function get(): array
     {
-        return PdoConnect::getInstance()->fetchAll(App::GET_All, [$_SESSION[APP_NAME]['lang_id']]);
+        return PdoConnect::getInstance()->fetchAll(App::GET_All, [$this->langId]);
     }
 
     public static function getIdFromName(string $name = null): int
     {
         return array_column(parent::getData(), 'id', 'key')[$name];
+    }
+
+    public static function getNameFromId(int $id = null): string
+    {
+        return array_column(parent::getData(), 'key', 'id')[$id];
     }
 }

@@ -21,7 +21,7 @@ class Bootstrap extends Bootstrap_Abstract
     }
 }
 
-function l(string $key, int $langId = null): string
+function l(string $key): string
 {
     return Yaconf::get(APP_NAME.'_lang_'.APP_LANG_NAME.'.'.$key, $key);
 }

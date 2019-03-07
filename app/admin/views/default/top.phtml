@@ -1,6 +1,6 @@
 <?php echo \Hook\Hook\Hook::run('displayTop');?>
 <!DOCTYPE html>
-<html lang="<?php echo $this->languages[$_SESSION[APP_NAME]['lang_id'] ?? APP_LANG_ID]['lang'];?>">
+<html lang="<?php echo $this->languages[$this->langId]['lang'];?>">
 <head>
 <meta charset="utf-8" />
 <meta name="theme-color" content="#3063A0">

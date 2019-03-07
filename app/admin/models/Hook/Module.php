@@ -12,13 +12,13 @@ class ModuleModel extends \AbstractModel
         'position' => array('type' => parent::INT, 'require' => true, 'validate' => 'isInt'),
     ];
 
-    public function __construct(int $id = null, int $langId = null)
+    public function __construct(int $id = null)
     {
-        parent::__construct($id, $langId);
+        parent::__construct($id);
     }
 
     public function getSelect(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Module::GET_SHOW_SELECT, [$_SESSION[APP_NAME]['app_id']], \PDO::FETCH_COLUMN | \PDO::FETCH_UNIQUE);
+        return PdoConnect::getInstance()->fetchAll(Module::GET_SHOW_SELECT, [$this->appId], \PDO::FETCH_COLUMN | \PDO::FETCH_UNIQUE);
     }
 }

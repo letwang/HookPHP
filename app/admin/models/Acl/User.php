@@ -7,9 +7,9 @@ class UserModel extends \AbstractModel
 {
     public static $table = 'hp_acl_user_role';
 
-    public function __construct(int $id = null, int $langId = null)
+    public function __construct(int $id = null)
     {
-        parent::__construct($id, $langId);
+        parent::__construct($id);
     }
 
     public function getSelect(): array

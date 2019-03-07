@@ -10,9 +10,9 @@ class ConfigModel extends AbstractModel
         'value' => array('require' => true),
     ];
 
-    public function __construct(int $id = null, int $langId = null)
+    public function __construct(int $id = null)
     {
-        parent::__construct($id, $langId);
+        parent::__construct($id);
     }
 
     public function get(): array
