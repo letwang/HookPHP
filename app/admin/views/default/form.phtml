@@ -24,7 +24,7 @@ $langCount = count($this->languages);
 ?>" novalidate>
 <fieldset>
 <?php if (isset($this->fields['title'])) {?><legend><?php echo $this->fields['title'];?></legend><?php }?>
-<input type="hidden" name="token" value="<?php echo $this->session['security']['token'];?>" />
+<input type="hidden" name="token" value="<?php echo $_SESSION[APP_NAME]['security']['token'];?>" />
 <?php foreach($this->fields['data'] ?? [] as $index => $fieldSet) {?>
 <div class="panel" id="fieldSet_<?php echo $index;?>_0_0">
 <?php foreach($fieldSet['form'] as $key => $field) {
@@ -165,7 +165,7 @@ if (isset($fieldSet['form']['submit']) || isset($fieldSet['form']['buttons'])) {
 ?></button>
 <?php
     }
-    if (!empty($this->showCancelButton)) {
+    if (!empty($this->showCancel)) {
 ?><a href="javascript:window.history.back();" id="<?php
         echo $this->controller.'_cancel';
     ?>" class="btn btn-danger"><?php echo l('app.cancel');?></a>

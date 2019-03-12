@@ -18,7 +18,7 @@ if (empty($input['lang'])) {
     <input type="text" id="<?php echo ($input['id'] ?? $input['name']);
     ?>" name="<?php echo $input['name'];
     ?>" class="form-control <?php echo $input['class'] ?? '';
-    ?>" value="<?php echo $this->fieldsValue[$input['name']] ?? '';?>" <?php
+    ?>" value="<?php echo $this->value[$input['name']] ?? '';?>" <?php
     if (isset($input['size'])) {?> size="<?php echo $input['size'];?>"<?php }
     if (isset($input['maxchar'])) {?> maxlength="<?php echo $input['maxchar'];?>"<?php }
     if (!empty($input['readonly'])) {?> readonly="readonly"<?php }
@@ -44,7 +44,7 @@ if (empty($input['lang'])) {
     foreach($this->languages as $language) {
         if ($langCount > 1) {?>
     <div class="row lang lang-<?php echo $language['id'];
-    ?>" <?php if ((int) $language['id'] !== $this->langId) {?>style="display:none"<?php }?>>
+    ?>" <?php if ((int) $language['id'] !== APP_LANG_ID) {?>style="display:none"<?php }?>>
         <div class="col-lg-9"><?php
         }
         if (isset($input['maxchar']) || isset($input['prefix']) || isset($input['suffix'])) {?>
@@ -65,7 +65,7 @@ if (empty($input['lang'])) {
             <input type="text" id="<?php echo ($input['id'] ?? $input['name']).'_'.$language['id'];
         ?>" name="<?php echo $input['name'].'_'.$language['id'];
         ?>" class="form-control <?php echo $input['class'] ?? '';
-        ?>" value="<?php echo $this->fieldsValue[$input['name']][$language['id']] ?? '';?>" <?php
+        ?>" value="<?php echo $this->value[$input['name']][$language['id']] ?? '';?>" <?php
         if (isset($input['size'])) {?> size="<?php echo $input['size'];?>"<?php }
         if (isset($input['maxchar'])) {?> maxlength="<?php echo $input['maxchar'];?>"<?php }
         if (!empty($input['readonly'])) {?> readonly="readonly"<?php }

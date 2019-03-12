@@ -1,8 +1,9 @@
 <?php
-use Hook\Db\PdoConnect;
+use Hook\Db\{PdoConnect, Orm};
 use Hook\Sql\App;
+use Hook\Cache\Cache;
 
-class AppModel extends AbstractModel
+class AppModel extends Base\AbstractModel
 {
     public static $table = 'hp_app';
     public static $foreign = 'app_id';
@@ -13,23 +14,23 @@ class AppModel extends AbstractModel
         'description' => array('require' => true),
     ];
 
-    public function __construct(int $id = null)
-    {
-        parent::__construct($id);
-    }
-
     public function get(): array
     {
-        return PdoConnect::getInstance()->fetchAll(App::GET_All, [$this->langId]);
+        return PdoConnect::getInstance()->fetchAll(App::GET_All, [APP_LANG_ID]);
     }
 
-    public static function getIdFromName(string $name = null): int
+    public static function getIds(): array
     {
-        return array_column(parent::getData(), 'id', 'key')[$name];
+        $data = &Cache::static(__METHOD__);
+        if (isset($data)) {
+            return $data;
+        }
+        return $data = Orm::getInstance(static::$table)->select(['key', 'id'])->where(['status' => 1])->fetchAll(PDO::FETCH_KEY_PAIR);
     }
 
-    public static function getNameFromId(int $id = null): string
+    public static function getDefaultId(string $name = null): int
     {
-        return array_column(parent::getData(), 'key', 'id')[$id];
+        $data = self::getIds();
+        return $data[$name] ?? $_SESSION[APP_NAME]['app_id'] ?? $data[APP_NAME];
     }
 }

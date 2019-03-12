@@ -3,7 +3,7 @@ namespace Hook;
 use Hook\Db\PdoConnect;
 use Hook\Sql\Hook\Hook;
 
-class HookModel extends \AbstractModel
+class HookModel extends \Base\AbstractModel
 {
     public static $table = 'hp_hook';
     public static $foreign = 'hook_id';
@@ -16,18 +16,13 @@ class HookModel extends \AbstractModel
         'description' => array('require' => true),
     ];
 
-    public function __construct(int $id = null)
-    {
-        parent::__construct($id);
-    }
-
     public function get(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Hook::GET_ALL, [$this->langId]);
+        return PdoConnect::getInstance()->fetchAll(Hook::GET_ALL, [APP_LANG_ID]);
     }
 
     public function getSelect(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Hook::GET_SHOW_SELECT, [$this->appId, $this->langId], \PDO::FETCH_COLUMN | \PDO::FETCH_UNIQUE);
+        return PdoConnect::getInstance()->fetchAll(Hook::GET_SHOW_SELECT, [APP_ID, APP_LANG_ID], \PDO::FETCH_KEY_PAIR);
     }
 }

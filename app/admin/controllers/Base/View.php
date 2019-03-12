@@ -1,30 +1,33 @@
 <?php
 namespace Base;
-abstract class ViewController extends InitController
+abstract class ViewController extends AbstractController
 {
-    protected $fieldsList = [];
-    protected $fieldsForm = [];
+    protected $list = [];
+    protected $form = [];
+    protected $ignore = [];
 
     protected function init()
     {
         parent::init();
-        //全局模板路径
+        $this->ignore = $this->model->ignore;
         $this->_view->setScriptPath(APP_CONFIG['application']['directory'].($this->_request->module === 'Index' ? '' : '/modules/'.$this->_request->module).'/views/'.APP_THEME_NAME);
-        //全局META SEO
-        $this->_view->assign(['title' => l('app.title'), 'keywords' => l('app.keywords'), 'description' => l('app.description')]);
-        //初始化模板变量
         $this->_view->assign(
             [
+                'title' => l('app.title'),
+                'keywords' => l('app.keywords'),
+                'description' => l('app.description'),
+
                 'id' => $this->id,
+                'languages' => $this->languages,
+
                 'module' => $this->_request->module,
                 'controller' => strtolower($this->_request->controller),
                 'action' => $this->_request->action,
                 'uri' => $this->_request->getRequestUri(),
-                'languages' => $this->languages,
             ]
         );
 
-        if (isset($this->session)) {
+        if (isset($_SESSION[APP_NAME])) {
             $this->_view->assign(
                 [
                     'menus' => \MenuModel::getMenu()
@@ -36,66 +39,67 @@ abstract class ViewController extends InitController
     protected function postAction()
     {
         $this->renderForm();
-        $this->_view->assign($this->fieldsForm);
+        $this->_view->assign($this->form);
     }
 
     protected function putAction()
     {
         $this->renderForm();
-        $this->setFieldsValue();
-        $this->_view->assign($this->fieldsForm);
+        $this->setValue();
+        $this->_view->assign($this->form);
     }
 
     protected function getAction()
     {
         $this->renderList();
-        $this->_view->assign(['fieldsList' => $this->fieldsList]);
+        $this->_view->assign(['list' => $this->list]);
     }
 
-    protected function setFieldsValue(): void
+    protected function setValue(): void
     {
-        foreach ($this->fieldsForm['fields']['data'][0]['form']['input'] as $field => $input) {
+        foreach ($this->form['fields']['data'][0]['form']['input'] as $field => $input) {
             if ($input['lang']) {
-                foreach (array_keys($this->languages) as $langId) {
-                    $this->fieldsForm['fieldsValue'][$field][$langId] = $this->model->getData(null, $this->id, $langId)[$field];
+                foreach ($this->languages as $language) {
+                    $this->form['value'][$field][$language['id']] = $this->model->getData($this->model::$table.'_lang', $this->id, $language['id'])[$field];
                 }
             } else {
-                $this->fieldsForm['fieldsValue'][$field] = $this->model->getData(null, $this->id)[$field];
+                $this->form['value'][$field] = $this->model->getData(null, $this->id)[$field];
             }
         }
     }
 
-    protected function getDefinition(array $ignore = []): array
+    protected function getDefinition(): array
     {
+        if (!$this->model::$table) {
+            return [];
+        }
+
         $data = APP_TABLE[$this->model::$table];
         foreach (APP_TABLE[$this->model::$table.'_lang'] ?? [] as $field => $desc) {
             $data[$field] = $desc + ['lang' => true];
         }
-        return array_diff_key($data, $ignore);
+        return array_diff_key($data, $this->ignore);
     }
 
     protected function renderList(): void
     {
         $white = ['status' => true, 'date_add' => true, 'date_upd' => true];
-        $this->fieldsList['id'] = ['data' => 'id', 'className' => 'col-checker align-middle', 'orderable' => false, 'searchable' => false];
-        if ($this->model) {
-            $ignore = $this->model->ignore;
-            unset($ignore['date_add'], $ignore['date_upd']);
-            foreach (array_keys($this->getDefinition($ignore)) as $field) {
-                $this->fieldsList[$field] = [
-                    'data' => $field,
-                    'className' => 'align-middle',
-                    'title' => l((isset($white[$field]) ? 'app' : $this->_request->controller).'.'.$field)
-                ];
-            }
+        $this->list['id'] = ['data' => 'id', 'className' => 'col-checker align-middle', 'orderable' => false, 'searchable' => false];
+        unset($this->ignore['date_add'], $this->ignore['date_upd']);
+        foreach (array_keys($this->getDefinition()) as $field) {
+            $this->list[$field] = [
+                'data' => $field,
+                'className' => 'align-middle',
+                'title' => l((isset($white[$field]) ? 'app' : $this->_request->controller).'.'.$field)
+            ];
         }
-        $this->fieldsList['idx'] = ['className' => 'align-middle text-right'] + $this->fieldsList['id'];
+        $this->list['idx'] = ['className' => 'align-middle text-right'] + $this->list['id'];
     }
 
     protected function renderForm(): void
     {
         $input = [];
-        foreach ($this->getDefinition($this->model->ignore) as $field => $desc) {
+        foreach ($this->getDefinition() as $field => $desc) {
             $input[$field] = [
                 'name' => $field,
                 'label' => l($this->_request->controller.'.'.$field),
@@ -118,7 +122,7 @@ abstract class ViewController extends InitController
                     break;
             }
         }
-        $this->fieldsForm = [
+        $this->form = [
             'fields' => [
                 'title' => l($this->_request->controller.'.'.$this->_request->action),
                 'data' => [
@@ -141,8 +145,8 @@ abstract class ViewController extends InitController
                     ]
                 ]
             ],
-            'fieldsValue' => [],
-            'showCancelButton' => true
+            'value' => [],
+            'showCancel' => true
         ];
     }
 }

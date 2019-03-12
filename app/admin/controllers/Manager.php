@@ -1,8 +1,9 @@
 <?php
 class ManagerController extends Base\ViewController
 {
-    public function init()
+    protected function renderList(): void
     {
-        parent::init();
+        $this->ignore += ['pass' => true];
+        parent::renderList();
     }
 }

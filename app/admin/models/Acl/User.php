@@ -1,19 +1,13 @@
 <?php
 namespace Acl;
-use Hook\Db\PdoConnect;
-use Hook\Sql\Acl\User;
+use Hook\Db\Orm;
 
-class UserModel extends \AbstractModel
+class UserModel extends \Base\AbstractModel
 {
     public static $table = 'hp_acl_user_role';
 
-    public function __construct(int $id = null)
-    {
-        parent::__construct($id);
-    }
-
     public function getSelect(): array
     {
-        return PdoConnect::getInstance()->fetchAll(User::GET_SHOW_SELECT, [], \PDO::FETCH_COLUMN | \PDO::FETCH_UNIQUE);
+        return Orm::getInstance('hp_user')->select(['id', 'user'])->where(['status' => 1])->fetchAll(\PDO::FETCH_KEY_PAIR);
     }
 }

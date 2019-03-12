@@ -267,8 +267,8 @@
                         ]
                     ]
                 ],
-                'fieldsValue' => [],
-                'showCancelButton' => true
+                'value' => [],
+                'showCancel' => true
             ]
         );
 ```

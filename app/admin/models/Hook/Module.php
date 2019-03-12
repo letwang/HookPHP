@@ -1,9 +1,8 @@
 <?php
 namespace Hook;
-use Hook\Db\PdoConnect;
-use Hook\Sql\Hook\Module;
+use Hook\Db\Orm;
 
-class ModuleModel extends \AbstractModel
+class ModuleModel extends \Base\AbstractModel
 {
     public static $table = 'hp_hook_module';
     public $fields = [
@@ -12,13 +11,8 @@ class ModuleModel extends \AbstractModel
         'position' => array('type' => parent::INT, 'require' => true, 'validate' => 'isInt'),
     ];
 
-    public function __construct(int $id = null)
-    {
-        parent::__construct($id);
-    }
-
     public function getSelect(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Module::GET_SHOW_SELECT, [$this->appId], \PDO::FETCH_COLUMN | \PDO::FETCH_UNIQUE);
+        return Orm::getInstance('hp_module')->select(['id', 'key'])->where(['app_id' => APP_ID, 'status' => 1])->fetchAll(\PDO::FETCH_KEY_PAIR);
     }
 }

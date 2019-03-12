@@ -1,8 +1,7 @@
 <?php
-use Hook\Db\PdoConnect;
-use Hook\Sql\Manager;
+use Hook\Db\Orm;
 
-class ManagerModel extends \AbstractModel
+class ManagerModel extends Base\AbstractModel
 {
     public static $table = 'hp_manager';
     public $fields = [
@@ -15,13 +14,8 @@ class ManagerModel extends \AbstractModel
         'firstname' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isGenericName'),
     ];
 
-    public function __construct(int $id = null)
-    {
-        parent::__construct($id);
-    }
-
     public function get(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Manager::GET_ALL);
+        return Orm::getInstance(static::$table)->select(['id', 'status', 'date_add', 'date_upd', 'user', 'email', 'phone', 'lastname', 'firstname'])->fetchAll();
     }
 }

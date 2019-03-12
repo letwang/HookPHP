@@ -1,8 +1,7 @@
 <?php
-use Hook\Db\{PdoConnect};
-use Hook\Sql\Config;
+use Hook\Db\{Orm};
 
-class ConfigModel extends AbstractModel
+class ConfigModel extends Base\AbstractModel
 {
     public static $table = 'hp_config';
     public $fields = [
@@ -10,25 +9,13 @@ class ConfigModel extends AbstractModel
         'value' => array('require' => true),
     ];
 
-    public function __construct(int $id = null)
-    {
-        parent::__construct($id);
-    }
-
     public function get(): array
     {
-        return PdoConnect::getInstance()->fetchAll(
-            Config::GET_All,
-            [1]
-        );
+        return Orm::getInstance(static::$table)->select(['id', 'status', 'date_add', 'date_upd', 'key', 'value'])->where(['app_id' => APP_ID])->fetchAll();
     }
 
     public static function getDefined(): array
     {
-        return PdoConnect::getInstance()->fetchAll(
-            Config::GET_DEFINED,
-            [1],
-            PDO::FETCH_COLUMN | PDO::FETCH_UNIQUE
-        );
+        return Orm::getInstance(static::$table)->select(['key', 'value'])->where(['app_id' => APP_ID, 'status' => 1])->fetchAll(PDO::FETCH_KEY_PAIR);
     }
 }

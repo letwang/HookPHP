@@ -1,8 +1,9 @@
 <?php
 class User_UserController extends Base\ViewController
 {
-    public function init()
+    protected function renderList(): void
     {
-        parent::init();
+        $this->ignore += ['pass' => true];
+        parent::renderList();
     }
 }

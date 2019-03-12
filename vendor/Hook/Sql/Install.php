@@ -25,7 +25,7 @@ CREATE TABLE `hp_acl_group_lang` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `group_id` (`group_id`,`lang_id`) USING BTREE,
   KEY `lang_id` (`lang_id`),
-  CONSTRAINT `FK_000009` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `FK_000009` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang_i18n` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `FK_000012` FOREIGN KEY (`group_id`) REFERENCES `hp_acl_group` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -68,7 +68,7 @@ CREATE TABLE `hp_acl_resource_lang` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `resource_id` (`resource_id`,`lang_id`),
   KEY `lang_id` (`lang_id`),
-  CONSTRAINT `FK_000010` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `FK_000010` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang_i18n` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `FK_000013` FOREIGN KEY (`resource_id`) REFERENCES `hp_acl_resource` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -93,7 +93,7 @@ CREATE TABLE `hp_acl_role_lang` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `role_id` (`role_id`,`lang_id`),
   KEY `lang_id` (`lang_id`),
-  CONSTRAINT `FK_000011` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `FK_000011` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang_i18n` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `FK_000014` FOREIGN KEY (`role_id`) REFERENCES `hp_acl_role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -160,7 +160,7 @@ CREATE TABLE `hp_app_lang` (
   KEY `FK_000031` (`app_id`),
   KEY `FK_000035` (`lang_id`),
   CONSTRAINT `FK_000031` FOREIGN KEY (`app_id`) REFERENCES `hp_app` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_000035` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `FK_000035` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang_i18n` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `hp_app_lang` VALUES (1,1,1,'平台中控系统，统一管理各大平台',''),(2,1,2,'ERP系统',''),(3,1,3,'PAAS系统',''),(4,2,1,'Platform central control system',''),(5,2,2,'ERP system',''),(6,2,3,'PAAS system','');
@@ -204,7 +204,7 @@ CREATE TABLE `hp_hook_lang` (
   UNIQUE KEY `hook_id` (`hook_id`,`lang_id`),
   KEY `lang_id` (`lang_id`),
   CONSTRAINT `FK_000015` FOREIGN KEY (`hook_id`) REFERENCES `hp_hook` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_000016` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `FK_000016` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang_i18n` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `hp_hook_lang` VALUES (1,1,1,'顶部钩子','所有顶部的钩子按顺序依次显示在这里。'),(2,1,2,'头部钩子','所有头部的钩子按顺序依次显示在这里。'),(3,1,3,'尾部钩子','所有尾部的钩子按顺序依次显示在这里。'),(4,2,1,'Top hook','All the top hooks are shown here in order.'),(5,2,2,'Head hook','The hooks of all the heads are shown here in order.'),(6,2,3,'Tail hook','All tail hooks are shown here in order.');
@@ -223,7 +223,7 @@ CREATE TABLE `hp_hook_module` (
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `hp_hook_module` VALUES (1,1493439330,1493439330,0,1,1),(2,1493439330,1493439330,0,2,2),(3,1493439330,1493439330,2,3,3),(4,1493439330,1493439330,0,3,1),(5,1493439330,1493439330,1,3,2);
-CREATE TABLE `hp_lang` (
+CREATE TABLE `hp_lang_i18n` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `date_add` int(10) unsigned NOT NULL,
@@ -234,7 +234,7 @@ CREATE TABLE `hp_lang` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `hp_lang` VALUES (1,1,1493439330,1493439330,'cn','zh-cn','简体中文 (简体中文)'),(2,1,1493439330,1493439330,'en','en-us','English (English)');
+INSERT INTO `hp_lang_i18n` VALUES (1,1,1493439330,1493439330,'cn','zh-cn','简体中文 (简体中文)'),(2,1,1493439330,1493439330,'en','en-us','English (English)');
 CREATE TABLE `hp_manager` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `app_id` int(10) unsigned NOT NULL,
@@ -251,7 +251,7 @@ CREATE TABLE `hp_manager` (
   PRIMARY KEY (`id`),
   KEY `lang_id` (`lang_id`) USING BTREE,
   KEY `FK_000038` (`app_id`),
-  CONSTRAINT `FK_000034` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `FK_000034` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang_i18n` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `FK_000038` FOREIGN KEY (`app_id`) REFERENCES `hp_app` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -283,7 +283,7 @@ CREATE TABLE `hp_menu_lang` (
   KEY `FK_000019` (`menu_id`,`lang_id`) USING BTREE,
   KEY `FK_000020` (`lang_id`) USING BTREE,
   CONSTRAINT `FK_000019` FOREIGN KEY (`menu_id`) REFERENCES `hp_menu` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_000020` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `FK_000020` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang_i18n` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `hp_menu_lang` VALUES (1,1,1,'用户管理'),(2,1,2,'用户'),(3,1,3,'权限管理'),(4,1,4,'权限'),(5,1,5,'资源'),(6,1,6,'角色'),(7,1,7,'用户'),(8,1,8,'分组'),(9,1,9,'配置管理'),(10,1,10,'配置'),(11,1,11,'翻译管理'),(12,1,12,'翻译'),(13,1,13,'超管管理'),(14,1,14,'超级管理员'),(15,1,15,'菜单管理'),(16,1,16,'菜单'),(17,1,17,'语言管理'),(18,1,18,'语言'),(19,1,19,'模块管理'),(20,1,20,'钩子'),(21,1,21,'模块'),(22,1,22,'模板管理'),(23,1,23,'模板'),(24,1,24,'平台管理'),(25,1,25,'平台'),(26,2,1,'User Management'),(27,2,2,'User'),(28,2,3,'Permission management'),(29,2,4,'Permission'),(30,2,5,'Resource'),(31,2,6,'Character'),(32,2,7,'user'),(33,2,8,'Grouping'),(34,2,9,'Configuration management'),(35,2,10,'Configuration'),(36,2,11,'Translation management'),(37,2,12,'Translation'),(38,2,13,'Super management'),(39,2,14,'Super administrator'),(40,2,15,'Menu management'),(41,2,16,'Menu'),(42,2,17,'Language management'),(43,2,18,'Language'),(44,2,19,'Module management'),(45,2,20,'hook'),(46,2,21,'Module'),(47,2,22,'Template management'),(48,2,23,'Template'),(49,2,24,'Platform management'),(50,2,25,'Platform');
@@ -349,7 +349,7 @@ CREATE TABLE `hp_user` (
   PRIMARY KEY (`id`),
   KEY `lang_id` (`lang_id`) USING BTREE,
   KEY `FK_000037` (`app_id`),
-  CONSTRAINT `FK_000021` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `FK_000021` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang_i18n` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `FK_000037` FOREIGN KEY (`app_id`) REFERENCES `hp_app` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 

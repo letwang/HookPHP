@@ -3,7 +3,7 @@ namespace Acl;
 use Hook\Db\PdoConnect;
 use Hook\Sql\Acl\Resource;
 
-class ResourceModel extends \AbstractModel
+class ResourceModel extends \Base\AbstractModel
 {
     public static $table = 'hp_acl_resource';
     public static $foreign = 'resource_id';
@@ -17,18 +17,13 @@ class ResourceModel extends \AbstractModel
         'name' => array('require' => true, 'validate' => 'isGenericName'),
     ];
 
-    public function __construct(int $id = null)
-    {
-        parent::__construct($id);
-    }
-
     public function get(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Resource::GET_ALL, [$this->appId, $this->langId]);
+        return PdoConnect::getInstance()->fetchAll(Resource::GET_ALL, [APP_ID, APP_LANG_ID]);
     }
 
     public function getSelect(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Resource::GET_SHOW_SELECT, [$this->appId, $this->langId], \PDO::FETCH_COLUMN | \PDO::FETCH_UNIQUE);
+        return PdoConnect::getInstance()->fetchAll(Resource::GET_SHOW_SELECT, [APP_ID, APP_LANG_ID], \PDO::FETCH_KEY_PAIR);
     }
 }

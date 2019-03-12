@@ -23,7 +23,7 @@ $(function(){
                 type: 'DELETE',
                 dataType: 'json',
                 url: '/api<?php echo $this->uri;?>/v1/id/'+id,
-                data: {'token': '<?php echo $this->session['security']['token'];?>'},
+                data: {'token': '<?php echo $_SESSION[APP_NAME]['security']['token'];?>'},
                 success: function(data){
                     if (data.code === 10000) {
                         $('.modalDelete').modal('hide');

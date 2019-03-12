@@ -1,10 +1,9 @@
 <?php
 namespace User;
 
-use Hook\Db\PdoConnect;
-use Hook\Sql\User\User;
+use Hook\Db\Orm;
 
-class UserModel extends \AbstractModel
+class UserModel extends \Base\AbstractModel
 {
     public static $table = 'hp_user';
     public $fields = [
@@ -17,13 +16,8 @@ class UserModel extends \AbstractModel
         'firstname' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isGenericName'),
     ];
 
-    public function __construct(int $id = null)
-    {
-        parent::__construct($id);
-    }
-
     public function get(): array
     {
-        return PdoConnect::getInstance()->fetchAll(User::GET_ALL);
+        return Orm::getInstance(static::$table)->select(['id', 'status', 'date_add', 'date_upd', 'user', 'email', 'phone', 'lastname', 'firstname'])->fetchAll();
     }
 }

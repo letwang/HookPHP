@@ -1,9 +1,14 @@
 <?php
 use Hook\Http\Header, Hook\Crypt\PassWord;
-use Hook\Db\{PdoConnect, Orm};
 
 class LoginController extends Base\ViewController
 {
+    /**
+     * 
+     * @var \LoginModel
+     */
+    protected $model;
+
     public function getAction()
     {
         $this->_view->referer = $this->getRequest()->getParam('referer', '/');
@@ -16,10 +21,7 @@ class LoginController extends Base\ViewController
         $token = $this->getRequest()->getPost('token');
         $referer = $this->getRequest()->getPost('referer', '/');
         
-        $login = PdoConnect::getInstance()->fetch(
-            Hook\Sql\Login::GET_MANAGER,
-            [$user, $user, $user]
-        );
+        $login = $this->model->signIn($user);
         
         if ($login && PassWord::verify($user.$pass, $login['pass'])) {
             $login['security'] = [
@@ -29,7 +31,7 @@ class LoginController extends Base\ViewController
                 'time' => time()
             ];
 
-            $this->session = $login;
+            $_SESSION[APP_NAME] = $login;
             session_regenerate_id(true);
 
             Header::redirect($referer);
@@ -41,7 +43,7 @@ class LoginController extends Base\ViewController
 
     public function outAction()
     {
-        unset($this->session);
+        unset($_SESSION[APP_NAME]);
         session_regenerate_id(true);
         Header::redirect('/');
         return true;

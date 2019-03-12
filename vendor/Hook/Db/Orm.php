@@ -14,7 +14,7 @@ class Orm extends Cache
     private $expression = ['1', 'DISTINCT', 'DISTINCTROW', 'SQL_CALC_FOUND_ROWS'];
 
     /**
-     * Orm::getInstance('hp_lang')->exist()
+     * Orm::getInstance('hp_lang_i18n')->exist()
      * @param string $table
      */
     public function __construct(string $table)
@@ -320,7 +320,7 @@ class Orm extends Cache
         $data = $this->select(['id', '*'])->fetchAll(\PDO::FETCH_ASSOC | \PDO::FETCH_UNIQUE);
         $flag = explode('_', $this->table);
         $max = count($flag) - 1;
-        if ($max > 1 && $flag[$max] === 'lang') {
+        if ($flag[$max] === 'lang') {
             $temp = [];
             foreach ($data as &$v) {
                 $temp[$v[$flag[$max-1].'_id'].'_'.$v['lang_id']] = $v;

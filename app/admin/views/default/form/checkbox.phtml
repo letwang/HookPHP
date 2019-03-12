@@ -6,7 +6,7 @@ foreach($input['values'] as $value) {?>
         ?>" class="custom-control-input" id="<?php echo $input['name'].'_'.$value['value'];
         ?>" value="<?php echo $value['value'];
         ?>"<?php
-        if ($this->fieldsValue[$input['name']] ?? '' === $value['value']) {?> checked="checked"<?php }
+        if ($this->value[$input['name']] ?? '' === $value['value']) {?> checked="checked"<?php }
         if (!empty($value['disabled'])) {?> disabled="disabled"<?php }
         ?>/> <label class="custom-control-label" for="<?php
         echo $input['name'].'_'.$value['value'];?>"><?php

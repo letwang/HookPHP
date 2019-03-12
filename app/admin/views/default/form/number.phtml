@@ -4,7 +4,7 @@
 ?>" name="<?php echo $input['name'];
 ?>" class="form-control <?php echo $input['class'] ?? '';
 ?>" value="<?php
-echo $this->fieldsValue[$input['name']] ?? '';?>"<?php
+echo $this->value[$input['name']] ?? '';?>"<?php
 if (empty($input['autocomplete'])) {?> autocomplete="off"<?php }
 if (!empty($input['required'])) {?> required<?php }?> />
 </div>

@@ -18,5 +18,5 @@
         <?php require __DIR__.'/../foot.phtml';?>
     </main>
 </div>
-<script type="text/javascript">advanceDataTables.init('/api/<?php echo $this->controller;?>/v1/', [<?php echo join(',', array_map('json_encode', $this->fieldsList));?>]);</script>
+<script type="text/javascript">advanceDataTables.init('/api/<?php echo $this->controller;?>/v1/', [<?php echo join(',', array_map('json_encode', $this->list));?>]);</script>
 <?php require __DIR__.'/../bottom.phtml';?>

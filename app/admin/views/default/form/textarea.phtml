@@ -2,7 +2,7 @@
 foreach($this->languages as $language) {
         if ($langCount > 1) {?>
 <div class="form-group row lang lang-<?php echo $language['id'];?>"<?php
-        if ((int) $language['id'] !== $this->langId) {?> style="display:none;"<?php }?>>
+        if ((int) $language['id'] !== APP_LANG_ID) {?> style="display:none;"<?php }?>>
 <div class="col-lg-9">
 <?php
         }
@@ -22,7 +22,7 @@ foreach($this->languages as $language) {
         if (isset($input['cols'])) {?> cols="<?php echo $input['cols'];?>"<?php }
         if (isset($input['rows'])) {?> rows="<?php echo $input['rows'];?>"<?php }
         if (isset($input['maxchar'])) {?> maxlength="<?php echo $input['maxchar'];?>"<?php }?>><?php
-        echo $this->fieldsValue[$input['name']][$language['id']] ?? '';?></textarea>
+        echo $this->value[$input['name']][$language['id']] ?? '';?></textarea>
 <?php
         if (isset($input['maxchar'])) {
 ?>

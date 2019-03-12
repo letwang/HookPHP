@@ -5,13 +5,13 @@
 <option value="">-</option>
 <?php if ($key === 'month') {
           foreach($select as $k => $v) {
-?><option value="<?php echo $k;?>"<?php if ($this->fieldsValue[$key] ?? '' === $k) {?> selected="selected"<?php }
+?><option value="<?php echo $k;?>"<?php if ($this->value[$key] ?? '' === $k) {?> selected="selected"<?php }
 ?>><?php
               echo $v;?></option><?php
           }
       } else {
           foreach($select as $v) {
-?><option value="<?php echo $v;?>"<?php if ($this->fieldsValue[$key] ?? '' === $v) {?> selected="selected"<?php }
+?><option value="<?php echo $v;?>"<?php if ($this->value[$key] ?? '' === $v) {?> selected="selected"<?php }
 ?>><?php
               echo $v;?></option><?php
           }
@@ -22,7 +22,7 @@
 <select name="day" class="custom-select <?php echo $input['class'] ?? '';?>">
 <option value="">-</option>
 <?php foreach(range(1, 28) as $v) {
-?><option value="<?php echo $v;?>"<?php if ($this->fieldsValue[$key] ?? '' === $v) {?> selected="selected"<?php }
+?><option value="<?php echo $v;?>"<?php if ($this->value[$key] ?? '' === $v) {?> selected="selected"<?php }
 ?>><?php echo $v;?></option><?php }?>
 </select>
 </div>

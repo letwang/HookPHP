@@ -2,7 +2,7 @@
 namespace Base;
 use Yaf\Dispatcher;
 
-abstract class ApiController extends InitController
+abstract class ApiController extends AbstractController
 {
     protected function init()
     {

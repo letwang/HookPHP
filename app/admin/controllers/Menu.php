@@ -7,15 +7,10 @@ class MenuController extends Base\ViewController
      */
     protected $model;
 
-    public function init()
-    {
-        parent::init();
-    }
-
     protected function renderForm(): void
     {
         parent::renderForm();
-        $this->fieldsForm['fields']['data'][0]['form']['input']['parent'] = [
+        $this->form['fields']['data'][0]['form']['input']['parent'] = [
             'type' => 'select',
             'name' => 'parent',
             'label' => l($this->_request->controller.'.parent'),

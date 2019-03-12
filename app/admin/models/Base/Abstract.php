@@ -1,20 +1,17 @@
 <?php
-use Hook\Db\{PdoConnect,RedisConnect,Orm};
+namespace Base;
+
+use Hook\Db\{PdoConnect, RedisConnect, Orm};
 use Hook\Cache\Cache;
 use Hook\Validate\Validate;
 use Hook\Tools\Tools;
-use Base\InitController;
 
-abstract class AbstractModel
+abstract class AbstractModel extends Cache
 {
     public static $table;
     public static $foreign;
 
     public $id;
-    public $appId;
-    public $langId;
-
-    public $session;
 
     public $fields = [];
     public $ignore = [];
@@ -28,20 +25,14 @@ abstract class AbstractModel
     public function __construct(int $id = null)
     {
         $this->id = $id;
-        $this->appId = \AppModel::getIdFromName(APP_NAME);
-        $this->langId = \LangModel::getIdFromName(APP_LANG_NAME);
-
-        $this->session = $_SESSION[APP_NAME];
-
         $this->ignore = ['id' => true, 'app_id' => true, 'date_add' => true, 'date_upd' => true, 'lang_id' => true, static::$foreign => true];
     }
 
     public static function getData(string $table = null, int $id = null, int $langId = null)
     {
         $table = $table ?? static::$table;
-        if ($langId) {
-            $table .= '_lang';
-            $id .= '_'.$langId;
+        if (substr($table, -4) === 'lang') {
+            $id = $id ? ($id.'_'.($langId ?? APP_LANG_ID)) : $id;
         }
 
         $data = &Cache::static(__METHOD__);
@@ -63,7 +54,7 @@ abstract class AbstractModel
             PdoConnect::getInstance()->pdo->beginTransaction();
 
             $parameter = $this->getFields();
-            $parameter += isset(APP_TABLE[static::$table]['app_id']) ? ['app_id' => $this->appId]: [];
+            $parameter += isset(APP_TABLE[static::$table]['app_id']) ? ['app_id' => APP_ID]: [];
             $parameter += isset(APP_TABLE[static::$table]['date_add']) ? ['date_add' => time()] : [];
 
             $orm = Orm::getInstance(static::$table);
@@ -79,9 +70,9 @@ abstract class AbstractModel
             }
 
             return PdoConnect::getInstance()->pdo->commit() && $this->afterPost($result['lastInsertId']) ? $result['lastInsertId']: 0;
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             PdoConnect::getInstance()->pdo->rollBack();
-            InitController::send([], 100003, $e->getMessage(), 500);
+            AbstractController::send([], 100003, $e->getMessage(), 500);
         }
     }
 
@@ -94,9 +85,9 @@ abstract class AbstractModel
             $orm = Orm::getInstance(static::$table);
             $orm->where(['id' => $this->id])->delete();
             return PdoConnect::getInstance()->pdo->commit() && $this->afterDelete();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             PdoConnect::getInstance()->pdo->rollBack();
-            InitController::send([], 100005, $e->getMessage(), 500);
+            AbstractController::send([], 100005, $e->getMessage(), 500);
         }
     }
 
@@ -119,15 +110,15 @@ abstract class AbstractModel
             }
 
             return PdoConnect::getInstance()->pdo->commit() && $this->afterPut();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             PdoConnect::getInstance()->pdo->rollBack();
-            InitController::send([], 100004, $e->getMessage(), 500);
+            AbstractController::send([], 100004, $e->getMessage(), 500);
         }
     }
 
     public function get()
     {
-        return array_values(self::getData(null, $this->id, $this->langId));
+        return array_values(self::getData(null, $this->id));
     }
 
     private function getFields(): array
@@ -145,7 +136,7 @@ abstract class AbstractModel
 
         $this->validateFieldsLang();
         $fields = [];
-        foreach ($this->langId ? [$this->langId] : LangModel::getIds() as $langId) {
+        foreach (\LangModel::getIds() as $langId) {
             $fields[$langId] = $this->formatFields($langId);
         }
         return $fields;
@@ -187,7 +178,7 @@ abstract class AbstractModel
 
         if (!empty($this->fields[$field]['require']) && Validate::isEmpty($value)) {
             if ($langId) {
-                $value = $this->{$field}[$langId] = $this->{$field}[$this->langId] ?: $desc['default'];
+                $value = $this->{$field}[$langId] = $this->{$field}[APP_LANG_ID] ?: $desc['default'];
             } else {
                 $value = $this->$field = $desc['default'];
             }
@@ -253,7 +244,7 @@ abstract class AbstractModel
         }
 
         foreach ($this->getDefinition(static::$table.'_lang') as $field) {
-            foreach ($this->langId ? [$this->langId] : LangModel::getIds() as $langId) {
+            foreach (\LangModel::getIds() as $langId) {
                 $this->{$field}[$langId] = $_POST[$field.'_'.$langId] ?? null;
             }
         }
@@ -275,7 +266,7 @@ abstract class AbstractModel
 
     protected function afterPost(int $id): bool
     {
-        $callback = function(Redis $redis) use ($id) {
+        $callback = function(\Redis $redis) use ($id) {
             $orm = Orm::getInstance(static::$table);
             $redis->hSet(
                 'table:'.$orm->table, $id,
@@ -283,7 +274,7 @@ abstract class AbstractModel
             );
             if (isset(APP_TABLE[static::$table.'_lang'])) {
                 $orm = Orm::getInstance(static::$table.'_lang');
-                foreach (LangModel::getIds() as $langId) {
+                foreach (\LangModel::getIds() as $langId) {
                     $redis->hSet(
                         'table:'.$orm->table, $id.'_'.$langId,
                         $orm->select(['*'])->where([static::$foreign => $id, 'lang_id' => $langId])->fetch()
@@ -312,11 +303,11 @@ abstract class AbstractModel
 
     protected function afterDelete(): bool
     {
-        $callback = function(Redis $redis) {
+        $callback = function(\Redis $redis) {
             $redis->hDel('table:'.static::$table, $this->id);
             if (isset(APP_TABLE[static::$table.'_lang'])) {
                 $param = ['table:'.static::$table.'_lang'];
-                foreach (LangModel::getIds() as $langId) {
+                foreach (\LangModel::getIds() as $langId) {
                     $param[] = $this->id.'_'.$langId;
                 }
                 call_user_func_array(array($redis, 'hDel'), $param);

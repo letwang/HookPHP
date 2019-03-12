@@ -1,10 +1,5 @@
 <?php
-class TranslationModel extends AbstractModel
+class TranslationModel extends Base\AbstractModel
 {
     public static $table = 'hp_translation';
-
-    public function __construct(int $id = null)
-    {
-        parent::__construct($id);
-    }
 }
