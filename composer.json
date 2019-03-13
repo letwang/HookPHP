@@ -15,6 +15,7 @@
         "ext-openssl": ">=1.1",
         "ext-zip": ">=1.15",
         "ext-yaf": ">=3.0",
+        "ext-yac": ">=2.0.2",
         "ext-yaconf": ">=1.0",
         "ext-redis": ">=4.1",
         "ext-mongodb": ">=1.5"

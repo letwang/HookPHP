@@ -1,5 +1,6 @@
 <?php
-use Yaf\{Dispatcher, Bootstrap_Abstract};
+use Yaf\{Dispatcher, Bootstrap_Abstract, Registry};
+use Hook\Db\YacConnect;
 
 class Bootstrap extends Bootstrap_Abstract
 {
@@ -10,6 +11,8 @@ class Bootstrap extends Bootstrap_Abstract
         $dispatcher->registerPlugin(new HookPlugin());
 
         //Loader::getInstance()->registerLocalNamespace('Hook');
+
+        Registry::set('yac', YacConnect::getInstance(APP_NAME)->yac);
 
         defined('APP_ID') || define('APP_ID', \AppModel::getDefaultId());
         foreach (\ConfigModel::getDefined() as $key => $value) {

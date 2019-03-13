@@ -1,5 +1,5 @@
 <?php
-use Hook\Db\{Orm};
+use Hook\Db\{OrmConnect};
 
 class ConfigModel extends Base\AbstractModel
 {
@@ -11,11 +11,11 @@ class ConfigModel extends Base\AbstractModel
 
     public function get(): array
     {
-        return Orm::getInstance(static::$table)->select(['id', 'status', 'date_add', 'date_upd', 'key', 'value'])->where(['app_id' => APP_ID])->fetchAll();
+        return OrmConnect::getInstance(static::$table)->select(['id', 'status', 'date_add', 'date_upd', 'key', 'value'])->where(['app_id' => APP_ID])->fetchAll();
     }
 
     public static function getDefined(): array
     {
-        return Orm::getInstance(static::$table)->select(['key', 'value'])->where(['app_id' => APP_ID, 'status' => 1])->fetchAll(PDO::FETCH_KEY_PAIR);
+        return OrmConnect::getInstance(static::$table)->select(['key', 'value'])->where(['app_id' => APP_ID, 'status' => 1])->fetchAll(PDO::FETCH_KEY_PAIR);
     }
 }

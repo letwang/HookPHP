@@ -1,8 +1,8 @@
 <?php
 namespace Hook\Hook;
 
-use Hook\Db\RedisConnect;
-use Hook\Db\PdoConnect;
+use Yaf\Registry;
+use Hook\Db\{RedisConnect, PdoConnect};
 use Hook\Cache\Cache;
 use Hook\Sql\Hook\Module as sqlModule;
 
@@ -10,18 +10,20 @@ class Hook
 {
     public static function getModulesForHook()
     {
-        $data = &Cache::static(__METHOD__);
-        if ($data !== null) {
+        //一级缓存：单机
+        if ($data = Registry::get('yac')->get('hook_module')) {
             return $data;
         }
+        //二级缓存：网络
         $redis = RedisConnect::getInstance()->redis;
-        $key = 'cache:'.md5(sqlModule::GET_ALL);
-        if (!$redis->exists($key)) {
+        $key = 'cache:hook_module';
+        if ($redis->exists($key)) {
+            $data = $redis->get($key);
+        } else {
             $data = PdoConnect::getInstance()->fetchAll(sqlModule::GET_ALL, [], \PDO::FETCH_COLUMN | \PDO::FETCH_GROUP);
             $redis->set($key, $data);
-            return $data;
         }
-        $data = $redis->get($key);
+        Registry::get('yac')->set('hook_module', $data);
         return $data;
     }
 

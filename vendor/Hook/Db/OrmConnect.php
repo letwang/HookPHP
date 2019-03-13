@@ -3,7 +3,7 @@ namespace Hook\Db;
 
 use Hook\Cache\Cache;
 
-class Orm extends Cache
+class OrmConnect extends Cache
 {
     public $table = '';
 
@@ -14,7 +14,7 @@ class Orm extends Cache
     private $expression = ['1', 'DISTINCT', 'DISTINCTROW', 'SQL_CALC_FOUND_ROWS'];
 
     /**
-     * Orm::getInstance('hp_lang_i18n')->exist()
+     * OrmConnect::getInstance('hp_lang_i18n')->exist()
      * @param string $table
      */
     public function __construct(string $table)

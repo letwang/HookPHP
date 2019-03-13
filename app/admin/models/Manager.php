@@ -1,5 +1,5 @@
 <?php
-use Hook\Db\Orm;
+use Hook\Db\OrmConnect;
 
 class ManagerModel extends Base\AbstractModel
 {
@@ -16,6 +16,6 @@ class ManagerModel extends Base\AbstractModel
 
     public function get(): array
     {
-        return Orm::getInstance(static::$table)->select(['id', 'status', 'date_add', 'date_upd', 'user', 'email', 'phone', 'lastname', 'firstname'])->fetchAll();
+        return OrmConnect::getInstance(static::$table)->select(['id', 'status', 'date_add', 'date_upd', 'user', 'email', 'phone', 'lastname', 'firstname'])->fetchAll();
     }
 }

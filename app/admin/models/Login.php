@@ -1,5 +1,5 @@
 <?php
-use Hook\Db\Orm;
+use Hook\Db\OrmConnect;
 
 class LoginModel extends Base\AbstractModel
 {
@@ -7,7 +7,7 @@ class LoginModel extends Base\AbstractModel
 
     public static function signIn(string $user)
     {
-        return Orm::getInstance(static::$table)->select(['*'])
+        return OrmConnect::getInstance(static::$table)->select(['*'])
         ->where(['user' => $user], 'OR')
         ->where(['email' => $user], 'OR')
         ->where(['phone' => $user])

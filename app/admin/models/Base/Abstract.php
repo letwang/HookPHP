@@ -1,7 +1,7 @@
 <?php
 namespace Base;
 
-use Hook\Db\{PdoConnect, RedisConnect, Orm};
+use Hook\Db\{PdoConnect, RedisConnect, OrmConnect};
 use Hook\Cache\Cache;
 use Hook\Validate\Validate;
 use Hook\Tools\Tools;
@@ -57,12 +57,11 @@ abstract class AbstractModel extends Cache
             $parameter += isset(APP_TABLE[static::$table]['app_id']) ? ['app_id' => APP_ID]: [];
             $parameter += isset(APP_TABLE[static::$table]['date_add']) ? ['date_add' => time()] : [];
 
-            $orm = Orm::getInstance(static::$table);
-            $result = $orm->insert($parameter);
+            $result = OrmConnect::getInstance(static::$table)->insert($parameter);
 
             $lang = $this->getFieldsLang();
             if ($lang) {
-                $orm = Orm::getInstance(static::$table.'_lang');
+                $orm = OrmConnect::getInstance(static::$table.'_lang');
                 foreach ($lang as $langId => $parameter) {
                     $parameter += ['lang_id' => $langId, static::$foreign => $result['lastInsertId']];
                     $orm->insert($parameter);
@@ -82,8 +81,8 @@ abstract class AbstractModel extends Cache
         try {
             PdoConnect::getInstance()->pdo->beginTransaction();
 
-            $orm = Orm::getInstance(static::$table);
-            $orm->where(['id' => $this->id])->delete();
+            OrmConnect::getInstance(static::$table)->where(['id' => $this->id])->delete();
+
             return PdoConnect::getInstance()->pdo->commit() && $this->afterDelete();
         } catch (\Throwable $e) {
             PdoConnect::getInstance()->pdo->rollBack();
@@ -98,12 +97,11 @@ abstract class AbstractModel extends Cache
         try {
             PdoConnect::getInstance()->pdo->beginTransaction();
 
-            $orm = Orm::getInstance(static::$table);
-            $orm->where(['id' => $this->id])->update($this->getFields());
+            OrmConnect::getInstance(static::$table)->where(['id' => $this->id])->update($this->getFields());
 
             $lang = $this->getFieldsLang();
             if ($lang) {
-                $orm = Orm::getInstance(static::$table.'_lang');
+                $orm = OrmConnect::getInstance(static::$table.'_lang');
                 foreach ($lang as $langId => $parameter) {
                     $orm->where([static::$foreign => $this->id, 'lang_id' => $langId])->update($parameter);
                 }
@@ -252,11 +250,7 @@ abstract class AbstractModel extends Cache
 
     protected function getDefinition(string $table): array
     {
-        $data = &Cache::static(__METHOD__);
-        if (isset($data[$table])) {
-            return $data[$table];
-        }
-        return $data[$table] = isset(APP_TABLE[$table]) ? array_keys(array_diff_key(APP_TABLE[$table], $this->ignore)) : [];
+        return isset(APP_TABLE[$table]) ? array_keys(array_diff_key(APP_TABLE[$table], $this->ignore)) : [];
     }
 
     protected function beforePost(): bool
@@ -267,13 +261,12 @@ abstract class AbstractModel extends Cache
     protected function afterPost(int $id): bool
     {
         $callback = function(\Redis $redis) use ($id) {
-            $orm = Orm::getInstance(static::$table);
             $redis->hSet(
-                'table:'.$orm->table, $id,
-                $orm->select(['*'])->where(['id' => $id])->fetch()
+                'table:'.static::$table, $id,
+                OrmConnect::getInstance(static::$table)->select(['*'])->where(['id' => $id])->fetch()
             );
             if (isset(APP_TABLE[static::$table.'_lang'])) {
-                $orm = Orm::getInstance(static::$table.'_lang');
+                $orm = OrmConnect::getInstance(static::$table.'_lang');
                 foreach (\LangModel::getIds() as $langId) {
                     $redis->hSet(
                         'table:'.$orm->table, $id.'_'.$langId,

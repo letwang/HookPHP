@@ -1,6 +1,6 @@
 <?php
 namespace Hook;
-use Hook\Db\Orm;
+use Hook\Db\OrmConnect;
 
 class ModuleModel extends \Base\AbstractModel
 {
@@ -13,6 +13,6 @@ class ModuleModel extends \Base\AbstractModel
 
     public function getSelect(): array
     {
-        return Orm::getInstance('hp_module')->select(['id', 'key'])->where(['app_id' => APP_ID, 'status' => 1])->fetchAll(\PDO::FETCH_KEY_PAIR);
+        return OrmConnect::getInstance('hp_module')->select(['id', 'key'])->where(['app_id' => APP_ID, 'status' => 1])->fetchAll(\PDO::FETCH_KEY_PAIR);
     }
 }

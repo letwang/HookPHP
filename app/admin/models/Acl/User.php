@@ -1,6 +1,6 @@
 <?php
 namespace Acl;
-use Hook\Db\Orm;
+use Hook\Db\OrmConnect;
 
 class UserModel extends \Base\AbstractModel
 {
@@ -8,6 +8,6 @@ class UserModel extends \Base\AbstractModel
 
     public function getSelect(): array
     {
-        return Orm::getInstance('hp_user')->select(['id', 'user'])->where(['status' => 1])->fetchAll(\PDO::FETCH_KEY_PAIR);
+        return OrmConnect::getInstance('hp_user')->select(['id', 'user'])->where(['status' => 1])->fetchAll(\PDO::FETCH_KEY_PAIR);
     }
 }
