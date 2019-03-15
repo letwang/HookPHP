@@ -14,12 +14,12 @@ class LangModel extends Base\AbstractModel
 
     public static function getIds(): array
     {
-        if ($data = Registry::get('yac')->get('lang:getIds')) {
-            return $data;
-        }
-        $data = OrmConnect::getInstance(static::$table)->select(['lang', 'id'])->where(['status' => 1])->fetchAll(PDO::FETCH_KEY_PAIR);
-        Registry::get('yac')->set('lang:getIds', $data);
-        return $data;
+        $key = 'lang:getIds';
+        $callback = function() {
+            return OrmConnect::getInstance(static::$table)->select(['lang', 'id'])->where(['status' => 1])->fetchAll(PDO::FETCH_KEY_PAIR);
+        };
+
+        return Registry::get('cache')->get($key, $callback);
     }
 
     public static function getDefaultId(string $name = null): int

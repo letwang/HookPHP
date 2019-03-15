@@ -12,7 +12,7 @@ class Bootstrap extends Bootstrap_Abstract
 
         //Loader::getInstance()->registerLocalNamespace('Hook');
 
-        Registry::set('yac', YacConnect::getInstance(APP_NAME)->yac);
+        Registry::set('cache', YacConnect::getInstance(APP_NAME));
 
         defined('APP_ID') || define('APP_ID', \AppModel::getDefaultId());
         foreach (\ConfigModel::getDefined() as $key => $value) {

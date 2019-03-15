@@ -1,6 +1,7 @@
 <?php
 namespace Base;
 
+use Yaf\Registry;
 use Hook\Db\{PdoConnect, RedisConnect, OrmConnect};
 use Hook\Cache\Cache;
 use Hook\Validate\Validate;
@@ -16,6 +17,8 @@ abstract class AbstractModel extends Cache
     public $fields = [];
     public $ignore = [];
 
+    private $tableLang;
+
     const INT = 1;
     const BOOL = 2;
     const FLOAT = 3;
@@ -25,7 +28,11 @@ abstract class AbstractModel extends Cache
     public function __construct(int $id = null)
     {
         $this->id = $id;
-        $this->ignore = ['id' => true, 'app_id' => true, 'date_add' => true, 'date_upd' => true, 'lang_id' => true, static::$foreign => true];
+        $this->tableLang = isset(APP_TABLE[static::$table.'_lang']) ? static::$table.'_lang' : null;
+        $this->ignore = ['id' => true, 'app_id' => true, 'date_add' => true, 'date_upd' => true, 'lang_id' => true];
+        if (static::$foreign) {
+            $this->ignore += [static::$foreign => true];
+        }
     }
 
     public static function getData(string $table = null, int $id = null, int $langId = null)
@@ -35,15 +42,12 @@ abstract class AbstractModel extends Cache
             $id = $id ? ($id.'_'.($langId ?? APP_LANG_ID)) : $id;
         }
 
-        $data = &Cache::static(__METHOD__);
-        if (isset($data[$table][$id])) {
-            return $data[$table][$id];
-        }
-
         $key = 'table:'.$table;
-        $redis = RedisConnect::getInstance()->redis;
-        $data[$table][$id] = $id ? $redis->hGet($key, $id) : $redis->hGetAll($key);
-        return $data[$table][$id];
+        $callback = function(\Redis $redis) use ($key) {
+            return $redis->hGetAll($key);
+        };
+
+        return Registry::get('cache')->get($key, $callback, $id);
     }
 
     public function post(): int
@@ -59,10 +63,9 @@ abstract class AbstractModel extends Cache
 
             $result = OrmConnect::getInstance(static::$table)->insert($parameter);
 
-            $lang = $this->getFieldsLang();
-            if ($lang) {
-                $orm = OrmConnect::getInstance(static::$table.'_lang');
-                foreach ($lang as $langId => $parameter) {
+            if ($this->tableLang) {
+                $orm = OrmConnect::getInstance($this->tableLang);
+                foreach ($this->getFieldsLang() as $langId => $parameter) {
                     $parameter += ['lang_id' => $langId, static::$foreign => $result['lastInsertId']];
                     $orm->insert($parameter);
                 }
@@ -99,10 +102,9 @@ abstract class AbstractModel extends Cache
 
             OrmConnect::getInstance(static::$table)->where(['id' => $this->id])->update($this->getFields());
 
-            $lang = $this->getFieldsLang();
-            if ($lang) {
-                $orm = OrmConnect::getInstance(static::$table.'_lang');
-                foreach ($lang as $langId => $parameter) {
+            if ($this->tableLang) {
+                $orm = OrmConnect::getInstance($this->tableLang);
+                foreach ($this->getFieldsLang() as $langId => $parameter) {
                     $orm->where([static::$foreign => $this->id, 'lang_id' => $langId])->update($parameter);
                 }
             }
@@ -128,10 +130,6 @@ abstract class AbstractModel extends Cache
 
     private function getFieldsLang(): array
     {
-        if (!static::$foreign) {
-            return [];
-        }
-
         $this->validateFieldsLang();
         $fields = [];
         foreach (\LangModel::getIds() as $langId) {
@@ -156,7 +154,7 @@ abstract class AbstractModel extends Cache
 
     private function validateFieldsLang(bool $exit = true, bool $return = false)
     {
-        foreach ($this->getDefinition(static::$table.'_lang') as $field) {
+        foreach ($this->getDefinition($this->tableLang) as $field) {
             foreach ($this->$field as $langId => $value) {
                 $message = $this->validateField($field, $value, $langId);
                 if ($message !== '') {
@@ -172,7 +170,7 @@ abstract class AbstractModel extends Cache
 
     private function validateField(string $field, $value, $langId = null): string
     {
-        $desc = APP_TABLE[static::$table][$field] ?? APP_TABLE[static::$table.'_lang'][$field];
+        $desc = APP_TABLE[static::$table][$field] ?? APP_TABLE[$this->tableLang][$field];
 
         if (!empty($this->fields[$field]['require']) && Validate::isEmpty($value)) {
             if ($langId) {
@@ -205,7 +203,7 @@ abstract class AbstractModel extends Cache
     {
         $fields = [];
         if ($langId) {
-            foreach ($this->getDefinition(static::$table.'_lang') as $field) {
+            foreach ($this->getDefinition($this->tableLang) as $field) {
                 $fields[$field] = $this->formatValue($this->{$field}[$langId], $this->fields[$field]['type'] ?? null);
             }
         } else {
@@ -241,16 +239,22 @@ abstract class AbstractModel extends Cache
             $this->{$field} = $_POST[$field] ?? null;
         }
 
-        foreach ($this->getDefinition(static::$table.'_lang') as $field) {
-            foreach (\LangModel::getIds() as $langId) {
-                $this->{$field}[$langId] = $_POST[$field.'_'.$langId] ?? null;
+        if ($this->tableLang) {
+            foreach ($this->getDefinition($this->tableLang) as $field) {
+                foreach (\LangModel::getIds() as $langId) {
+                    $this->{$field}[$langId] = $_POST[$field.'_'.$langId] ?? null;
+                }
             }
         }
     }
 
     protected function getDefinition(string $table): array
     {
-        return isset(APP_TABLE[$table]) ? array_keys(array_diff_key(APP_TABLE[$table], $this->ignore)) : [];
+        $data = &Cache::static(__METHOD__);
+        if (isset($data[$table])) {
+            return $data[$table];
+        }
+        return $data[$table] = isset(APP_TABLE[$table]) ? array_keys(array_diff_key(APP_TABLE[$table], $this->ignore)) : [];
     }
 
     protected function beforePost(): bool
@@ -260,23 +264,10 @@ abstract class AbstractModel extends Cache
 
     protected function afterPost(int $id): bool
     {
-        $callback = function(\Redis $redis) use ($id) {
-            $redis->hSet(
-                'table:'.static::$table, $id,
-                OrmConnect::getInstance(static::$table)->select(['*'])->where(['id' => $id])->fetch()
-            );
-            if (isset(APP_TABLE[static::$table.'_lang'])) {
-                $orm = OrmConnect::getInstance(static::$table.'_lang');
-                foreach (\LangModel::getIds() as $langId) {
-                    $redis->hSet(
-                        'table:'.$orm->table, $id.'_'.$langId,
-                        $orm->select(['*'])->where([static::$foreign => $id, 'lang_id' => $langId])->fetch()
-                    );
-                }
-            }
-        };
-        RedisConnect::getInstance()->multi($callback);
-        return true;
+        $flag = true;
+        $flag &= $this->setLocalCache();
+        $flag &= $this->setNetworkCache($id);
+        return $flag;
     }
 
     protected function beforePut(): bool
@@ -296,14 +287,55 @@ abstract class AbstractModel extends Cache
 
     protected function afterDelete(): bool
     {
+        $flag = true;
+        $flag &= $this->deleteLocalCache();
+        $flag &= $this->deleteNetworkCache();
+        return $flag;
+    }
+
+    protected function deleteLocalCache(): bool
+    {
+        Registry::get('cache')->handle->delete('table:'.static::$table);
+        $this->tableLang && Registry::get('cache')->handle->delete('table:'.$this->tableLang);
+        return true;
+    }
+
+    protected function deleteNetworkCache(): bool
+    {
         $callback = function(\Redis $redis) {
             $redis->hDel('table:'.static::$table, $this->id);
-            if (isset(APP_TABLE[static::$table.'_lang'])) {
-                $param = ['table:'.static::$table.'_lang'];
+            if ($this->tableLang) {
+                $param = ['table:'.$this->tableLang];
                 foreach (\LangModel::getIds() as $langId) {
                     $param[] = $this->id.'_'.$langId;
                 }
                 call_user_func_array(array($redis, 'hDel'), $param);
+            }
+        };
+        RedisConnect::getInstance()->multi($callback);
+        return true;
+    }
+
+    protected function setLocalCache(): bool
+    {
+        return $this->deleteLocalCache();
+    }
+
+    protected function setNetworkCache(int $id): bool
+    {
+        $callback = function(\Redis $redis) use ($id) {
+            $redis->hSet(
+                'table:'.static::$table, $id,
+                OrmConnect::getInstance(static::$table)->select(['*'])->where(['id' => $id])->fetch()
+                );
+            if ($this->tableLang) {
+                $orm = OrmConnect::getInstance($this->tableLang);
+                foreach (\LangModel::getIds() as $langId) {
+                    $redis->hSet(
+                        'table:'.$orm->table, $id.'_'.$langId,
+                        $orm->select(['*'])->where([static::$foreign => $id, 'lang_id' => $langId])->fetch()
+                    );
+                }
             }
         };
         RedisConnect::getInstance()->multi($callback);

@@ -4,10 +4,13 @@
         "mongodb/mongodb": ">=1.4",
         "symfony/process": ">=4.1",
         "phpmailer/phpmailer": ">=6.0",
-        "ext-ctype": "*",
         "ext-gd": ">=2.2",
         "ext-spl": "*",
+        "ext-xml": "*",
+        "ext-json": "*",
+        "ext-ctype": "*",
         "ext-bcmath": "*",
+        "ext-filter": "*",
         "ext-curl": "*",
         "ext-iconv": ">=2.27",
         "ext-intl": ">=1.1",
@@ -17,6 +20,8 @@
         "ext-yaf": ">=3.0",
         "ext-yac": ">=2.0.2",
         "ext-yaconf": ">=1.0",
+        "ext-pdo": "*",
+        "ext-pdo_mysql": "*",
         "ext-redis": ">=4.1",
         "ext-mongodb": ">=1.5"
     }

@@ -21,12 +21,12 @@ class AppModel extends Base\AbstractModel
 
     public static function getIds(): array
     {
-        if ($data = Registry::get('yac')->get('app:getIds')) {
-            return $data;
-        }
-        $data = OrmConnect::getInstance(static::$table)->select(['key', 'id'])->where(['status' => 1])->fetchAll(PDO::FETCH_KEY_PAIR);
-        Registry::get('yac')->set('app:getIds', $data);
-        return $data;
+        $key = 'app:getIds';
+        $callback = function() {
+            return OrmConnect::getInstance(static::$table)->select(['key', 'id'])->where(['status' => 1])->fetchAll(PDO::FETCH_KEY_PAIR);
+        };
+
+        return Registry::get('cache')->get($key, $callback);
     }
 
     public static function getDefaultId(string $name = null): int

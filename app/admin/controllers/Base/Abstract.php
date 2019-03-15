@@ -9,7 +9,7 @@ abstract class AbstractController extends \Yaf\Controller_Abstract
 
     /**
      *
-     * @var \AbstractModel
+     * @var \Base\AbstractModel
      */
     protected $model;
 
@@ -18,8 +18,7 @@ abstract class AbstractController extends \Yaf\Controller_Abstract
         $this->id = (int) $this->getRequest()->getParam('id');
         $this->languages = \LangModel::getData();
 
-        $class = str_replace('_', '\\', $this->_request->controller).'Model';
-        $this->model = new $class($this->id);
+        $this->model = (str_replace('_', '\\', $this->_request->controller).'Model')::getInstance($this->id);
 
         //登录检测
         if (!isset($_SESSION[APP_NAME])) {
