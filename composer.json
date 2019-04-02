@@ -29,6 +29,7 @@
         "ext-mongodb": ">=1.5",
         "ext-session": "*",
         "ext-simplexml": "*",
-        "ext-swoole": ">=4.3.1"
+        "ext-swoole": ">=4.3.1",
+        "ext-zend-opcache": "*"
     }
 }

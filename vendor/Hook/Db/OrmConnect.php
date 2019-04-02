@@ -2,6 +2,7 @@
 namespace Hook\Db;
 
 use Hook\Cache\Cache;
+use Yaf\Registry;
 
 class OrmConnect extends Cache
 {
@@ -10,13 +11,9 @@ class OrmConnect extends Cache
     private $statement = '';
     private $parameter = [];
 
-    private $operator = ['>' => '>', '>=' => '>=', '<' => '<', '<=' => '<=', '!=' => '!=', 'LIKE' => 'LIKE', 'NOT LIKE' => 'NOT LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
-    private $expression = ['1', 'DISTINCT', 'DISTINCTROW', 'SQL_CALC_FOUND_ROWS'];
+    private $operator = ['=' => '=', '!=' => '!=', '>' => '>', '>=' => '>=', '<' => '<', '<=' => '<=', 'LIKE' => 'LIKE', 'NOT LIKE' => 'NOT LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
+    private $expression = ['DISTINCT', 'DISTINCTROW', 'SQL_CALC_FOUND_ROWS'];
 
-    /**
-     * OrmConnect::getInstance('hp_lang_i18n')->exist()
-     * @param string $table
-     */
     public function __construct(string $table)
     {
         $this->table = $table;
@@ -28,31 +25,16 @@ class OrmConnect extends Cache
         $this->parameter = [];
     }
 
-    /**
-     * 获取经过优化后的表结构
-     * @return array
-     */
     public function desc(): array
     {
         return APP_TABLE[$this->table];
     }
 
-    /**
-     * 判断该表、字段是否存在
-     * @param string $column
-     * @return bool
-     */
     public function exist(string $column = null): bool
     {
         return $column ? isset(APP_TABLE[$this->table][$column]) : isset(APP_TABLE[$this->table]);
     }
 
-    /**
-     * ->select(['id', 'name'], ['SQL_CALC_FOUND_ROWS'])
-     * @param array $column
-     * @param array $expression
-     * @return self
-     */
     public function select(array $column = ['id'], array $expression = []): self
     {
         if ($expression) {
@@ -60,51 +42,35 @@ class OrmConnect extends Cache
         }
         if ($column) {
             $this->statement .= '`'.join('`,`', $column).'`';
+        } else {
+            $this->statement .= '1';
         }
         $this->statement = 'SELECT '.$this->statement.' FROM `'.$this->table.'` ';
         return $this;
     }
 
-    /**
-     * ->where(['id' => ['<=' => 100, 'IN' => [1, 2]]])
-       ->where(['iso' => ['LIKE' => '%zh%']], 'OR')
-       ->where(['name' => 'cn'], 'AND')
-     * @param array $where
-     * @param string $relation
-     * @return self
-     */
-    public function where(array $where, string $relation = 'AND'): self
+    public function where(array $condition, string $relationOut = 'AND', string $relationIn = 'AND'): self
     {
-        $relation = $relation === 'AND' ? ' AND ' : ' OR ';
-        foreach ($where as $column => $value) {
-            if (is_array($value)) {
-                $this->statement .= '(';
-                foreach ($value as $operator => $value) {
-                    $this->statement .= '`'.$column.'` '.$this->operator[$operator].' ';
-                    if (is_array($value)) {
-                        $this->statement .= '('.implode(',', array_fill(0, count($value), '?')).')';
-                        $this->parameter = array_merge($this->parameter, $value);
-                    } else {
-                        $this->statement .= '?';
-                        $this->parameter[] = $value;
-                    }
-                    $this->statement .= ' AND ';
+        $statement = '';
+        $relationOut = $relationOut === 'AND' ? ' AND ' : ' OR ';
+        $relationIn = $relationIn === 'AND' ? ' AND ' : ' OR ';
+        foreach ($condition as $column => $value) {
+            foreach (is_array($value) ? $value : ['=' => $value] as $operator => $value) {
+                $statement .= '`'.$column.'`'.$this->operator[$operator];
+                if (is_array($value)) {
+                    $statement .= '('.implode(',', array_fill(0, count($value), '?')).')';
+                    $this->parameter = array_merge($this->parameter, $value);
+                } else {
+                    $statement .= '?';
+                    $this->parameter[] = $value;
                 }
-                $this->statement = substr($this->statement, 0, -5).')'.$relation;
-            } else {
-                $this->statement .= '`'.$column.'` = ?'.$relation;
-                $this->parameter[] = $value;
             }
+            $statement .= $relationIn;
         }
-
+        $this->statement .= (strpos($this->statement, 'WHERE') === false ? 'WHERE ' : $relationOut).'('.rtrim($statement, $relationIn).')';
         return $this;
     }
 
-    /**
-     * ->group(['id' => 'ASC', 'name' => 'DESC'])
-     * @param array $group
-     * @return self
-     */
     public function group(array $group): self
     {
         $this->statement .= ' GROUP BY';
@@ -116,11 +82,6 @@ class OrmConnect extends Cache
         return $this;
     }
 
-    /**
-     * ->order(['id' => 'ASC', 'name' => 'DESC'])
-     * @param array $order
-     * @return self
-     */
     public function order(array $order): self
     {
         $this->statement .= ' ORDER BY';
@@ -132,57 +93,30 @@ class OrmConnect extends Cache
         return $this;
     }
 
-    /**
-     * ->limit(0, 100)
-     * @param int $offset
-     * @param int $count
-     * @return self
-     */
-    public function limit(int $offset = 0, int $count = 30): self
+    public function limit(int $count = 30, int $offset = null): self
     {
-        $this->statement .= ' LIMIT '.$offset.', '.$count;
+        $this->statement .= ' LIMIT '.($offset === null ? '' : $offset.',').$count;
         return $this;
     }
 
-    /**
-     * 注释参考PdoConnect::getInstance()->fetchAll
-     * @param int $type
-     * @return array
-     */
     public function fetchAll(int $type = \PDO::FETCH_ASSOC): array
     {
         list($statement, $parameter) = $this->checkAndClear();
         return PdoConnect::getInstance()->fetchAll($statement, $parameter, $type);
     }
 
-    /**
-     * 获取第1行数据
-     * @param int $type
-     * @return mixed[array|object|false]
-     */
     public function fetch(int $type = \PDO::FETCH_ASSOC)
     {
         list($statement, $parameter) = $this->checkAndClear();
         return PdoConnect::getInstance()->fetch($statement, $parameter, $type);
     }
 
-    /**
-     * 获取该行某列数据
-     * @param int $column
-     * @return mixed[string|false]
-     */
     public function fetchColumn(int $column = 0)
     {
         list($statement, $parameter) = $this->checkAndClear();
         return PdoConnect::getInstance()->fetchColumn($statement, $parameter, $column);
     }
 
-    /**
-     * ->select(['*'], ['SQL_CALC_FOUND_ROWS'])->fetch()
-       ...
-       ->count()
-     * @return int
-     */
     public function count(): int
     {
         $this->statement = 'SELECT FOUND_ROWS()';
@@ -190,11 +124,6 @@ class OrmConnect extends Cache
         return $this->fetch()['FOUND_ROWS()'];
     }
 
-    /**
-     * ->insert(['status' => 1, 'name' => 'a'])
-     * @param array $parameter
-     * @return array
-     */
     public function insert(array $parameter): array
     {
         $this->statement = 'INSERT INTO `'.$this->table.'`(`'.join('`,`', array_keys($parameter)).'`)VALUES(:'.join(',:', array_keys($parameter)).')';
@@ -203,11 +132,6 @@ class OrmConnect extends Cache
         return PdoConnect::getInstance()->insert($statement, $parameter);
     }
 
-    /**
-     * ->where(['id' => 1])->where(['id' => 2], 'OR')->update(['status' => 0, 'iso' => 3])
-     * @param array $assignment
-     * @return int
-     */
     public function update(array $assignment): int
     {
         $statement = '';
@@ -223,10 +147,6 @@ class OrmConnect extends Cache
         return PdoConnect::getInstance()->update($statement, $parameter);
     }
 
-    /**
-     * ->where(['id' => 1])->where(['id' => 2], 'OR')->delete()
-     * @return int
-     */
     public function delete(): int
     {
         $this->statement = 'DELETE FROM `'.$this->table.'` '.$this->statement;
@@ -234,11 +154,6 @@ class OrmConnect extends Cache
         return PdoConnect::getInstance()->delete($statement, $parameter);
     }
 
-    /**
-     * 根据DB表结构返回该字段取值范围
-     * @param string $type
-     * @return array
-     */
     public function validate(string $type): array
     {
         $unsigned = strpos($type, 'unsigned');
@@ -308,10 +223,6 @@ class OrmConnect extends Cache
         return $data;
     }
 
-    /**
-     * 同步MySQL数据到Redis
-     * @return bool
-     */
     public function synData(): bool
     {
         $redis = RedisConnect::getInstance()->redis;
@@ -330,24 +241,21 @@ class OrmConnect extends Cache
         return $redis->hMset($key, $data);
     }
 
-    /**
-     * SQL注入一次性检测&操作清理
-     * @throws \Exception
-     * @return array
-     */
     private function checkAndClear(): array
     {
-         preg_match_all('/`(\w+)`/', $this->statement, $matches);
-         $white = APP_TABLE[$this->table] + [$this->table => []];
-         foreach (array_flip($matches[1]) as $column => $index) {
-             if (!isset($white[$column])) {
-                throw new \Exception('db hack~');
-             }
-         }
-         $this->statement = str_replace(['` (`', '?`', '` `'], ['` WHERE (`', '? WHERE `', '` WHERE `'], $this->statement, $count);
-         $this->statement = $count > 0 ? substr($this->statement, 0, -4) : $this->statement;
-         $data = [$this->statement, $this->parameter];
-         $this->__destruct();
-         return $data;
+        $key = md5($this->statement);
+        if (!Registry::get('cache')->handle->get($key)) {
+            preg_match_all('/`(\w+)`/u', $this->statement, $matches);
+            $white = APP_TABLE[$this->table] + [$this->table => []];
+            foreach (array_flip($matches[1]) as $column => $index) {
+                if (!isset($white[$column])) {
+                    throw new \Exception('db hack #'.$index.' ['.$this->statement.']');
+                }
+            }
+            Registry::get('cache')->handle->set($key, true, 3600);
+        }
+        $data = [$this->statement, $this->parameter];
+        $this->__destruct();
+        return $data;
     }
 }
