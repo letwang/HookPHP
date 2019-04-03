@@ -1,28 +1,23 @@
 <?php
-use Hook\Db\{PdoConnect, OrmConnect};
+use Yaf\{Registry};
+use Hook\Db\{PdoConnect, OrmConnect, YacConnect};
 use Hook\Sql\{Install};
 
 require __DIR__.'/../init.php';
 
 $app = new Yaf\Application(['application' => APP_CONFIG['application']]);
+Registry::set('cache', YacConnect::getInstance(APP_NAME));
 
-$name = 'default';
-$dsn = 'mysql:host='.APP_CONFIG['mysql'][$name]['host'].';port='.APP_CONFIG['mysql'][$name]['port'];
-$dsn .= ';charset='.APP_CONFIG['mysql'][$name]['charset'];
-$pdo = new \PDO(
-    $dsn,
-    APP_CONFIG['mysql'][$name]['username'],
-    APP_CONFIG['mysql'][$name]['passwd'],
-    APP_CONFIG['mysql'][$name]['options']
-);
-$pdo->query('DROP DATABASE IF EXISTS `'.APP_CONFIG['mysql'][$name]['dbname'].'`');
-echo "删除数据库 \e[32m 成功 \e[0m\n", PHP_EOL;
-
-$pdo->query('CREATE DATABASE `'.APP_CONFIG['mysql'][$name]['dbname'].'`');
-echo "创建数据库 \e[32m 成功 \e[0m\n", PHP_EOL;
+$database = APP_CONFIG['mysql']['default']['dbname'];
 
 $pdo = PdoConnect::getInstance();
-$pdo->query(Install::CREATE_DATA);
+$pdo->query('DROP DATABASE IF EXISTS `'.$database.'`');
+echo "删除数据库 \e[32m 成功 \e[0m\n", PHP_EOL;
+
+$pdo->query('CREATE DATABASE `'.$database.'`');
+echo "创建数据库 \e[32m 成功 \e[0m\n", PHP_EOL;
+
+$pdo->query('USE '.$database.';'.Install::CREATE_DATA);
 echo "初始化数据库 \e[32m 成功 \e[0m\n", PHP_EOL;
 
 $app->execute('main', $pdo);

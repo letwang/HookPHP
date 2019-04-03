@@ -11,18 +11,12 @@ class OrmConnect extends Cache
     private $statement = '';
     private $parameter = [];
 
-    private $operator = ['=' => '=', '!=' => '!=', '>' => '>', '>=' => '>=', '<' => '<', '<=' => '<=', 'LIKE' => 'LIKE', 'NOT LIKE' => 'NOT LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
+    private $operator = ['=' => '=', '>' => '>', '>=' => '>=', '<' => '<', '<=' => '<=', '!=' => '!=', 'LIKE' => 'LIKE', 'NOT LIKE' => 'NOT LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN', 'BETWEEN' => 'BETWEEN', 'NOT BETWEEN' => 'NOT BETWEEN', 'AND' => 'AND'];
     private $expression = ['DISTINCT', 'DISTINCTROW', 'SQL_CALC_FOUND_ROWS'];
 
     public function __construct(string $table)
     {
         $this->table = $table;
-    }
-
-    public function __destruct()
-    {
-        $this->statement = '';
-        $this->parameter = [];
     }
 
     public function desc(): array
@@ -49,14 +43,16 @@ class OrmConnect extends Cache
         return $this;
     }
 
-    public function where(array $condition, string $relationOut = 'AND', string $relationIn = 'AND'): self
+    public function where(array $where, string $relationOut = 'AND', string $relationIn = 'AND'): self
     {
         $statement = '';
         $relationOut = $relationOut === 'AND' ? ' AND ' : ' OR ';
         $relationIn = $relationIn === 'AND' ? ' AND ' : ' OR ';
-        foreach ($condition as $column => $value) {
-            foreach (is_array($value) ? $value : ['=' => $value] as $operator => $value) {
-                $statement .= '`'.$column.'`'.$this->operator[$operator];
+        foreach ($where as $column => $condition) {
+            $condition = is_array($condition) ? $condition : ['=' => $condition];
+            $statement .= isset($condition['AND']) ? '`'.$column.'`' : '';
+            foreach ($condition as $operator => $value) {
+                $statement .= (!isset($condition['AND']) ? '`'.$column.'`' : '').' '.$this->operator[$operator].' ';
                 if (is_array($value)) {
                     $statement .= '('.implode(',', array_fill(0, count($value), '?')).')';
                     $this->parameter = array_merge($this->parameter, $value);
@@ -101,35 +97,38 @@ class OrmConnect extends Cache
 
     public function fetchAll(int $type = \PDO::FETCH_ASSOC): array
     {
-        list($statement, $parameter) = $this->checkAndClear();
-        return PdoConnect::getInstance()->fetchAll($statement, $parameter, $type);
+        $this->check();$data = PdoConnect::getInstance()->fetchAll($this->statement, $this->parameter, $type);$this->clean();
+        return $data;
     }
 
     public function fetch(int $type = \PDO::FETCH_ASSOC)
     {
-        list($statement, $parameter) = $this->checkAndClear();
-        return PdoConnect::getInstance()->fetch($statement, $parameter, $type);
+        $this->check();$data = PdoConnect::getInstance()->fetch($this->statement, $this->parameter, $type);$this->clean();
+        return $data;
     }
 
     public function fetchColumn(int $column = 0)
     {
-        list($statement, $parameter) = $this->checkAndClear();
-        return PdoConnect::getInstance()->fetchColumn($statement, $parameter, $column);
+        $this->check();$data = PdoConnect::getInstance()->fetchColumn($this->statement, $this->parameter, $column);$this->clean();
+        return $data;
     }
 
     public function count(): int
     {
         $this->statement = 'SELECT FOUND_ROWS()';
         $this->parameter = [];
-        return $this->fetch()['FOUND_ROWS()'];
+
+        $data = PdoConnect::getInstance()->fetchColumn($this->statement, $this->parameter);$this->clean();
+        return $data;
     }
 
     public function insert(array $parameter): array
     {
         $this->statement = 'INSERT INTO `'.$this->table.'`(`'.join('`,`', array_keys($parameter)).'`)VALUES(:'.join(',:', array_keys($parameter)).')';
         $this->parameter = $parameter;
-        list($statement, $parameter) = $this->checkAndClear();
-        return PdoConnect::getInstance()->insert($statement, $parameter);
+
+        $this->check();$data = PdoConnect::getInstance()->insert($this->statement, $this->parameter);$this->clean();
+        return $data;
     }
 
     public function update(array $assignment): int
@@ -143,15 +142,17 @@ class OrmConnect extends Cache
 
         $this->statement = 'UPDATE `'.$this->table.'` SET '.substr($statement, 0, -1).$this->statement;
         $this->parameter = array_merge($parameter, $this->parameter);
-        list($statement, $parameter) = $this->checkAndClear();
-        return PdoConnect::getInstance()->update($statement, $parameter);
+
+        $this->check();$data = PdoConnect::getInstance()->update($this->statement, $this->parameter);$this->clean();
+        return $data;
     }
 
     public function delete(): int
     {
         $this->statement = 'DELETE FROM `'.$this->table.'` '.$this->statement;
-        list($statement, $parameter) = $this->checkAndClear();
-        return PdoConnect::getInstance()->delete($statement, $parameter);
+
+        $this->check();$data = PdoConnect::getInstance()->delete($this->statement, $this->parameter);$this->clean();
+        return $data;
     }
 
     public function validate(string $type): array
@@ -241,7 +242,7 @@ class OrmConnect extends Cache
         return $redis->hMset($key, $data);
     }
 
-    private function checkAndClear(): array
+    private function check(): void
     {
         $key = md5($this->statement);
         if (!Registry::get('cache')->handle->get($key)) {
@@ -254,8 +255,11 @@ class OrmConnect extends Cache
             }
             Registry::get('cache')->handle->set($key, true, 3600);
         }
-        $data = [$this->statement, $this->parameter];
-        $this->__destruct();
-        return $data;
+    }
+
+    private function clean(): void
+    {
+        $this->statement = '';
+        $this->parameter = [];
     }
 }
