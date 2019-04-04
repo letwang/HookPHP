@@ -22,7 +22,7 @@ class RedisConnect extends Cache
             $this->redis->auth(APP_CONFIG['redis'][$name]['auth']);
         }
 
-        $this->redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_PHP);
+        $this->redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_IGBINARY);
         $this->redis->setOption(Redis::OPT_PREFIX, APP_NAME.':');
     }
 
