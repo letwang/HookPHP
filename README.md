@@ -10,12 +10,12 @@
 [中文][1] | English | Français | Español | Deutsch | Italiano | Português | 日本語 | Русский | Nederlands | العربية | Norsk
 
 # 架构
-![HookPHP系统服务架构图_1](https://github.com/letwang/HookPHP/blob/master/public/iot/demo/2.png?raw=true)
+![HookPHP系统服务架构图_1](https://github.com/letwang/HookPHP/blob/master/public/demo/2.png?raw=true)
 
 # 社区
-![HookPHP社区_1](https://github.com/letwang/HookPHP/blob/master/public/iot/demo/3.jpg?raw=true)
+![HookPHP社区_1](https://github.com/letwang/HookPHP/blob/master/public/demo/3.jpg?raw=true)
 
 # 演示
-![HookPHP效果演示图_1](https://github.com/letwang/HookPHP/blob/master/public/iot/demo/1.png?raw=true)
+![HookPHP效果演示图_1](https://github.com/letwang/HookPHP/blob/master/public/demo/1.png?raw=true)
 
 [1]: https://github.com/letwang/HookPHP/blob/master/doc/
