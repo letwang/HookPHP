@@ -5,7 +5,7 @@ use Hook\Sql\Acl\Role;
 
 class RoleModel extends \Base\AbstractModel
 {
-    public static $table = 'hp_rbac_role';
+    public static $table = 'hp_'.APP_NAME.'_rbac_role';
     public static $foreign = 'role_id';
 
     public $fields = [
@@ -15,11 +15,11 @@ class RoleModel extends \Base\AbstractModel
 
     public function get(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Role::GET_ALL, [APP_ID, APP_LANG_ID]);
+        return PdoConnect::getInstance()->fetchAll(Role::GET_ALL, [APP_LANG_ID]);
     }
 
     public function getSelect(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Role::GET_SHOW_SELECT, [APP_ID, APP_LANG_ID], \PDO::FETCH_KEY_PAIR);
+        return PdoConnect::getInstance()->fetchAll(Role::GET_SHOW_SELECT, [APP_LANG_ID], \PDO::FETCH_KEY_PAIR);
     }
 }

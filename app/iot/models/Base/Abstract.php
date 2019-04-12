@@ -29,7 +29,7 @@ abstract class AbstractModel extends Cache
     {
         $this->id = $id;
         $this->tableLang = isset(APP_TABLE[static::$table.'_lang']) ? static::$table.'_lang' : null;
-        $this->ignore = ['id' => true, 'app_id' => true, 'date_add' => true, 'date_upd' => true, 'lang_id' => true];
+        $this->ignore = ['id' => true, 'date_add' => true, 'date_upd' => true, 'lang_id' => true];
         if (static::$foreign) {
             $this->ignore += [static::$foreign => true];
         }
@@ -58,7 +58,6 @@ abstract class AbstractModel extends Cache
             PdoConnect::getInstance()->pdo->beginTransaction();
 
             $parameter = $this->getFields();
-            $parameter += isset(APP_TABLE[static::$table]['app_id']) ? ['app_id' => APP_ID]: [];
             $parameter += isset(APP_TABLE[static::$table]['date_add']) ? ['date_add' => time()] : [];
 
             $result = OrmConnect::getInstance(static::$table)->insert($parameter);

@@ -6,7 +6,7 @@ use Hook\Data\ArrayUtils;
 
 class MenuModel extends Base\AbstractModel
 {
-    public static $table = 'hp_menu';
+    public static $table = 'hp_'.APP_NAME.'_menu';
     public static $foreign = 'menu_id';
 
     public $fields = [
@@ -20,12 +20,12 @@ class MenuModel extends Base\AbstractModel
 
     public function get(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Menu::GET_ALL, [APP_ID, APP_LANG_ID]);
+        return PdoConnect::getInstance()->fetchAll(Menu::GET_ALL, [APP_LANG_ID]);
     }
 
     public function getSelect(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Menu::GET_SHOW_SELECT, [APP_ID, APP_LANG_ID], PDO::FETCH_KEY_PAIR);
+        return PdoConnect::getInstance()->fetchAll(Menu::GET_SHOW_SELECT, [APP_LANG_ID], PDO::FETCH_KEY_PAIR);
     }
 
     public static function getMenu(): array
@@ -38,7 +38,7 @@ class MenuModel extends Base\AbstractModel
                 $utils = new ArrayUtils();
                 $utils->idKey = 'id';
                 $utils->parentIdKey = 'parent';
-                $data = $utils->classify(PdoConnect::getInstance()->fetchAll(Menu::GET_SHOW_ALL, [APP_ID, APP_LANG_ID]));
+                $data = $utils->classify(PdoConnect::getInstance()->fetchAll(Menu::GET_SHOW_ALL, [APP_LANG_ID]));
                 $redis->set($key, $data);
                 return $data;
             }

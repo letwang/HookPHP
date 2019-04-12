@@ -5,7 +5,7 @@ use Hook\Sql\Hook\Hook;
 
 class HookModel extends \Base\AbstractModel
 {
-    public static $table = 'hp_hook';
+    public static $table = 'hp_'.APP_NAME.'_hook_hook';
     public static $foreign = 'hook_id';
 
     public $fields = [
@@ -23,6 +23,6 @@ class HookModel extends \Base\AbstractModel
 
     public function getSelect(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Hook::GET_SHOW_SELECT, [APP_ID, APP_LANG_ID], \PDO::FETCH_KEY_PAIR);
+        return PdoConnect::getInstance()->fetchAll(Hook::GET_SHOW_SELECT, [APP_LANG_ID], \PDO::FETCH_KEY_PAIR);
     }
 }

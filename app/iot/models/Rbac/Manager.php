@@ -4,7 +4,7 @@ use Hook\Db\OrmConnect;
 
 class ManagerModel extends \Base\AbstractModel
 {
-    public static $table = 'hp_rbac_manager_role';
+    public static $table = 'hp_'.APP_NAME.'_rbac_manager_role';
 
     public function getSelect(): array
     {
