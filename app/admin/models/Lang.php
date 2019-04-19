@@ -4,7 +4,7 @@ use Hook\Db\OrmConnect;
 
 class LangModel extends Base\AbstractModel
 {
-    public static $table = 'hp_lang_i18n';
+    public static $table = 'hp_admin_lang_i18n';
     public $fields = [
         'status' => array('type' => parent::BOOL, 'require' => true, 'validate' => 'isBool'),
         'iso' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isIsoCode'),

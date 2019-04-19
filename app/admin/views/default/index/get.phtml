@@ -1,0 +1,26 @@
+<?php require __DIR__.'/../top.phtml';?>
+<title><?php echo $this->title;?></title>
+<meta name="description" content="<?php echo $this->description;?>" />
+<meta name="keywords" content="<?php echo $this->keywords;?>" />
+</head>
+<body>
+<div class="app">
+  <?php require __DIR__.'/../head.phtml';?>
+  <?php require __DIR__.'/../left.phtml';?>
+  <main class="app-main">
+    <div class="wrapper">
+      <div class="page">
+        <div class="page-inner">
+          <header class="page-title-bar">
+            <!-- page title stuff goes here -->
+          </header>
+          <div class="page-section">
+            Index
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php require __DIR__.'/../foot.phtml';?>
+  </main>
+</div>
+<?php require __DIR__.'/../bottom.phtml';?>

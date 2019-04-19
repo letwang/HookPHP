@@ -5,7 +5,7 @@ use Hook\Sql\App;
 
 class AppModel extends Base\AbstractModel
 {
-    public static $table = 'hp_app';
+    public static $table = 'hp_admin_app';
     public static $foreign = 'app_id';
 
     public $fields = [

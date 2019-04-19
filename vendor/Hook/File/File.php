@@ -3,57 +3,6 @@ namespace Hook\File;
 
 class File
 {
-
-    public static function write($file, $data)
-    {
-        $fp = fopen($file, 'cb');
-        
-        if (! $fp) {
-            return false;
-        }
-        
-        if (! flock($fp, LOCK_EX | LOCK_NB)) {
-            fclose($fp);
-            return false;
-        }
-        
-        if (fwrite($fp, $data) === false) {
-            flock($fp, LOCK_UN);
-            fclose($fp);
-            return false;
-        }
-        
-        if (! ftruncate($fp, mb_strlen($data))) {
-            flock($fp, LOCK_UN);
-            fclose($fp);
-            return false;
-        }
-        flock($fp, LOCK_UN);
-        fclose($fp);
-        return true;
-    }
-
-    public static function read($file)
-    {
-        $fp = fopen($file, 'rb');
-        if (! $fp) {
-            return false;
-        }
-        if (! flock($fp, LOCK_SH | LOCK_NB)) {
-            fclose($fp);
-            return false;
-        }
-        $data = stream_get_contents($fp);
-        if ($data === false) {
-            flock($fp, LOCK_UN);
-            fclose($fp);
-            return false;
-        }
-        flock($fp, LOCK_UN);
-        fclose($fp);
-        return $data;
-    }
-
     public static function down($file)
     {
         ob_start();

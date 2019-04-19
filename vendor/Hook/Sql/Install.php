@@ -3,9 +3,9 @@ namespace Hook\Sql;
 
 class Install
 {
-    const CREATE_SYS_STRUCT = "
-SET FOREIGN_KEY_CHECKS = 0;
-CREATE TABLE `hp_app` (
+    const CREATE_ADMIN_STRUCT = "
+DROP TABLE IF EXISTS `hp_admin_app`;
+CREATE TABLE `hp_admin_app` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `date_add` int(10) unsigned NOT NULL,
@@ -14,7 +14,8 @@ CREATE TABLE `hp_app` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE `hp_app_lang` (
+DROP TABLE IF EXISTS `hp_admin_app_lang`;
+CREATE TABLE `hp_admin_app_lang` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `lang_id` int(10) unsigned NOT NULL,
   `app_id` int(10) unsigned NOT NULL,
@@ -23,11 +24,12 @@ CREATE TABLE `hp_app_lang` (
   PRIMARY KEY (`id`),
   KEY `app_id` (`app_id`),
   KEY `lang_id` (`lang_id`),
-  CONSTRAINT `FK_000031` FOREIGN KEY (`app_id`) REFERENCES `hp_app` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_000035` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang_i18n` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `%s_000001` FOREIGN KEY (`app_id`) REFERENCES `hp_admin_app` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `%s_000002` FOREIGN KEY (`lang_id`) REFERENCES `hp_admin_lang_i18n` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE `hp_lang_i18n` (
+DROP TABLE IF EXISTS `hp_admin_lang_i18n`;
+CREATE TABLE `hp_admin_lang_i18n` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `date_add` int(10) unsigned NOT NULL,
@@ -38,7 +40,8 @@ CREATE TABLE `hp_lang_i18n` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE `hp_user` (
+DROP TABLE IF EXISTS `hp_admin_user`;
+CREATE TABLE `hp_admin_user` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `app_id` int(10) unsigned NOT NULL,
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -54,11 +57,12 @@ CREATE TABLE `hp_user` (
   PRIMARY KEY (`id`),
   KEY `lang_id` (`lang_id`),
   KEY `app_id` (`app_id`),
-  CONSTRAINT `FK_000034` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang_i18n` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `FK_000038` FOREIGN KEY (`app_id`) REFERENCES `hp_app` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `%s_000003` FOREIGN KEY (`lang_id`) REFERENCES `hp_admin_lang_i18n` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `%s_000004` FOREIGN KEY (`app_id`) REFERENCES `hp_admin_app` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE `hp_manager` (
+DROP TABLE IF EXISTS `hp_admin_manager`;
+CREATE TABLE `hp_admin_manager` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `app_id` int(10) unsigned NOT NULL,
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -74,11 +78,12 @@ CREATE TABLE `hp_manager` (
   PRIMARY KEY (`id`),
   KEY `lang_id` (`lang_id`),
   KEY `app_id` (`app_id`),
-  CONSTRAINT `FK_000021` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang_i18n` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `FK_000037` FOREIGN KEY (`app_id`) REFERENCES `hp_app` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `%s_000005` FOREIGN KEY (`lang_id`) REFERENCES `hp_admin_lang_i18n` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `%s_000006` FOREIGN KEY (`app_id`) REFERENCES `hp_admin_app` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE `hp_translation` (
+DROP TABLE IF EXISTS `hp_admin_translation`;
+CREATE TABLE `hp_admin_translation` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `date_add` int(10) unsigned NOT NULL,
@@ -92,16 +97,15 @@ CREATE TABLE `hp_translation` (
   UNIQUE KEY `from_to_crc32` (`from`,`to`,`crc32`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 ";
-    const CREATE_SYS_DATA = "
-SET FOREIGN_KEY_CHECKS = 0;
-INSERT INTO `hp_app` VALUES (NULL,1,1493439330,1493439330,'iot'),(NULL,1,1493439330,1493439330,'payment'),(NULL,1,1493439330,1493439330,'store'),(NULL,1,1493439330,1493439330,'paas');
-INSERT INTO `hp_app_lang` VALUES (NULL,1,1,'职能家居',''),(NULL,1,2,'支付网关',''),(NULL,1,3,'电商系统',''),(NULL,1,4,'PAAS平台',''),(NULL,2,1,'Functional home',''),(NULL,2,2,'Payment gateway',''),(NULL,2,3,'E-commerce system',''),(NULL,2,4,'PAAS platform','');
-INSERT INTO `hp_lang_i18n` VALUES (NULL,1,1493439330,1493439330,'cn','zh-cn','简体中文 (简体中文)'),(NULL,1,1493439330,1493439330,'en','en-us','English (English)');
-INSERT INTO `hp_user` VALUES (1,1,1,1493439330,1493439330,1,'admin','admin@hookphp.com','15902366666','\$argon2i\$v=19\$m=1024,t=2,p=2\$c2NtWmdCb255NGZZUFBOLw\$Hoi3pZx1vlPKT6nwtcu9/zyAppezbxKAOW2u1EmtxqA','Stephen','Bob');
-INSERT INTO `hp_manager` VALUES (NULL,1,1,1493439330,1493439330,1,'test1','test1@hotmail.com','13356966661','\$argon2i\$v=19\$m=1024,t=2,p=2\$c2NtWmdCb255NGZZUFBOLw\$Hoi3pZx1vlPKT6nwtcu9/zyAppezbxKAOW2u1EmtxqA','Helen1','Alice1'),(NULL,1,1,1493439330,1493439330,1,'test2','test2@hotmail.com','13356966662','\$argon2i\$v=19\$m=1024,t=2,p=2\$c2NtWmdCb255NGZZUFBOLw\$Hoi3pZx1vlPKT6nwtcu9/zyAppezbxKAOW2u1EmtxqA','Helen2','Alice2'),(NULL,1,1,1493439330,1493439330,1,'test3','test3@hotmail.com','13356966663','\$argon2i\$v=19\$m=1024,t=2,p=2\$c2NtWmdCb255NGZZUFBOLw\$Hoi3pZx1vlPKT6nwtcu9/zyAppezbxKAOW2u1EmtxqA','Helen3','Alice3'),(NULL,1,1,1493439330,1493439330,1,'test4','test4@hotmail.com','13356966664','\$argon2i\$v=19\$m=1024,t=2,p=2\$c2NtWmdCb255NGZZUFBOLw\$Hoi3pZx1vlPKT6nwtcu9/zyAppezbxKAOW2u1EmtxqA','Helen4','Alice4');
+    const CREATE_ADMIN_DATA = "
+INSERT INTO `hp_admin_app` VALUES (NULL,1,1493439330,1493439330,'admin'),(NULL,1,1493439330,1493439330,'iot'),(NULL,1,1493439330,1493439330,'payment'),(NULL,1,1493439330,1493439330,'store'),(NULL,1,1493439330,1493439330,'paas');
+INSERT INTO `hp_admin_app_lang` VALUES (NULL,1,1,'中控平台',''),(NULL,1,2,'职能家居',''),(NULL,1,3,'支付网关',''),(NULL,1,4,'电商系统',''),(NULL,1,5,'PAAS平台',''),(NULL,2,1,'Central control platform',''),(NULL,2,2,'Functional home',''),(NULL,2,3,'Payment gateway',''),(NULL,2,4,'E-commerce system',''),(NULL,2,5,'PAAS platform','');
+INSERT INTO `hp_admin_lang_i18n` VALUES (NULL,1,1493439330,1493439330,'cn','zh-cn','简体中文 (简体中文)'),(NULL,1,1493439330,1493439330,'en','en-us','English (English)');
+INSERT INTO `hp_admin_user` VALUES (NULL,1,1,1493439330,1493439330,1,'test1','test1@hotmail.com','13356966661','\$argon2i\$v=19\$m=1024,t=2,p=2\$c2NtWmdCb255NGZZUFBOLw\$Hoi3pZx1vlPKT6nwtcu9/zyAppezbxKAOW2u1EmtxqA','Helen1','Alice1'),(NULL,1,1,1493439330,1493439330,1,'test2','test2@hotmail.com','13356966662','\$argon2i\$v=19\$m=1024,t=2,p=2\$c2NtWmdCb255NGZZUFBOLw\$Hoi3pZx1vlPKT6nwtcu9/zyAppezbxKAOW2u1EmtxqA','Helen2','Alice2'),(NULL,1,1,1493439330,1493439330,1,'test3','test3@hotmail.com','13356966663','\$argon2i\$v=19\$m=1024,t=2,p=2\$c2NtWmdCb255NGZZUFBOLw\$Hoi3pZx1vlPKT6nwtcu9/zyAppezbxKAOW2u1EmtxqA','Helen3','Alice3'),(NULL,1,1,1493439330,1493439330,1,'test4','test4@hotmail.com','13356966664','\$argon2i\$v=19\$m=1024,t=2,p=2\$c2NtWmdCb255NGZZUFBOLw\$Hoi3pZx1vlPKT6nwtcu9/zyAppezbxKAOW2u1EmtxqA','Helen4','Alice4');
+INSERT INTO `hp_admin_manager` VALUES (1,1,1,1493439330,1493439330,1,'admin','admin@hookphp.com','15902366666','\$argon2i\$v=19\$m=1024,t=2,p=2\$c2NtWmdCb255NGZZUFBOLw\$Hoi3pZx1vlPKT6nwtcu9/zyAppezbxKAOW2u1EmtxqA','Stephen','Bob');
 ";
     const CREATE_APP_STRUCT = "
-SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS `hp_%s_rbac_group`;
 CREATE TABLE `hp_%s_rbac_group` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -110,6 +114,7 @@ CREATE TABLE `hp_%s_rbac_group` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+DROP TABLE IF EXISTS `hp_%s_rbac_group_lang`;
 CREATE TABLE `hp_%s_rbac_group_lang` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `group_id` int(10) unsigned NOT NULL,
@@ -118,10 +123,11 @@ CREATE TABLE `hp_%s_rbac_group_lang` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `group_lang` (`group_id`,`lang_id`),
   KEY `lang_id` (`lang_id`),
-  CONSTRAINT `FK_000012` FOREIGN KEY (`group_id`) REFERENCES `hp_%s_rbac_group` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_000009` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang_i18n` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `%s_000007` FOREIGN KEY (`group_id`) REFERENCES `hp_%s_rbac_group` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `%s_000008` FOREIGN KEY (`lang_id`) REFERENCES `hp_admin_lang_i18n` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+DROP TABLE IF EXISTS `hp_%s_rbac_group_role`;
 CREATE TABLE `hp_%s_rbac_group_role` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -132,10 +138,11 @@ CREATE TABLE `hp_%s_rbac_group_role` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `group_role` (`group_id`,`role_id`),
   KEY `role_id` (`role_id`),
-  CONSTRAINT `FK_000043` FOREIGN KEY (`group_id`) REFERENCES `hp_%s_rbac_group` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `FK_000042` FOREIGN KEY (`role_id`) REFERENCES `hp_%s_rbac_role` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `%s_000009` FOREIGN KEY (`group_id`) REFERENCES `hp_%s_rbac_group` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `%s_000010` FOREIGN KEY (`role_id`) REFERENCES `hp_%s_rbac_role` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+DROP TABLE IF EXISTS `hp_%s_rbac_group_manager`;
 CREATE TABLE `hp_%s_rbac_group_manager` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -146,10 +153,11 @@ CREATE TABLE `hp_%s_rbac_group_manager` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `group_manager` (`group_id`,`manager_id`),
   KEY `manager_id` (`manager_id`),
-  CONSTRAINT `FK_000001` FOREIGN KEY (`group_id`) REFERENCES `hp_%s_rbac_group` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `FK_000002` FOREIGN KEY (`manager_id`) REFERENCES `hp_manager` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `%s_000011` FOREIGN KEY (`group_id`) REFERENCES `hp_%s_rbac_group` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `%s_000012` FOREIGN KEY (`manager_id`) REFERENCES `hp_admin_manager` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+DROP TABLE IF EXISTS `hp_%s_rbac_role`;
 CREATE TABLE `hp_%s_rbac_role` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -158,6 +166,7 @@ CREATE TABLE `hp_%s_rbac_role` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+DROP TABLE IF EXISTS `hp_%s_rbac_role_lang`;
 CREATE TABLE `hp_%s_rbac_role_lang` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `role_id` int(10) unsigned NOT NULL,
@@ -166,10 +175,11 @@ CREATE TABLE `hp_%s_rbac_role_lang` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `role_lang` (`role_id`,`lang_id`),
   KEY `lang_id` (`lang_id`),
-  CONSTRAINT `FK_000014` FOREIGN KEY (`role_id`) REFERENCES `hp_%s_rbac_role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_000011` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang_i18n` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `%s_000013` FOREIGN KEY (`role_id`) REFERENCES `hp_%s_rbac_role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `%s_000014` FOREIGN KEY (`lang_id`) REFERENCES `hp_admin_lang_i18n` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+DROP TABLE IF EXISTS `hp_%s_rbac_permission`;
 CREATE TABLE `hp_%s_rbac_permission` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -180,9 +190,10 @@ CREATE TABLE `hp_%s_rbac_permission` (
   `relation_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `role_type_relation` (`role_id`,`type`,`relation_id`),
-  CONSTRAINT `FK_000004` FOREIGN KEY (`role_id`) REFERENCES `hp_%s_rbac_role` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `%s_000015` FOREIGN KEY (`role_id`) REFERENCES `hp_%s_rbac_role` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+DROP TABLE IF EXISTS `hp_%s_rbac_manager_role`;
 CREATE TABLE `hp_%s_rbac_manager_role` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -193,10 +204,11 @@ CREATE TABLE `hp_%s_rbac_manager_role` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `manager_role` (`manager_id`,`role_id`),
   KEY `role_id` (`role_id`),
-  CONSTRAINT `FK_000008` FOREIGN KEY (`manager_id`) REFERENCES `hp_manager` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `FK_000007` FOREIGN KEY (`role_id`) REFERENCES `hp_%s_rbac_role` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `%s_000016` FOREIGN KEY (`manager_id`) REFERENCES `hp_admin_manager` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `%s_000017` FOREIGN KEY (`role_id`) REFERENCES `hp_%s_rbac_role` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+DROP TABLE IF EXISTS `hp_%s_config`;
 CREATE TABLE `hp_%s_config` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -208,6 +220,7 @@ CREATE TABLE `hp_%s_config` (
   UNIQUE KEY `key` (`key`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+DROP TABLE IF EXISTS `hp_%s_hook_hook`;
 CREATE TABLE `hp_%s_hook_hook` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -219,6 +232,7 @@ CREATE TABLE `hp_%s_hook_hook` (
   UNIQUE KEY `key` (`key`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+DROP TABLE IF EXISTS `hp_%s_hook_hook_lang`;
 CREATE TABLE `hp_%s_hook_hook_lang` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `hook_id` int(10) unsigned NOT NULL,
@@ -228,10 +242,11 @@ CREATE TABLE `hp_%s_hook_hook_lang` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `hook_lang` (`hook_id`,`lang_id`),
   KEY `lang_id` (`lang_id`),
-  CONSTRAINT `FK_000015` FOREIGN KEY (`hook_id`) REFERENCES `hp_%s_hook_hook` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_000016` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang_i18n` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `%s_000018` FOREIGN KEY (`hook_id`) REFERENCES `hp_%s_hook_hook` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `%s_000019` FOREIGN KEY (`lang_id`) REFERENCES `hp_admin_lang_i18n` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+DROP TABLE IF EXISTS `hp_%s_hook_hook_module`;
 CREATE TABLE `hp_%s_hook_hook_module` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -243,10 +258,11 @@ CREATE TABLE `hp_%s_hook_hook_module` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `hook_module` (`hook_id`,`module_id`),
   KEY `module_id` (`module_id`),
-  CONSTRAINT `FK_000017` FOREIGN KEY (`hook_id`) REFERENCES `hp_%s_hook_hook` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `FK_000018` FOREIGN KEY (`module_id`) REFERENCES `hp_%s_hook_module` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `%s_000020` FOREIGN KEY (`hook_id`) REFERENCES `hp_%s_hook_hook` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `%s_000021` FOREIGN KEY (`module_id`) REFERENCES `hp_%s_hook_module` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+DROP TABLE IF EXISTS `hp_%s_hook_module`;
 CREATE TABLE `hp_%s_hook_module` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -258,6 +274,7 @@ CREATE TABLE `hp_%s_hook_module` (
   UNIQUE KEY `key` (`key`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+DROP TABLE IF EXISTS `hp_%s_element`;
 CREATE TABLE `hp_%s_element` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -267,6 +284,7 @@ CREATE TABLE `hp_%s_element` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+DROP TABLE IF EXISTS `hp_%s_element_lang`;
 CREATE TABLE `hp_%s_element_lang` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `element_id` int(10) unsigned NOT NULL,
@@ -275,10 +293,11 @@ CREATE TABLE `hp_%s_element_lang` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `element_lang` (`element_id`,`lang_id`),
   KEY `lang_id` (`lang_id`),
-  CONSTRAINT `FK_000047` FOREIGN KEY (`element_id`) REFERENCES `hp_%s_element` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_000046` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang_i18n` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `%s_000022` FOREIGN KEY (`element_id`) REFERENCES `hp_%s_element` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `%s_000023` FOREIGN KEY (`lang_id`) REFERENCES `hp_admin_lang_i18n` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+DROP TABLE IF EXISTS `hp_%s_menu`;
 CREATE TABLE `hp_%s_menu` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -290,9 +309,10 @@ CREATE TABLE `hp_%s_menu` (
   `icon` varchar(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `parent` (`parent`),
-  CONSTRAINT `FK_000022` FOREIGN KEY (`parent`) REFERENCES `hp_%s_menu` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `%s_000024` FOREIGN KEY (`parent`) REFERENCES `hp_%s_menu` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+DROP TABLE IF EXISTS `hp_%s_menu_lang`;
 CREATE TABLE `hp_%s_menu_lang` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `menu_id` int(10) unsigned NOT NULL,
@@ -301,10 +321,11 @@ CREATE TABLE `hp_%s_menu_lang` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `menu_lang` (`menu_id`,`lang_id`),
   KEY `lang_id` (`lang_id`),
-  CONSTRAINT `FK_000019` FOREIGN KEY (`menu_id`) REFERENCES `hp_%s_menu` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_000020` FOREIGN KEY (`lang_id`) REFERENCES `hp_lang_i18n` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `%s_000025` FOREIGN KEY (`menu_id`) REFERENCES `hp_%s_menu` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `%s_000026` FOREIGN KEY (`lang_id`) REFERENCES `hp_admin_lang_i18n` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+DROP TABLE IF EXISTS `hp_%s_theme`;
 CREATE TABLE `hp_%s_theme` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -316,7 +337,6 @@ CREATE TABLE `hp_%s_theme` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 ";
     const CREATE_APP_DATA = "
-SET FOREIGN_KEY_CHECKS = 0;
 INSERT INTO `hp_%s_rbac_group` VALUES (NULL,1,1493439330,1493439330),(NULL,1,1493439330,1493439330),(NULL,1,1493439330,1493439330),(NULL,1,1493439330,1493439330);
 INSERT INTO `hp_%s_rbac_group_lang` VALUES (NULL,1,1,'董事会'),(NULL,2,1,'高层'),(NULL,3,1,'中层'),(NULL,4,1,'基层');
 INSERT INTO `hp_%s_rbac_group_role` VALUES (NULL,1,1493439330,1493439330,1,1),(NULL,1,1493439330,1493439330,2,2),(NULL,1,1493439330,1493439330,3,3),(NULL,1,1493439330,1493439330,4,4);

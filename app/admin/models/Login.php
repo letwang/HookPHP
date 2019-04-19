@@ -3,7 +3,7 @@ use Hook\Db\OrmConnect;
 
 class LoginModel extends Base\AbstractModel
 {
-    public static $table = 'hp_manager';
+    public static $table = 'hp_admin_manager';
 
     public static function signIn(string $user)
     {

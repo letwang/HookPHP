@@ -23,7 +23,7 @@ class RedisConnect extends Cache
         }
 
         $this->redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_IGBINARY);
-        $this->redis->setOption(Redis::OPT_PREFIX, APP_NAME.':');
+        //$this->redis->setOption(Redis::OPT_PREFIX, APP_NAME.':');
     }
 
     public function multi(callable $callback, int $type = Redis::MULTI)

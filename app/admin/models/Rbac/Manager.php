@@ -8,6 +8,6 @@ class ManagerModel extends \Base\AbstractModel
 
     public function getSelect(): array
     {
-        return OrmConnect::getInstance('hp_manager')->select(['id', 'user'])->where(['status' => 1])->fetchAll(\PDO::FETCH_KEY_PAIR);
+        return OrmConnect::getInstance('hp_admin_manager')->select(['id', 'user'])->where(['status' => 1])->fetchAll(\PDO::FETCH_KEY_PAIR);
     }
 }

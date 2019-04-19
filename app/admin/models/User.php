@@ -1,11 +1,9 @@
 <?php
-namespace Manager;
-
 use Hook\Db\OrmConnect;
 
-class ManagerModel extends \Base\AbstractModel
+class UserModel extends Base\AbstractModel
 {
-    public static $table = 'hp_manager';
+    public static $table = 'hp_admin_user';
     public $fields = [
         'status' => array('type' => parent::BOOL, 'require' => true, 'validate' => 'isBool'),
         'user' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isGenericName'),
