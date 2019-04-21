@@ -16,6 +16,6 @@ class UserModel extends Base\AbstractModel
 
     public function get(): array
     {
-        return OrmConnect::getInstance(static::$table)->select(['id', 'status', 'date_add', 'date_upd', 'user', 'email', 'phone', 'lastname', 'firstname'])->fetchAll();
+        return OrmConnect::getInstance(static::$table)->select(['id', 'app_id', 'status', 'date_add', 'date_upd', 'user', 'email', 'phone', 'lastname', 'firstname'])->fetchAll();
     }
 }

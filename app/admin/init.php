@@ -2,7 +2,7 @@
 use Yaf\Registry;
 use Hook\Db\YacConnect;
 
-define('APP_NAME', 'admin');
+define('APP_NAME', PHP_SAPI === 'cli' ? 'admin' : 'iot');
 define('APP_CONFIG', Yaconf::get('admin_'.YAF\ENVIRON));
 define('APP_TABLE', Yaconf::get('admin_table') + Yaconf::get(APP_NAME.'_table'));
 

@@ -1,5 +1,5 @@
 <?php
-namespace Hook\Sql\Acl;
+namespace Hook\Sql\Rbac;
 
 class Manager
 {

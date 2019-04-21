@@ -1,17 +1,17 @@
 <?php
-use Acl\{ManagerModel, RoleModel};
+use Rbac\{GroupModel, RoleModel};
 
-class Rbac_ManagerController extends Base\ViewController
+class Rbac_Group_RoleController extends Base\ViewController
 {
     protected function renderForm(): void
     {
         parent::renderForm();
-        $this->form['fields']['data'][0]['form']['input']['user_id'] = [
+        $this->form['fields']['data'][0]['form']['input']['group_id'] = [
             'type' => 'select',
-            'name' => 'user_id',
-            'label' => l($this->_request->controller.'.user_id'),
+            'name' => 'group_id',
+            'label' => l($this->_request->controller.'.group_id'),
             'lang' => false,
-            'values' => [['options' => ManagerModel::getInstance($this->id)->getSelect()]]
+            'values' => [['options' => GroupModel::getInstance($this->id)->getSelect()]]
         ];
         $this->form['fields']['data'][0]['form']['input']['role_id'] = [
             'type' => 'select',

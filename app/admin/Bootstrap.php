@@ -19,7 +19,7 @@ class Bootstrap extends Bootstrap_Abstract
     }
 }
 
-function l(string $key): string
+function l(string $key)
 {
-    return Yaconf::get(APP_NAME.'_lang_'.LangModel::getDefaultName().'.'.$key, $key);
+    return Yaconf::get('admin_lang_'.LangModel::getDefaultName().'.'.$key, $key);
 }

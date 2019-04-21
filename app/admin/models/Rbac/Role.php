@@ -1,7 +1,7 @@
 <?php
-namespace Acl;
+namespace Rbac;
 use Hook\Db\PdoConnect;
-use Hook\Sql\Acl\Role;
+use Hook\Sql\Rbac\Role;
 
 class RoleModel extends \Base\AbstractModel
 {

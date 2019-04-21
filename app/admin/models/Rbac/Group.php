@@ -1,7 +1,7 @@
 <?php
-namespace Acl;
+namespace Rbac;
 use Hook\Db\PdoConnect;
-use Hook\Sql\Acl\Group;
+use Hook\Sql\Rbac\Group;
 
 class GroupModel extends \Base\AbstractModel
 {
