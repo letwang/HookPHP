@@ -11,7 +11,7 @@ class Bootstrap extends Bootstrap_Abstract
     }
 }
 
-function l(string $key): string
+function l(string $key)
 {
     return Yaconf::get(APP_NAME.'_lang_zh-cn.'.$key, $key);
 }

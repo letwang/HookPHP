@@ -83,14 +83,13 @@ abstract class ViewController extends AbstractController
 
     protected function renderList(): void
     {
-        $white = ['status' => true, 'date_add' => true, 'date_upd' => true];
         $this->list['id'] = ['data' => 'id', 'className' => 'col-checker align-middle', 'orderable' => false, 'searchable' => false];
         unset($this->ignore['date_add'], $this->ignore['date_upd']);
         foreach (array_keys($this->getDefinition()) as $field) {
             $this->list[$field] = [
                 'data' => $field,
                 'className' => 'align-middle',
-                'title' => l((isset($white[$field]) ? 'app' : $this->_request->controller).'.'.$field)
+                'title' => l($this->_request->controller.'.'.$field)
             ];
         }
         $this->list['idx'] = ['className' => 'align-middle text-right'] + $this->list['id'];

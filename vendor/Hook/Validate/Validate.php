@@ -1,6 +1,8 @@
 <?php
 namespace Hook\Validate;
 
+use \Yaconf;
+
 class Validate
 {
     public static function isEmpty(?string $value): bool
@@ -15,12 +17,12 @@ class Validate
 
     public static function isEmail(string $value): bool
     {
-        return preg_match('/^'.APP_CONFIG['regexp']['core']['email'].'$/', $value);
+        return preg_match('/^'.Yaconf::get('regexp')['core']['email'].'$/', $value);
     }
 
     public static function isUrl(string $value): bool
     {
-        return preg_match('/^'.APP_CONFIG['regexp']['core']['url'].'$/', $value);
+        return preg_match('/^'.Yaconf::get('regexp')['core']['url'].'$/', $value);
     }
 
     public static function isMd5(string $value): bool
@@ -35,7 +37,7 @@ class Validate
 
     public static function isFloat(string $value): bool
     {
-        return preg_match('/^'.APP_CONFIG['regexp']['core']['float'].'$/', $value);
+        return preg_match('/^'.Yaconf::get('regexp')['core']['float'].'$/', $value);
     }
 
     public static function isBool(string $value): bool
@@ -45,7 +47,7 @@ class Validate
 
     public static function isInt(string $value): bool
     {
-        return preg_match('/^'.APP_CONFIG['regexp']['core']['int'].'$/', $value);
+        return preg_match('/^'.Yaconf::get('regexp')['core']['int'].'$/', $value);
     }
 
     public static function isPrice(string $value): bool
@@ -65,12 +67,12 @@ class Validate
 
     public static function isPhone(string $value): bool
     {
-        return preg_match('/^'.APP_CONFIG['regexp']['core']['phone'].'$/', $value);
+        return preg_match('/^'.Yaconf::get('regexp')['core']['phone'].'$/', $value);
     }
 
     public static function isMobile(string $value): bool
     {
-        return preg_match('/^'.APP_CONFIG['regexp']['core']['mobile'].'$/', $value);
+        return preg_match('/^'.Yaconf::get('regexp')['core']['mobile'].'$/', $value);
     }
 
     public static function isGenericName(string $value): bool
@@ -80,41 +82,41 @@ class Validate
 
     public static function isZh(string $value): bool
     {
-        return preg_match('/^'.APP_CONFIG['regexp']['core']['zh'].'$/', $value);
+        return preg_match('/^'.Yaconf::get('regexp')['core']['zh'].'$/', $value);
     }
 
     public static function isMb(string $value): bool
     {
-        return preg_match('/^'.APP_CONFIG['regexp']['core']['mb'].'$/', $value);
+        return preg_match('/^'.Yaconf::get('regexp')['core']['mb'].'$/', $value);
     }
 
     public static function isQq(string $value): bool
     {
-        return preg_match('/^'.APP_CONFIG['regexp']['core']['qq'].'$/', $value);
+        return preg_match('/^'.Yaconf::get('regexp')['core']['qq'].'$/', $value);
     }
 
     public static function isPostal(string $value): bool
     {
-        return preg_match('/^'.APP_CONFIG['regexp']['core']['postal'].'$/', $value);
+        return preg_match('/^'.Yaconf::get('regexp')['core']['postal'].'$/', $value);
     }
 
     public static function isIpv4(string $value): bool
     {
-        return preg_match('/^'.APP_CONFIG['regexp']['core']['ipv4'].'$/', $value);
+        return preg_match('/^'.Yaconf::get('regexp')['core']['ipv4'].'$/', $value);
     }
 
     public static function isCard(string $value): bool
     {
-        return preg_match('/^'.APP_CONFIG['regexp']['core']['card'].'$/', $value);
+        return preg_match('/^'.Yaconf::get('regexp')['core']['card'].'$/', $value);
     }
 
     public static function isDate(string $value): bool
     {
-        return preg_match('/^'.APP_CONFIG['regexp']['core']['date'].'$/', $value);
+        return preg_match('/^'.Yaconf::get('regexp')['core']['date'].'$/', $value);
     }
 
     public static function isName(string $value): bool
     {
-        return preg_match('/^'.APP_CONFIG['regexp']['core']['name'].'$/', $value);
+        return preg_match('/^'.Yaconf::get('regexp')['core']['name'].'$/', $value);
     }
 }

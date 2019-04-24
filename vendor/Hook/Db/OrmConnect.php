@@ -140,7 +140,7 @@ class OrmConnect extends Cache
             $parameter[] = $value;
         }
 
-        $this->statement = 'UPDATE `'.$this->table.'` SET '.substr($statement, 0, -1).$this->statement;
+        $this->statement = 'UPDATE `'.$this->table.'` SET '.substr($statement, 0, -1).' '.$this->statement;
         $this->parameter = array_merge($parameter, $this->parameter);
 
         $this->check();$data = PdoConnect::getInstance()->update($this->statement, $this->parameter);$this->clean();
