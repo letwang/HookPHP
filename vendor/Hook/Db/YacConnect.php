@@ -20,6 +20,6 @@ class YacConnect extends Cache
             $data = $callback($redis);
             $this->handle->set($key, $data, $ttl);
         }
-        return $id ? $data[$id] : $data;
+        return $id ? ($data[$id] ?? null) : $data;
     }
 }

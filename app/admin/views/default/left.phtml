@@ -53,8 +53,18 @@
       </nav>
     </section>
     <div class="aside-footer border-top p-3">
-      <button class="btn btn-light btn-block" data-toggle="skin">Night mode
-        <i class="fas fa-moon ml-1"></i></button>
+        <form action="/change/" method="get" name="change">
+            <select class="custom-select col-lg-5" onchange="document.change.submit()" name="lang_id">
+            <?php foreach (\LangModel::getIds() as $text => $id) {
+                echo '<option value="'.$id.'"'.(APP_LANG_ID === (int) $id ? ' selected="selected"' : '').'>'.$text.'</option>';
+            }?>
+            </select>
+            <select class="custom-select col-lg-5" onchange="document.change.submit()" name="app_id">
+            <?php foreach (\AppModel::getIds() as $text => $id) {
+                echo '<option value="'.$id.'"'.(APP_ID === (int) $id ? ' selected="selected"' : '').'>'.$text.'</option>';
+            }?>
+            </select>
+        </form>
     </div>
   </div>
 </aside>
