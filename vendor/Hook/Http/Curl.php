@@ -6,7 +6,7 @@ class Curl
 
     public $curlHandle, $fileHandle;
 
-    public $userAgent = [
+    public $agent = [
         'Mozilla/5.0 (Windows NT 6.%u; rv:31.%u) Gecko/20100101 Firefox/%u0.%u',
         'Mozilla/5.0 (Windows NT 6.%u; Trident/7.%u; rv:50.%u) like Gecko',
         'Mozilla/5.0 (Windows NT 6.%u) AppleWebKit/537.%u6 (KHTML, like Gecko) Chrome/50.%u.1%u16.153 Safari/5%u7.%u6',
@@ -15,48 +15,38 @@ class Curl
         'Opera/9.80 (Windows NT 6.%u; U; en) Presto/2.%u.%u0 Version/10.%u0'
     ];
 
-    public $httpHeader = [
+    public $header = [
         'Accept: text/html,application/xhtml+xml,application/xml;q=0.%u,*/*;q=0.%u',
-        'Accept-Language: %s;q=0.%u',
-        'Cache-Control: max-age=0',
+        'Accept-Language: zh-CN,zh;q=0.%u,en-US;q=0.%u',
         'Connection: keep-alive',
-        'Pragma: no-cache'
-    ];
-
-    public $acceptLanguage = [
-        'en-us,en',
-        'it-ch,it',
-        'sv-se,sv',
-        'es-pa,es',
-        'de-li,de',
-        'fr-lu,fr',
-        'sa-in,sa',
-        'nn-no,nn',
-        'ms-bn,ms'
+        'Pragma: no-cache',
+        'Cache-Control: no-cache',
     ];
 
     public $options = [
-        CURLOPT_VERBOSE => false, // true is for debug
-        CURLOPT_CUSTOMREQUEST => 'GET', // use get action on http
-        CURLOPT_FOLLOWLOCATION => true, // auto redirect
-        CURLOPT_MAXREDIRS => 10, // auto redirect max times
-        CURLOPT_AUTOREFERER => true, // auto fill referer in browser header
-        CURLOPT_ENCODING => '', // empty is all
-        CURLOPT_RETURNTRANSFER => true, // save stream to output,not Direct echo
-        CURLOPT_BINARYTRANSFER => true, // return raw result
-        CURLOPT_FORBID_REUSE => true, // no cache connection
-        CURLOPT_FRESH_CONNECT => true, // no cache connection
-        CURLOPT_FAILONERROR => true, // show error code and catch error
-        CURLOPT_SSL_VERIFYPEER => false, // disable verify to server
-        CURLOPT_SSL_VERIFYHOST => 2, // verify is exists or not
-        CURLOPT_TIMEOUT => 36000, // curl exec max seconds,10 h for download big file
-        CURLOPT_CONNECTTIMEOUT => 0, // wait exec forever
+        CURLOPT_VERBOSE => false,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_AUTOREFERER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_BINARYTRANSFER => true,
+        CURLOPT_FORBID_REUSE => true,
+        CURLOPT_FRESH_CONNECT => true,
+        CURLOPT_FAILONERROR => true,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => 2,
+        CURLOPT_TIMEOUT => 36000,
+        CURLOPT_CONNECTTIMEOUT => 0,
         CURLOPT_DNS_CACHE_TIMEOUT => 36000
     ];
-    // dns max seconds,10 h forever
+
     public function __construct(array $options = [])
     {
-        $this->setCurlOptions($options);
+        foreach ($options as $k => $v) {
+            $this->options[$k] = $v;
+        }
     }
 
     public function __destruct()
@@ -66,57 +56,50 @@ class Curl
         unset($this->curlHandle, $this->fileHandle);
     }
 
-    public function setCurlOptions(array $options = [])
+    public function setMode(bool $header = false, bool $noBody = false)
     {
-        foreach ($options as $k => $v) {
-            $this->options[$k] = $v; // externally set will override default
-        }
+        $this->options[CURLOPT_HEADER] = $header;
+        $this->options[CURLOPT_NOBODY] = $noBody;
     }
 
-    public function setModeToTest()
+    public function setMethod(string $method = 'GET', $value = '')
     {
-        $this->options[CURLOPT_HEADER] = false;
-        $this->options[CURLOPT_NOBODY] = true;
+        $this->options[CURLOPT_CUSTOMREQUEST] = $method;
+        $this->options[CURLOPT_POSTFIELDS] = $value;
     }
 
-    public function setModeToHeader()
+    public function setReferer(string $referer = '')
     {
-        $this->options[CURLOPT_HEADER] = true;
-        $this->options[CURLOPT_NOBODY] = true;
+        $this->options[CURLOPT_REFERER] = $referer;
     }
 
-    public function setModeToContent()
+    public function setAgent()
     {
-        $this->options[CURLOPT_HEADER] = false;
-        $this->options[CURLOPT_NOBODY] = false;
+        $this->options[CURLOPT_USERAGENT] = str_replace('%u', mt_rand(1, 9), $this->agent[array_rand($this->agent)]);
     }
 
-    public function setModeToAll()
+    public function setHeader()
     {
-        $this->options[CURLOPT_HEADER] = true;
-        $this->options[CURLOPT_NOBODY] = false;
+        $this->options[CURLOPT_HTTPHEADER] = array_merge(str_replace('%u', mt_rand(1, 9), $this->header), $this->options[CURLOPT_HTTPHEADER] ?? []);
     }
 
-    public function setUserAgent()
+    public function setAjax()
     {
-        $this->options[CURLOPT_USERAGENT] = str_replace('%u', mt_rand(1, 9), $this->userAgent[array_rand($this->userAgent)]);
+        $this->options[CURLOPT_HTTPHEADER][] = 'X-Requested-With: XMLHttpRequest';
     }
 
-    public function setHttpHeader()
+    public function setType(string $type = 'application/json', $charset = 'utf-8')
     {
-        $this->options[CURLOPT_HTTPHEADER] = array_map(
-            function ($v) {
-                return str_replace(
-                    ['%s', '%u'],
-                    [$this->acceptLanguage[array_rand($this->acceptLanguage)], mt_rand(1, 9)],
-                    $v
-                );
-            },
-            $this->httpHeader
-        );
+        $this->options[CURLOPT_HTTPHEADER][] = 'Content-Type: '.$type.'; charset='.$charset;
     }
 
-    public function setCookie($file, array $cookie = [])
+    public function setIp()
+    {
+        $this->options[CURLOPT_HTTPHEADER][] = 'X-Forwarded-For: ' . mt_rand(0, 255) . '.' . mt_rand(0, 255) . '.' . mt_rand(0, 255) . '.' . mt_rand(0, 255);
+        $this->options[CURLOPT_HTTPHEADER][] = 'Client-Ip: ' . mt_rand(0, 255) . '.' . mt_rand(0, 255) . '.' . mt_rand(0, 255) . '.' . mt_rand(0, 255);
+    }
+
+    public function setCookie(string $file, array $cookie = [])
     {
         $this->options[CURLOPT_COOKIEJAR] = $this->options[CURLOPT_COOKIEFILE] = $file;
         $this->options[CURLOPT_COOKIE] = join(
@@ -131,48 +114,30 @@ class Curl
         );
     }
 
-    public function setMultiplePagesDuringOneSession($enable = true)
+    public function setCookieSession(bool $enable = true)
     {
         $this->options[CURLOPT_COOKIESESSION] = $enable;
     }
 
-    public function setReferer($referer)
+    public function setAuth(string $username, string $password, int $auth = CURLAUTH_BASIC)
     {
-        $this->options[CURLOPT_REFERER] = $referer;
-    }
-
-    public function setAuth($username, $password)
-    {
-        $this->options[CURLOPT_HTTPAUTH] = CURLAUTH_ANY;
+        $this->options[CURLOPT_HTTPAUTH] = $auth;
         $this->options[CURLOPT_USERPWD] = "$username:$password";
     }
 
-    public function setProxy(array $proxy)
+    public function setProxy(array $proxy, int $type = CURLPROXY_HTTP)
     {
-        $this->options[CURLOPT_PROXYTYPE] = CURLPROXY_HTTP;
+        $this->options[CURLOPT_PROXYTYPE] = $type;
         $this->options[CURLOPT_PROXY] = $proxy[array_rand($proxy)];
     }
 
-    public function setProxyMisLead()
+    public function setProxyAuth(string $username, string $password, int $auth = CURLAUTH_BASIC)
     {
-        $this->options[CURLOPT_HTTPHEADER][] = 'X-Forwarded-For: ' . mt_rand(0, 255) . '.' . mt_rand(0, 255) . '.' . mt_rand(0, 255) . '.' . mt_rand(0, 255);
-        $this->options[CURLOPT_HTTPHEADER][] = 'Client_Ip: ' . mt_rand(0, 255) . '.' . mt_rand(0, 255) . '.' . mt_rand(0, 255) . '.' . mt_rand(0, 255);
-    }
-
-    public function setProxyAuth($username, $password)
-    {
-        $this->options[CURLOPT_PROXYAUTH] = CURLAUTH_ANY;
+        $this->options[CURLOPT_PROXYAUTH] = $auth;
         $this->options[CURLOPT_PROXYUSERPWD] = "$username:$password";
     }
 
-    public function setPost($post)
-    {
-        $this->options[CURLOPT_CUSTOMREQUEST] = 'POST';
-        $this->options[CURLOPT_POST] = true;
-        $this->options[CURLOPT_POSTFIELDS] = $post;
-    }
-
-    public function spider($url, $filePath = '')
+    public function spider(string $url, string $filePath = '')
     {
         $this->curlHandle = curl_init($url);
         curl_setopt_array($this->curlHandle, $this->options);
@@ -188,17 +153,17 @@ class Curl
         ];
     }
 
-    public function spiders(array $urlArray, array $filePathArray = [])
+    public function spiders(array $url, array $filePath = [])
     {
         $result = $curlHandles = $fileHandles = [];
         $multiCurlHandles = curl_multi_init();
-        $isDownLoad = ! empty($filePathArray) && array_keys($urlArray) === array_keys($filePathArray);
+        $isDownLoad = ! empty($filePathArray) && array_keys($url) === array_keys($filePath);
         
-        foreach ($urlArray as $k => $url) {
+        foreach ($url as $k => $url) {
             $curlHandles[$k] = curl_init($url);
             curl_setopt_array($curlHandles[$k], $this->options);
             if ($isDownLoad) {
-                $fileHandles[$k] = fopen($filePathArray[$k], 'cb');
+                $fileHandles[$k] = fopen($filePath[$k], 'cb');
                 curl_setopt($curlHandles[$k], CURLOPT_FILE, $fileHandles[$k]);
             }
             curl_multi_add_handle($multiCurlHandles, $curlHandles[$k]);
