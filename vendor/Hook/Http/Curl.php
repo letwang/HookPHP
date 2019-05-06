@@ -95,8 +95,10 @@ class Curl
 
     public function setIp()
     {
-        $this->options[CURLOPT_HTTPHEADER][] = 'X-Forwarded-For: ' . mt_rand(0, 255) . '.' . mt_rand(0, 255) . '.' . mt_rand(0, 255) . '.' . mt_rand(0, 255);
-        $this->options[CURLOPT_HTTPHEADER][] = 'Client-Ip: ' . mt_rand(0, 255) . '.' . mt_rand(0, 255) . '.' . mt_rand(0, 255) . '.' . mt_rand(0, 255);
+        $ip = mt_rand(0, 255).'.'.mt_rand(0, 255).'.'.mt_rand(0, 255).'.'.mt_rand(0, 255);
+        $this->options[CURLOPT_HTTPHEADER][] = 'X-REAL-IP: '.$ip;
+        $this->options[CURLOPT_HTTPHEADER][] = 'X-FORWARDED-FOR: '.$ip;
+        $this->options[CURLOPT_HTTPHEADER][] = 'CLIENT-IP: '.$ip;
     }
 
     public function setCookie(string $file, array $cookie = [])
