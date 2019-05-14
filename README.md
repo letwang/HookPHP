@@ -10,12 +10,13 @@
 [中文][1] | English | Français | Español | Deutsch | Italiano | Português | 日本語 | Русский | Nederlands | العربية | Norsk
 
 # 架构
-![HookPHP系统服务架构图_1](https://github.com/letwang/HookPHP/blob/master/public/demo/2.png?raw=true)
+![HookPHP_架构](https://github.com/letwang/HookPHP/blob/master/public/demo/architecture.png?raw=true)
 
 # 社区
-![HookPHP社区_1](https://github.com/letwang/HookPHP/blob/master/public/demo/3.jpg?raw=true)
+![HookPHP_社区_QQ](https://github.com/letwang/HookPHP/blob/master/public/demo/qq.jpg?raw=true)
+![HookPHP_社区_知识星球](https://github.com/letwang/HookPHP/blob/master/public/demo/zsxq.png?raw=true)
 
 # 演示
-![HookPHP效果演示图_1](https://github.com/letwang/HookPHP/blob/master/public/demo/1.png?raw=true)
+![HookPHP_演示_1](https://github.com/letwang/HookPHP/blob/master/public/demo/1.png?raw=true)
 
 [1]: https://github.com/letwang/HookPHP/blob/master/doc/
