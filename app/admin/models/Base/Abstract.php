@@ -55,7 +55,7 @@ abstract class AbstractModel extends Cache
         $this->beforePost();
         $this->copyFromPost();
         try {
-            PdoConnect::getInstance()->pdo->beginTransaction();
+            PdoConnect::getInstance()->handle->beginTransaction();
 
             $parameter = $this->getFields();
             $parameter += isset(APP_TABLE[static::$table]['date_add']) ? ['date_add' => time()] : [];
@@ -70,9 +70,9 @@ abstract class AbstractModel extends Cache
                 }
             }
 
-            return PdoConnect::getInstance()->pdo->commit() && $this->afterPost($result['lastInsertId']) ? $result['lastInsertId']: 0;
+            return PdoConnect::getInstance()->handle->commit() && $this->afterPost($result['lastInsertId']) ? $result['lastInsertId']: 0;
         } catch (\Throwable $e) {
-            PdoConnect::getInstance()->pdo->rollBack();
+            PdoConnect::getInstance()->handle->rollBack();
             AbstractController::send([], 100003, $e->getMessage(), 500);
         }
     }
@@ -81,13 +81,13 @@ abstract class AbstractModel extends Cache
     {
         $this->beforeDelete();
         try {
-            PdoConnect::getInstance()->pdo->beginTransaction();
+            PdoConnect::getInstance()->handle->beginTransaction();
 
             OrmConnect::getInstance(static::$table)->where(['id' => $this->id])->delete();
 
-            return PdoConnect::getInstance()->pdo->commit() && $this->afterDelete();
+            return PdoConnect::getInstance()->handle->commit() && $this->afterDelete();
         } catch (\Throwable $e) {
-            PdoConnect::getInstance()->pdo->rollBack();
+            PdoConnect::getInstance()->handle->rollBack();
             AbstractController::send([], 100005, $e->getMessage(), 500);
         }
     }
@@ -97,7 +97,7 @@ abstract class AbstractModel extends Cache
         $this->beforePut();
         $this->copyFromPost();
         try {
-            PdoConnect::getInstance()->pdo->beginTransaction();
+            PdoConnect::getInstance()->handle->beginTransaction();
 
             OrmConnect::getInstance(static::$table)->where(['id' => $this->id])->update($this->getFields());
 
@@ -108,9 +108,9 @@ abstract class AbstractModel extends Cache
                 }
             }
 
-            return PdoConnect::getInstance()->pdo->commit() && $this->afterPut();
+            return PdoConnect::getInstance()->handle->commit() && $this->afterPut();
         } catch (\Throwable $e) {
-            PdoConnect::getInstance()->pdo->rollBack();
+            PdoConnect::getInstance()->handle->rollBack();
             AbstractController::send([], 100004, $e->getMessage(), 500);
         }
     }

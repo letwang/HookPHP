@@ -16,8 +16,7 @@ class YacConnect extends Cache
     {
         $data = $this->handle->get($key);
         if (!$data && $callback) {
-            $redis = RedisConnect::getInstance()->redis;
-            $data = $callback($redis);
+            $data = $callback(RedisConnect::getInstance()->handle);
             $this->handle->set($key, $data, $ttl);
         }
         return $id ? ($data[$id] ?? null) : $data;

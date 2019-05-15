@@ -226,7 +226,7 @@ class OrmConnect extends Cache
 
     public function synData(): bool
     {
-        $redis = RedisConnect::getInstance()->redis;
+        $redis = RedisConnect::getInstance()->handle;
         $key = 'table:'.$this->table;
         $redis->del($key);
         $data = $this->select(['id', '*'])->fetchAll(\PDO::FETCH_ASSOC | \PDO::FETCH_UNIQUE);

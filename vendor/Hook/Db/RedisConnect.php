@@ -6,12 +6,12 @@ use Hook\Cache\Cache;
 
 class RedisConnect extends Cache
 {
-    public $redis;
+    public $handle;
     
     public function __construct(string $name = 'default')
     {
-        $this->redis = new \Redis();
-        $this->redis->connect(
+        $this->handle = new \Redis();
+        $this->handle->connect(
             APP_CONFIG['redis'][$name]['host'],
             APP_CONFIG['redis'][$name]['port'],
             APP_CONFIG['redis'][$name]['timeout'],
@@ -19,16 +19,16 @@ class RedisConnect extends Cache
             APP_CONFIG['redis'][$name]['interval']
         );
         if (! empty(APP_CONFIG['redis'][$name]['auth'])) {
-            $this->redis->auth(APP_CONFIG['redis'][$name]['auth']);
+            $this->handle->auth(APP_CONFIG['redis'][$name]['auth']);
         }
 
-        $this->redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_IGBINARY);
-        //$this->redis->setOption(Redis::OPT_PREFIX, APP_NAME.':');
+        $this->handle->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_IGBINARY);
+        //$this->handle->setOption(Redis::OPT_PREFIX, APP_NAME.':');
     }
 
     public function multi(callable $callback, int $type = Redis::MULTI)
     {
-        $redis = $this->redis->multi($type);
+        $redis = $this->handle->multi($type);
         $callback($redis);
         return $redis->exec();
     }

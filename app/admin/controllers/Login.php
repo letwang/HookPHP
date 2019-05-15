@@ -43,8 +43,7 @@ class LoginController extends Base\ViewController
 
     public function outAction()
     {
-        unset($_SESSION[APP_NAME]);
-        session_regenerate_id(true);
+        session_destroy();
         Header::redirect('/');
         return true;
     }

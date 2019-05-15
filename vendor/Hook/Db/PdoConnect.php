@@ -6,7 +6,7 @@ use SeasLog;
 
 class PdoConnect extends Cache
 {
-    public $pdo;
+    public $handle;
 
     /**
      * 
@@ -16,7 +16,7 @@ class PdoConnect extends Cache
     {
         $dsn = 'mysql:host='.APP_CONFIG['mysql'][$name]['host'].';port='.APP_CONFIG['mysql'][$name]['port'];
         $dsn .= ';dbname='.APP_CONFIG['mysql'][$name]['dbname'].';charset='.APP_CONFIG['mysql'][$name]['charset'];
-        $this->pdo = new \PDO(
+        $this->handle = new \PDO(
             $dsn,
             APP_CONFIG['mysql'][$name]['username'],
             APP_CONFIG['mysql'][$name]['passwd'],
@@ -83,7 +83,7 @@ class PdoConnect extends Cache
     {
         return [
             'rowCount' => $this->query($statement, $parameter)->rowCount(),
-            'lastInsertId' => (int) $this->pdo->lastInsertId()
+            'lastInsertId' => (int) $this->handle->lastInsertId()
         ];
     }
 
@@ -118,7 +118,7 @@ class PdoConnect extends Cache
     public function query(string $statement, array $parameter = []): \PDOStatement
     {
         defined('APP_DEBUG') && APP_DEBUG && SeasLog::log('SQL', $statement.' | '.json_encode($parameter));
-        $rs = $this->pdo->prepare($statement);
+        $rs = $this->handle->prepare($statement);
         $flag = isset($parameter[0]);
         foreach ($parameter as $key => $value) {
             switch (1) {

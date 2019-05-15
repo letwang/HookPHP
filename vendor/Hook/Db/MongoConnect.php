@@ -5,11 +5,11 @@ use Hook\Cache\Cache;
 
 class MongoConnect extends Cache
 {
-    public $mongo;
+    public $handle;
     
     public function __construct(string $name = 'default')
     {
-        $this->mongo = new \MongoDB\Client(
+        $this->handle = new \MongoDB\Client(
             APP_CONFIG['mongo'][$name]['uri'],
             APP_CONFIG['mongo'][$name]['uriOptions'],
             APP_CONFIG['mongo'][$name]['driverOptions']
