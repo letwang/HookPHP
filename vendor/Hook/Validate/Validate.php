@@ -1,7 +1,7 @@
 <?php
 namespace Hook\Validate;
 
-use \Yaconf;
+use Yaconf;
 
 class Validate
 {

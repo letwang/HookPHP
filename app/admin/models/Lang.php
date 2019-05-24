@@ -1,5 +1,4 @@
 <?php
-use Yaf\Registry;
 use Hook\Db\OrmConnect;
 
 class LangModel extends Base\AbstractModel
@@ -14,12 +13,7 @@ class LangModel extends Base\AbstractModel
 
     public static function getIds(): array
     {
-        $key = 'lang:getIds';
-        $callback = function() {
-            return OrmConnect::getInstance(static::$table)->select(['lang', 'id'])->where(['status' => 1])->fetchAll(PDO::FETCH_KEY_PAIR);
-        };
-
-        return Registry::get('cache')->get($key, $callback);
+        return OrmConnect::getInstance(static::$table)->select(['lang', 'id'])->where(['status' => 1])->fetchAll(PDO::FETCH_KEY_PAIR);
     }
 
     public static function getDefaultId(string $name = null): int

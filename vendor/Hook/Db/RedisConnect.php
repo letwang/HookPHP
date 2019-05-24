@@ -23,13 +23,17 @@ class RedisConnect extends Cache
         }
 
         $this->handle->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_IGBINARY);
-        //$this->handle->setOption(Redis::OPT_PREFIX, APP_NAME.':');
     }
 
-    public function multi(callable $callback, int $type = Redis::MULTI)
+    public function getHash(string $key, string $hashKey, callable $callback = null, int $ttl = null)
     {
-        $redis = $this->handle->multi($type);
-        $callback($redis);
-        return $redis->exec();
+        if ($this->handle->hExists($key, $hashKey)) {
+            return $this->handle->hGet($key, $hashKey);
+        } else {
+            $value = $callback($this->handle);
+            $this->handle->hSet($key, $hashKey, $value);
+            $this->handle->setTimeout($key, $ttl);
+            return $value;
+        }
     }
 }

@@ -1,5 +1,4 @@
 <?php
-use Yaf\Registry;
 use Hook\Db\{PdoConnect, OrmConnect};
 use Hook\Sql\App;
 
@@ -21,12 +20,7 @@ class AppModel extends Base\AbstractModel
 
     public static function getIds(): array
     {
-        $key = 'app:getIds';
-        $callback = function() {
-            return OrmConnect::getInstance(static::$table)->select(['key', 'id'])->where(['status' => 1])->fetchAll(PDO::FETCH_KEY_PAIR);
-        };
-
-        return Registry::get('cache')->get($key, $callback);
+        return OrmConnect::getInstance(static::$table)->select(['key', 'id'])->where(['status' => 1])->fetchAll(PDO::FETCH_KEY_PAIR);
     }
 
     public static function getDefaultId(string $name = null): int

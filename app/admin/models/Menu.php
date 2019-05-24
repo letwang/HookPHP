@@ -1,5 +1,4 @@
 <?php
-use Yaf\Registry;
 use Hook\Db\{PdoConnect};
 use Hook\Sql\Menu;
 use Hook\Data\ArrayUtils;
@@ -30,20 +29,10 @@ class MenuModel extends Base\AbstractModel
 
     public static function getMenu(): array
     {
-        $key = 'cache:showMenu';
-        $callback = function(\Redis $redis) use ($key) {
-            if ($redis->exists($key)) {
-                return $redis->get($key);
-            } else {
-                $utils = new ArrayUtils();
-                $utils->idKey = 'id';
-                $utils->parentIdKey = 'parent';
-                $data = $utils->classify(PdoConnect::getInstance()->fetchAll(Menu::GET_SHOW_ALL, [APP_LANG_ID]));
-                $redis->set($key, $data);
-                return $data;
-            }
-        };
-
-        return Registry::get('cache')->get($key, $callback);
+        $utils = new ArrayUtils();
+        $utils->idKey = 'id';
+        $utils->parentIdKey = 'parent';
+        $data = $utils->classify(PdoConnect::getInstance()->fetchAll(Menu::GET_SHOW_ALL, [APP_LANG_ID]));
+        return $data;
     }
 }

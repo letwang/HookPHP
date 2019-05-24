@@ -1,7 +1,6 @@
 <?php
 namespace Hook\Hook;
 
-use Yaf\Registry;
 use Hook\Db\{PdoConnect};
 use Hook\Sql\Hook\Module as sqlModule;
 
@@ -9,18 +8,7 @@ class Hook
 {
     public static function getModulesForHook()
     {
-        $key = 'cache:runHook';
-        $callback = function(\Redis $redis) use ($key) {
-            if ($redis->exists($key)) {
-                return $redis->get($key);
-            } else {
-                $data = PdoConnect::getInstance()->fetchAll(sqlModule::GET_ALL, [], \PDO::FETCH_COLUMN | \PDO::FETCH_GROUP);
-                $redis->set($key, $data);
-                return $data;
-            }
-        };
-
-        return Registry::get('cache')->get($key, $callback);
+        return PdoConnect::getInstance()->fetchAll(sqlModule::GET_ALL, [], \PDO::FETCH_COLUMN | \PDO::FETCH_GROUP);;
     }
 
     public static function run($key, $args = null)

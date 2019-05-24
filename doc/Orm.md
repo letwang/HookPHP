@@ -1,6 +1,6 @@
 # 实例化单表
 ```
-$orm = Hook\Db\OrmConnect::getInstance('hp_config');
+$orm = Hook\Db\OrmConnect::getInstance('hp_iot_config');
 ```
 # 查看表结构
 ```
@@ -16,17 +16,17 @@ $orm->exist('id');
 ```
 # 查询
 ```
-$orm->select()->fetchAll(); #SELECT `id` FROM `hp_config`
-$orm->select([], [])->fetchAll(); #SELECT 1 FROM `hp_config`
+$orm->select()->fetchAll(); #SELECT `id` FROM `hp_iot_config`
+$orm->select([], [])->fetchAll(); #SELECT 1 FROM `hp_iot_config`
 
-$orm->select(['id', 'key'])->fetchAll(); #SELECT `id`,`key` FROM `hp_config`
-$orm->select(['id', 'key'], ['DISTINCTROW'])->fetchAll(); #SELECT DISTINCTROW`id`,`key` FROM `hp_config`
+$orm->select(['id', 'key'])->fetchAll(); #SELECT `id`,`key` FROM `hp_iot_config`
+$orm->select(['id', 'key'], ['DISTINCTROW'])->fetchAll(); #SELECT DISTINCTROW`id`,`key` FROM `hp_iot_config`
 
-$orm->select(['*'])->fetch(); #SELECT `*` FROM `hp_config`
-$orm->select(['*'])->fetchColumn();  #SELECT `*` FROM `hp_config`
-$orm->select(['*'])->fetchAll(); #SELECT `*` FROM `hp_config`
+$orm->select(['*'])->fetch(); #SELECT `*` FROM `hp_iot_config`
+$orm->select(['*'])->fetchColumn();  #SELECT `*` FROM `hp_iot_config`
+$orm->select(['*'])->fetchAll(); #SELECT `*` FROM `hp_iot_config`
 
-$orm->select(['*'], ['SQL_CALC_FOUND_ROWS', 'DISTINCT'])->fetchAll(); #SELECT SQL_CALC_FOUND_ROWS DISTINCT`*` FROM `hp_config`
+$orm->select(['*'], ['SQL_CALC_FOUND_ROWS', 'DISTINCT'])->fetchAll(); #SELECT SQL_CALC_FOUND_ROWS DISTINCT`*` FROM `hp_iot_config`
 $orm->count(); #SELECT FOUND_ROWS()
 
 $orm->select()
@@ -37,7 +37,7 @@ $orm->select()
 	->group(['app_id' => 'ASC', 'id' => 'DESC'])
 	->order(['app_id' => 'ASC', 'id' => 'DESC'])
 	->limit(30, 30)
-	->fetchAll(); #SELECT `id` FROM `hp_config` WHERE (`id` BETWEEN ? AND ?) AND (`date_add` = ?) AND (`app_id` < ? OR `status` = ? OR `id` IN (?,?,?)) AND (`date_add` = ?) GROUP BY `app_id` ASC, `id` DESC ORDER BY `app_id` ASC, `id` DESC LIMIT 30,30
+	->fetchAll(); #SELECT `id` FROM `hp_iot_config` WHERE (`id` BETWEEN ? AND ?) AND (`date_add` = ?) AND (`app_id` < ? OR `status` = ? OR `id` IN (?,?,?)) AND (`date_add` = ?) GROUP BY `app_id` ASC, `id` DESC ORDER BY `app_id` ASC, `id` DESC LIMIT 30,30
 ```
 # 插入
 ```
@@ -48,7 +48,7 @@ $data = $orm->insert([
 	'date_upd' => time(true),
 	'key' => 'testKey',
 	'value' => 'testValue',
-]); #INSERT INTO `hp_config`(`app_id`,`status`,`date_add`,`date_upd`,`key`,`value`)VALUES(:app_id,:status,:date_add,:date_upd,:key,:value)
+]); #INSERT INTO `hp_iot_config`(`app_id`,`status`,`date_add`,`date_upd`,`key`,`value`)VALUES(:app_id,:status,:date_add,:date_upd,:key,:value)
 ```
 # 更新
 ```
@@ -59,11 +59,11 @@ $orm->where(['id' => $data['lastInsertId']])->limit(50)->update([
 	'date_upd' => time(true),
 	'key' => 'testKey',
 	'value' => 'testValue',
-]); #UPDATE `hp_config` SET `app_id`=?,`status`=?,`date_add`=?,`date_upd`=?,`key`=?,`value`=?WHERE (`id`=?) LIMIT 50
+]); #UPDATE `hp_iot_config` SET `app_id`=?,`status`=?,`date_add`=?,`date_upd`=?,`key`=?,`value`=?WHERE (`id`=?) LIMIT 50
 ```
 # 删除
 ```
-$orm->where(['id' => $data['lastInsertId']])->limit(100)->delete(); #DELETE FROM `hp_config` WHERE (`id`=?) LIMIT 100
+$orm->where(['id' => $data['lastInsertId']])->limit(100)->delete(); #DELETE FROM `hp_iot_config` WHERE (`id`=?) LIMIT 100
 ```
 # 验证
 ```
@@ -71,5 +71,5 @@ $orm->validate('tinyint(3) unsigned');
 ```
 # 同步
 ```
-$orm->synData(); #SELECT `id`,`*` FROM `hp_config`
+$orm->synData(); #SELECT `id`,`*` FROM `hp_iot_config`
 ```
