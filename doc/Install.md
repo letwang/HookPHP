@@ -1,6 +1,64 @@
 # Introduction
 https://my.oschina.net/cart/blog/2986804
-# Environment
+
+# Host
+```
+127.0.0.1 www.admin.com
+127.0.0.1 www.iot.com
+127.0.0.1 www.paas.com
+127.0.0.1 www.payment.com
+127.0.0.1 www.store.com
+```
+# Access
+```
+http://www.admin.com:8080/
+http://www.iot.com:8080/
+http://www.paas.com:8080/
+http://www.payment.com:8080/
+http://www.store.com:8080/
+
+admin@hookphp.com
+12345678
+```
+
+
+# Docker 部署
+```
+sudo docker run -i -t -d -p 8080:80 --name hookphp \
+-v ~/workspace/HookPHP/docker/mongodb/mongod.conf:/etc/mongod.conf \
+-v ~/workspace/HookPHP/docker/mysql/mysql.cnf:/etc/mysql/conf.d/mysql.cnf \
+-v ~/workspace/HookPHP/docker/nginx/nginx.conf:/etc/nginx/nginx.conf \
+-v ~/workspace/HookPHP/docker/nginx/conf.d:/etc/nginx/conf.d \
+-v ~/workspace/HookPHP/docker/php/7.3/cli/php.ini:/etc/php/7.3/cli/php.ini \
+-v ~/workspace/HookPHP/docker/php/7.3/fpm/php-fpm.conf:/etc/php/7.3/fpm/php-fpm.conf \
+-v ~/workspace/HookPHP/docker/php/7.3/fpm/php.ini:/etc/php/7.3/fpm/php.ini \
+-v ~/workspace/HookPHP/docker/php/7.3/fpm/pool.d:/etc/php/7.3/fpm/pool.d \
+-v ~/workspace/HookPHP/docker/redis/redis.conf:/etc/redis/redis.conf \
+-v ~/workspace/HookPHP/docker/log:/var/log \
+-v ~/workspace:/usr/share/nginx/html \
+letwang/hookphp && sudo docker exec -it hookphp bash /usr/share/nginx/html/HookPHP/start.sh
+```
+
+## 常用命令
+```
+sudo docker cp 1e459940fa7d:/etc/mongod.conf  ~/workspace/HookPHP/docker/mongodb/
+sudo docker cp 1e459940fa7d:/etc/mysql/conf.d/mysql.cnf  ~/workspace/HookPHP/docker/mysql/
+sudo docker cp 1e459940fa7d:/etc/nginx/nginx.conf  ~/workspace/HookPHP/docker/nginx/nginx.conf
+sudo docker cp 1e459940fa7d:/etc/nginx/conf.d  ~/workspace/HookPHP/docker/nginx/
+sudo docker cp 1e459940fa7d:/etc/php/7.3/cli/php.ini  ~/workspace/HookPHP/docker/php/7.3/cli/php.ini
+sudo docker cp 1e459940fa7d:/etc/php/7.3/fpm/php-fpm.conf  ~/workspace/HookPHP/docker/php/7.3/fpm/php-fpm.conf
+sudo docker cp 1e459940fa7d:/etc/php/7.3/fpm/php.ini  ~/workspace/HookPHP/docker/php/7.3/fpm/php.ini
+sudo docker cp 1e459940fa7d:/etc/php/7.3/fpm/pool.d  ~/workspace/HookPHP/docker/php/7.3/fpm/
+sudo docker cp 1e459940fa7d:/etc/redis/redis.conf  ~/workspace/HookPHP/docker/redis/redis.conf
+
+sudo docker rm -f hookphp
+
+sudo docker ps -a && sudo docker images
+
+sudo docker commit -m="HookPHP" -a="letwang" hookphp letwang/hookphp:latest && sudo docker push letwang/hookphp:latest
+```
+# 原生 部署
+## Environment
 ```
 curl -L https://packagecloud.io/varnishcache/varnish62/gpgkey | sudo apt-key add -
 echo "deb https://packagecloud.io/varnishcache/varnish62/ubuntu/ bionic main\ndeb-src https://packagecloud.io/varnishcache/varnish62/ubuntu bionic main" | sudo tee /etc/apt/sources.list.d/varnishcache_varnish62.list
@@ -57,9 +115,9 @@ curl -sS https://getcomposer.org/installer | php
 sudo mv composer.phar /usr/local/bin/composer
 
 wget -P ~/bin/ http://sphinxsearch.com/files/sphinx-3.1.1-612d99f-linux-amd64.tar.gz
-wget -P /home/letwang/workspace/HookPHP/vendor/Hook/Tika http://mirrors.hust.edu.cn/apache/tika/tika-app-1.20.jar
+wget -P /usr/share/nginx/html/HookPHP/vendor/Hook/Tika http://mirrors.hust.edu.cn/apache/tika/tika-app-1.20.jar
 ```
-# php.ini
+## php.ini
 ```
 [Session]
 session.save_handler = redis
@@ -70,20 +128,20 @@ session.save_path = "tcp://127.0.0.1:6379?weight=1&auth=123456&database=0, tcp:/
 extension=yaf
 yaf.use_namespace = 1
 yaf.use_spl_autoload = 1
-yaf.library = /home/letwang/workspace/HookPHP/vendor/
+yaf.library = /usr/share/nginx/html/HookPHP/vendor/
 
 [yac]
 extension=yac
 
 [yaconf]
 extension=yaconf
-yaconf.directory = /home/letwang/workspace/HookPHP/conf/
+yaconf.directory = /usr/share/nginx/html/HookPHP/conf/
 
 [seaslog]
 extension=seaslog
 seaslog.trace_notice=1
 seaslog.trace_warning=1
-seaslog.default_basepath='/home/letwang/workspace/HookPHP/log'
+seaslog.default_basepath='/usr/share/nginx/html/HookPHP/log'
 seaslog.default_template = '%T | %L | %P | %Q | %t | %M | %H | %D | %R | %m | %I | %F | %U | %u | %C'
 
 [xhprof]
@@ -116,11 +174,11 @@ extension=mongodb
 [swoole]
 extension=swoole
 ```
-# Nginx|OpenResty
+## Nginx|OpenResty
 ```
 server {
 	listen 80;
-	root /home/letwang/workspace/HookPHP/public/admin/;
+	root /usr/share/nginx/html/HookPHP/public/admin/;
 	index index.html index.htm index.php;
 	error_log /var/log/nginx/www.admin.com-error.log error;
 	access_log /var/log/nginx/www.admin.com-access.log combined;
@@ -151,7 +209,7 @@ server {
 
 server {
 	listen 80;
-	root /home/letwang/workspace/HookPHP/public/iot/;
+	root /usr/share/nginx/html/HookPHP/public/iot/;
 	index index.html index.htm index.php;
 	error_log /var/log/nginx/www.iot.com-error.log error;
 	access_log /var/log/nginx/www.iot.com-access.log combined;
@@ -168,7 +226,7 @@ server {
 
 server {
 	listen 80;
-	root /home/letwang/workspace/HookPHP/public/paas/;
+	root /usr/share/nginx/html/HookPHP/public/paas/;
 	index index.html index.htm index.php;
 	error_log /var/log/nginx/www.paas.com-error.log error;
 	access_log /var/log/nginx/www.paas.com-access.log combined;
@@ -185,7 +243,7 @@ server {
 
 server {
 	listen 80;
-	root /home/letwang/workspace/HookPHP/public/payment/;
+	root /usr/share/nginx/html/HookPHP/public/payment/;
 	index index.html index.htm index.php;
 	error_log /var/log/nginx/www.payment.com-error.log error;
 	access_log /var/log/nginx/www.payment.com-access.log combined;
@@ -202,7 +260,7 @@ server {
 
 server {
 	listen 80;
-	root /home/letwang/workspace/HookPHP/public/store/;
+	root /usr/share/nginx/html/HookPHP/public/store/;
 	index index.html index.htm index.php;
 	error_log /var/log/nginx/www.store.com-error.log error;
 	access_log /var/log/nginx/www.store.com-access.log combined;
@@ -217,15 +275,7 @@ server {
 	 }
 }
 ```
-# Host
-```
-127.0.0.1 www.admin.com
-127.0.0.1 www.iot.com
-127.0.0.1 www.paas.com
-127.0.0.1 www.payment.com
-127.0.0.1 www.store.com
-```
-# Init
+## Init
 ```
 cd ~/workspace/HookPHP/
 sudo chmod 777 -R ./log
@@ -237,15 +287,4 @@ php app/iot/bin/install.php
 php app/paas/bin/install.php
 php app/payment/bin/install.php
 php app/store/bin/install.php
-```
-# Access
-```
-http://www.admin.com/
-http://www.iot.com/
-http://www.paas.com/
-http://www.payment.com/
-http://www.store.com/
-
-admin@hookphp.com
-12345678
 ```
