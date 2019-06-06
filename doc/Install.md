@@ -12,7 +12,6 @@
 sudo rm -rf HookPHP &&
 git clone https://github.com/letwang/HookPHP.git &&
 cd HookPHP &&
-sudo docker rm -f hookphp &&
 sudo docker run -itd -p 8080:80 --name hookphp \
 -v `pwd`/docker/mongodb/mongod.conf:/etc/mongod.conf \
 -v `pwd`/docker/mysql/mysql.cnf:/etc/mysql/conf.d/mysql.cnf \
@@ -29,6 +28,11 @@ letwang/hookphp &&
 sudo docker exec -d hookphp bash /usr/share/nginx/html/HookPHP/docker/init.sh
 sudo docker ps -a &&
 sudo docker images
+```
+# Command
+```
+#删除容器
+sudo docker rm -f hookphp
 ```
 # Demo
 ```
