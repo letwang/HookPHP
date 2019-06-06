@@ -32,7 +32,6 @@
         "ext-seaslog": ">=2.0.2",
         "ext-xhprof": ">=2.1.0",
         "ext-swoole": ">=4.3.2",
-        "ext-varnish": ">=1.2.4",
         "ext-zend-opcache": "*"
     }
 }

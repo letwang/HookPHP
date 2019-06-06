@@ -3,3 +3,7 @@
 .settings/
 
 *.log
+*.jar
+
+vendor/autoload.php
+vendor/composer
