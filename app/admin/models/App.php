@@ -1,6 +1,5 @@
 <?php
 use Hook\Db\{PdoConnect, OrmConnect};
-use Hook\Sql\App;
 
 class AppModel extends Base\AbstractModel
 {
@@ -15,7 +14,7 @@ class AppModel extends Base\AbstractModel
 
     public function get(): array
     {
-        return PdoConnect::getInstance()->fetchAll(App::GET_All, [APP_LANG_ID]);
+        return PdoConnect::getInstance()->fetchAll(Yaconf::get('sql.APP.GET_All'), [APP_LANG_ID]);
     }
 
     public static function getIds(): array

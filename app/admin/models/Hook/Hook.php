@@ -1,7 +1,8 @@
 <?php
 namespace Hook;
+
+use \Yaconf;
 use Hook\Db\PdoConnect;
-use Hook\Sql\Hook\Hook;
 
 class HookModel extends \Base\AbstractModel
 {
@@ -18,11 +19,11 @@ class HookModel extends \Base\AbstractModel
 
     public function get(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Hook::GET_ALL, [APP_LANG_ID]);
+        return PdoConnect::getInstance()->fetchAll(Yaconf::get('sql.HOOK.HOOK.GET_ALL'), [APP_LANG_ID]);
     }
 
     public function getSelect(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Hook::GET_SHOW_SELECT, [APP_LANG_ID], \PDO::FETCH_KEY_PAIR);
+        return PdoConnect::getInstance()->fetchAll(Yaconf::get('sql.HOOK.HOOK.GET_SELECT'), [APP_LANG_ID], \PDO::FETCH_KEY_PAIR);
     }
 }

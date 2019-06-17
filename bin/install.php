@@ -2,18 +2,17 @@
 isset($app) || exit('请至平台中运行：php app/[admin|iot|paas|payment|store]/bin/install.php'.PHP_EOL);
 
 use Hook\Db\{PdoConnect, OrmConnect, RedisConnect};
-use Hook\Sql\{Install, Table};
 
 function admin() {
     global $app;
     $pdo = PdoConnect::getInstance();
     $pdo->handle->beginTransaction();
 
-    foreach (Install::CREATE_ADMIN_STRUCT as $sql) {
+    foreach (Yaconf::get('sql.INSTALL.ADMIN.STRUCT') as $sql) {
         $pdo->query(str_replace('%database%', APP_CONFIG['mysql']['default']['dbname'], $sql));
     }
 
-    foreach (Install::CREATE_ADMIN_DATA as $sql) {
+    foreach (Yaconf::get('sql.INSTALL.ADMIN.DATA') as $sql) {
         $pdo->query($sql);
     }
 
@@ -29,11 +28,11 @@ function app() {
     $pdo = PdoConnect::getInstance();
     $pdo->handle->beginTransaction();
 
-    foreach (Install::CREATE_APP_STRUCT as $sql) {
+    foreach (Yaconf::get('sql.INSTALL.APP.STRUCT') as $sql) {
         $pdo->query(str_replace('%s_', APP_NAME.'_', $sql));
     }
 
-    foreach (Install::CREATE_APP_DATA as $sql) {
+    foreach (Yaconf::get('sql.INSTALL.APP.DATA') as $sql) {
         $pdo->query(str_replace('%s_', APP_NAME.'_', $sql));
     }
 
@@ -46,7 +45,7 @@ function app() {
 function init(PdoConnect $pdo, string $appName) {
     $data = '';
     $redis = RedisConnect::getInstance()->handle;
-    foreach ($pdo->fetchAll(Table::GET_ALL, ['hp_'.$appName.'_%'], PDO::FETCH_NUM) as list($table)) {
+    foreach ($pdo->fetchAll(Yaconf::get('sql.TABLE.GET_ALL'), ['hp_'.$appName.'_%'], PDO::FETCH_NUM) as list($table)) {
         $orm = OrmConnect::getInstance($table);
         $redis->del(sprintf(Yaconf::get('const')['table']['syn'], $table));
         foreach ($orm->select(['*'])->fetchAll() as $value) {
