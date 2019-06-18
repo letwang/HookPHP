@@ -4,9 +4,6 @@ use Hook\Data\ArrayUtils;
 
 class MenuModel extends Base\AbstractModel
 {
-    public static $table = 'hp_'.APP_NAME.'_menu';
-    public static $foreign = 'menu_id';
-
     public $fields = [
         'parent' => array('type' => parent::INT, 'require' => false, 'validate' => 'isInt'),
         'status' => array('type' => parent::BOOL, 'require' => true, 'validate' => 'isBool'),

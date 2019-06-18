@@ -1,7 +1,7 @@
 <?php
 namespace Hook\Db;
 
-use Yaf\Registry;
+use Hook\Db\{RedisConnect, YacConnect};
 use Hook\Cache\Cache;
 
 class YacConnect extends Cache
@@ -17,7 +17,7 @@ class YacConnect extends Cache
     {
         $data = $this->handle->get($key);
         if (!$data && $callback) {
-            $data = $callback(Registry::get('redis')->handle);
+            $data = $callback(RedisConnect::getInstance()->handle);
             $this->handle->set($key, $data, $ttl);
         }
         return $id ? ($data[$id] ?? null) : $data;

@@ -4,9 +4,9 @@ namespace Hook\Db;
 use PDO;
 use Redis;
 use Yaconf;
-use Yaf\Registry;
+use Hook\Db\{OrmConnect, PdoConnect, RedisConnect, YacConnect};
 use Hook\Cache\Cache;
-use Hook\Db\RedisConnect;
+USE Hook\Tools\Tools;
 
 class OrmConnect extends Cache
 {
@@ -24,7 +24,7 @@ class OrmConnect extends Cache
 
     public function __construct(string $table)
     {
-        $this->table = $table;
+        $this->table = Tools::formatTableName($table);
     }
 
     public function desc(): array
@@ -258,7 +258,7 @@ class OrmConnect extends Cache
         }
 
         $key = md5($this->statement);
-        if (!Registry::get('yac')->handle->get($key)) {
+        if (!YacConnect::getInstance()->handle->get($key)) {
             preg_match_all('/`(\w+)`/u', $this->statement, $matches);
             $white = APP_TABLE[$this->table] + [$this->table => []];
             foreach (array_flip($matches[1]) as $column => $index) {
@@ -266,7 +266,7 @@ class OrmConnect extends Cache
                     throw new \Exception('db hack #'.$index.' ['.$this->statement.']');
                 }
             }
-            Registry::get('yac')->handle->set($key, true, $this->ttl);
+            YacConnect::getInstance()->handle->set($key, true, $this->ttl);
         }
     }
 

@@ -166,4 +166,23 @@ class Tools
             ['options' => ['default' => $default]]
             ) : $default;
     }
+
+    public static function getLineFromHump(string $name): string
+    {
+        return preg_replace_callback(
+            '/[[:upper:]]/', function($v){
+                return'_'.strtolower($v[0]);
+            }, $name
+        );
+    }
+
+    public static function getHumpFromLine(string $name): string
+    {
+        return str_replace('_', '', lcfirst(ucwords($name, '_')));
+    }
+
+    public static function formatTableName(string $string): string
+    {
+        return str_replace(['%p', '%s'], [APP_CONFIG['application']['prefix'], APP_NAME], $string);
+    }
 }

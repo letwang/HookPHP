@@ -3,6 +3,7 @@ namespace Hook\Db;
 
 use Hook\Cache\Cache;
 use SeasLog;
+use Hook\Tools\Tools;
 
 class PdoConnect extends Cache
 {
@@ -117,6 +118,7 @@ class PdoConnect extends Cache
      */
     public function query(string $statement, array $parameter = []): \PDOStatement
     {
+        $statement = Tools::formatTableName($statement);
         defined('APP_DEBUG') && APP_DEBUG && SeasLog::log('SQL', $statement.' | '.json_encode($parameter));
         $rs = $this->handle->prepare($statement);
         $flag = isset($parameter[0]);

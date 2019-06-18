@@ -21,5 +21,5 @@ class Bootstrap extends Bootstrap_Abstract
 
 function l(string $key)
 {
-    return Yaconf::get('admin_lang_'.LangModel::getDefaultName().'.'.$key, $key);
+    return Yaconf::get('%padmin_lang_'.LangModel::getDefaultName().'.'.$key, $key);
 }

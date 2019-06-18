@@ -1,7 +1,7 @@
 <?php
 namespace Hook\Batch;
 
-use Hook\Db\PdoConnect;
+use Hook\Db\{PdoConnect};
 
 class Process
 {

@@ -2,16 +2,15 @@
 namespace Base;
 
 use Yaconf;
-use Yaf\Registry;
-use Hook\Db\{PdoConnect, OrmConnect};
+use Hook\Db\{OrmConnect, PdoConnect, YacConnect};
 use Hook\Cache\Cache;
 use Hook\Validate\Validate;
 use Hook\Tools\Tools;
 
 abstract class AbstractModel extends Cache
 {
-    public static $table;
-    public static $foreign;
+    public $table;
+    public $foreign;
 
     public $id;
 
@@ -31,17 +30,18 @@ abstract class AbstractModel extends Cache
     public function __construct(int $id = null)
     {
         $this->id = $id;
-        $this->ignore += static::$foreign ? [static::$foreign => true] : [];
-        $this->definition = array_keys(array_diff_key(APP_TABLE[static::$table], $this->ignore));
-        if (isset(APP_TABLE[static::$table.'_lang'])) {
-            $this->tableLang = static::$table.'_lang';
+        $this->table = Tools::formatTableName($this->table);
+        $this->ignore += $this->foreign ? [$this->foreign => true] : [];
+        $this->definition = array_keys(array_diff_key(APP_TABLE[$this->table], $this->ignore));
+        if (isset(APP_TABLE[$this->table.'_lang'])) {
+            $this->tableLang = $this->table.'_lang';
             $this->definitionLang = array_keys(array_diff_key(APP_TABLE[$this->tableLang], $this->ignore));
         }
     }
 
-    public static function getData(string $table = null, int $id = null, int $langId = null)
+    public function getData(string $table = null, int $id = null, int $langId = null)
     {
-        $table = $table ?? static::$table;
+        $table = Tools::formatTableName($table ?? $this->table);
         if (substr($table, -4) === 'lang') {
             $id = $id ? ($id.'_'.($langId ?? APP_LANG_ID)) : $id;
         }
@@ -51,7 +51,7 @@ abstract class AbstractModel extends Cache
             return $redis->hGetAll($key);
         };
 
-        return Registry::get('yac')->get($key, $callback, $id);
+        return YacConnect::getInstance()->get($key, $callback, $id);
     }
 
     public function post(): int
@@ -62,14 +62,14 @@ abstract class AbstractModel extends Cache
             PdoConnect::getInstance()->handle->beginTransaction();
 
             $parameter = $this->getFields();
-            $parameter += isset(APP_TABLE[static::$table]['date_add']) ? ['date_add' => time()] : [];
+            $parameter += isset(APP_TABLE[$this->table]['date_add']) ? ['date_add' => time()] : [];
 
-            $result = OrmConnect::getInstance(static::$table)->insert($parameter);
+            $result = OrmConnect::getInstance($this->table)->insert($parameter);
 
             if ($this->tableLang) {
                 $orm = OrmConnect::getInstance($this->tableLang);
                 foreach ($this->getFieldsLang() as $langId => $parameter) {
-                    $parameter += ['lang_id' => $langId, static::$foreign => $result['lastInsertId']];
+                    $parameter += ['lang_id' => $langId, $this->foreign => $result['lastInsertId']];
                     $orm->insert($parameter);
                 }
             }
@@ -87,7 +87,7 @@ abstract class AbstractModel extends Cache
         try {
             PdoConnect::getInstance()->handle->beginTransaction();
 
-            OrmConnect::getInstance(static::$table)->where(['id' => $this->id])->delete();
+            OrmConnect::getInstance($this->table)->where(['id' => $this->id])->delete();
 
             return PdoConnect::getInstance()->handle->commit() && $this->afterDelete();
         } catch (\Throwable $e) {
@@ -103,12 +103,12 @@ abstract class AbstractModel extends Cache
         try {
             PdoConnect::getInstance()->handle->beginTransaction();
 
-            OrmConnect::getInstance(static::$table)->where(['id' => $this->id])->update($this->getFields());
+            OrmConnect::getInstance($this->table)->where(['id' => $this->id])->update($this->getFields());
 
             if ($this->tableLang) {
                 $orm = OrmConnect::getInstance($this->tableLang);
                 foreach ($this->getFieldsLang() as $langId => $parameter) {
-                    $orm->where([static::$foreign => $this->id, 'lang_id' => $langId])->update($parameter);
+                    $orm->where([$this->foreign => $this->id, 'lang_id' => $langId])->update($parameter);
                 }
             }
 
@@ -173,7 +173,7 @@ abstract class AbstractModel extends Cache
 
     private function validateField(string $field, $value, $langId = null): string
     {
-        $desc = APP_TABLE[static::$table][$field] ?? APP_TABLE[$this->tableLang][$field];
+        $desc = APP_TABLE[$this->table][$field] ?? APP_TABLE[$this->tableLang][$field];
 
         if (!empty($this->fields[$field]['require']) && Validate::isEmpty($value)) {
             if ($langId) {
@@ -213,7 +213,7 @@ abstract class AbstractModel extends Cache
             foreach ($this->definition as $field) {
                 $fields[$field] = $this->formatValue($this->$field, $this->fields[$field]['type'] ?? null);
             }
-            $fields += isset(APP_TABLE[static::$table]['date_upd']) ? ['date_upd' => time()] : [];
+            $fields += isset(APP_TABLE[$this->table]['date_upd']) ? ['date_upd' => time()] : [];
         }
         return $fields;
     }

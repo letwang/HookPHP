@@ -2,13 +2,10 @@
 namespace Hook;
 
 use \Yaconf;
-use Hook\Db\PdoConnect;
+use Hook\Db\{PdoConnect};
 
 class HookModel extends \Base\AbstractModel
 {
-    public static $table = 'hp_'.APP_NAME.'_hook_hook';
-    public static $foreign = 'hook_id';
-
     public $fields = [
         'position' => array('type' => parent::INT, 'require' => true, 'validate' => 'isInt'),
         'key' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isGenericName'),

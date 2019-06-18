@@ -2,13 +2,10 @@
 namespace Rbac;
 
 use \Yaconf;
-use Hook\Db\PdoConnect;
+use Hook\Db\{PdoConnect};
 
 class RoleModel extends \Base\AbstractModel
 {
-    public static $table = 'hp_'.APP_NAME.'_rbac_role';
-    public static $foreign = 'role_id';
-
     public $fields = [
         'status' => array('type' => parent::BOOL, 'require' => true, 'validate' => 'isBool'),
         'name' => array('require' => true, 'validate' => 'isGenericName'),

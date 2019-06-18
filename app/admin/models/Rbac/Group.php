@@ -2,13 +2,10 @@
 namespace Rbac;
 
 use \Yaconf;
-use Hook\Db\PdoConnect;
+use Hook\Db\{PdoConnect};
 
 class GroupModel extends \Base\AbstractModel
 {
-    public static $table = 'hp_'.APP_NAME.'_rbac_group';
-    public static $foreign = 'group_id';
-
     public $fields = [
         'status' => array('type' => parent::BOOL, 'require' => true, 'validate' => 'isBool'),
         'name' => array('require' => true, 'validate' => 'isGenericName'),

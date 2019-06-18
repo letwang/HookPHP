@@ -2,7 +2,7 @@
 require __DIR__.'/../init.php';
 require __DIR__.'/../../../bin/install.php';
 
-use Hook\Db\RedisConnect;
+use Hook\Db\{RedisConnect};
 
 $connection = new AMQPConnection();
 $connection->connect();

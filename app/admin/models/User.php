@@ -3,7 +3,6 @@ use Hook\Db\OrmConnect;
 
 class UserModel extends Base\AbstractModel
 {
-    public static $table = 'hp_admin_user';
     public $fields = [
         'status' => array('type' => parent::BOOL, 'require' => true, 'validate' => 'isBool'),
         'user' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isGenericName'),
@@ -16,6 +15,6 @@ class UserModel extends Base\AbstractModel
 
     public function get(): array
     {
-        return OrmConnect::getInstance(static::$table)->select(['id', 'app_id', 'status', 'date_add', 'date_upd', 'user', 'email', 'phone', 'lastname', 'firstname'])->fetchAll();
+        return OrmConnect::getInstance($this->table)->select(['id', 'app_id', 'status', 'date_add', 'date_upd', 'user', 'email', 'phone', 'lastname', 'firstname'])->fetchAll();
     }
 }

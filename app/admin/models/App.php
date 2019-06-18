@@ -1,11 +1,8 @@
 <?php
-use Hook\Db\{PdoConnect, OrmConnect};
+use Hook\Db\{OrmConnect, PdoConnect};
 
 class AppModel extends Base\AbstractModel
 {
-    public static $table = 'hp_admin_app';
-    public static $foreign = 'app_id';
-
     public $fields = [
         'status' => array('type' => parent::BOOL, 'require' => true, 'validate' => 'isBool'),
         'key' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isGenericName'),
@@ -19,7 +16,7 @@ class AppModel extends Base\AbstractModel
 
     public static function getIds(): array
     {
-        return OrmConnect::getInstance(static::$table)->select(['key', 'id'])->where(['status' => 1])->fetchAll(PDO::FETCH_KEY_PAIR);
+        return OrmConnect::getInstance($this->table)->select(['key', 'id'])->where(['status' => 1])->fetchAll(PDO::FETCH_KEY_PAIR);
     }
 
     public static function getDefaultId(string $name = null): int

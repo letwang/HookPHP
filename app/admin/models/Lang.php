@@ -3,7 +3,6 @@ use Hook\Db\OrmConnect;
 
 class LangModel extends Base\AbstractModel
 {
-    public static $table = 'hp_admin_lang_i18n';
     public $fields = [
         'status' => array('type' => parent::BOOL, 'require' => true, 'validate' => 'isBool'),
         'iso' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isIsoCode'),
@@ -13,7 +12,7 @@ class LangModel extends Base\AbstractModel
 
     public static function getIds(): array
     {
-        return OrmConnect::getInstance(static::$table)->select(['lang', 'id'])->where(['status' => 1])->fetchAll(PDO::FETCH_KEY_PAIR);
+        return OrmConnect::getInstance($this->table)->select(['lang', 'id'])->where(['status' => 1])->fetchAll(PDO::FETCH_KEY_PAIR);
     }
 
     public static function getDefaultId(string $name = null): int
