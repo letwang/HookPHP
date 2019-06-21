@@ -8,18 +8,19 @@ class RedisConnect extends Cache
 {
     public $handle;
     
-    public function __construct(string $name = 'default')
+    public function __construct(string $db = '')
     {
+        $db = $db ? $db : 'default';
         $this->handle = new \Redis();
         $this->handle->connect(
-            APP_CONFIG['redis'][$name]['host'],
-            APP_CONFIG['redis'][$name]['port'],
-            APP_CONFIG['redis'][$name]['timeout'],
-            APP_CONFIG['redis'][$name]['reserved'],
-            APP_CONFIG['redis'][$name]['interval']
+            APP_CONFIG['redis'][$db]['host'],
+            APP_CONFIG['redis'][$db]['port'],
+            APP_CONFIG['redis'][$db]['timeout'],
+            APP_CONFIG['redis'][$db]['reserved'],
+            APP_CONFIG['redis'][$db]['interval']
         );
-        if (! empty(APP_CONFIG['redis'][$name]['auth'])) {
-            $this->handle->auth(APP_CONFIG['redis'][$name]['auth']);
+        if (! empty(APP_CONFIG['redis'][$db]['auth'])) {
+            $this->handle->auth(APP_CONFIG['redis'][$db]['auth']);
         }
 
         $this->handle->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_IGBINARY);

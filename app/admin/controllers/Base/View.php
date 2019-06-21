@@ -1,5 +1,8 @@
 <?php
 namespace Base;
+
+use MenuModel;
+
 abstract class ViewController extends AbstractController
 {
     protected $list = [];
@@ -30,7 +33,7 @@ abstract class ViewController extends AbstractController
         if (isset($_SESSION[APP_NAME])) {
             $this->_view->assign(
                 [
-                    'menus' => \MenuModel::getMenu()
+                    'menus' => MenuModel::getInstance()->getMenu()
                 ]
             );
         }
@@ -60,22 +63,22 @@ abstract class ViewController extends AbstractController
         foreach ($this->form['fields']['data'][0]['form']['input'] as $field => $input) {
             if ($input['lang']) {
                 foreach ($this->languages as $language) {
-                    $this->form['value'][$field][$language['id']] = $this->model->getData($this->model::$table.'_lang', $this->id, $language['id'])[$field];
+                    $this->form['value'][$field][$language['id']] = $this->model->getData($language['id'])[$field];
                 }
             } else {
-                $this->form['value'][$field] = $this->model->getData(null, $this->id)[$field];
+                $this->form['value'][$field] = $this->model->getData()[$field];
             }
         }
     }
 
     protected function getDefinition(): array
     {
-        if (!$this->model::$table) {
+        if (!$this->model->table) {
             return [];
         }
 
-        $data = APP_TABLE[$this->model::$table];
-        foreach (APP_TABLE[$this->model::$table.'_lang'] ?? [] as $field => $desc) {
+        $data = APP_TABLE[$this->model->table];
+        foreach (APP_TABLE[$this->model->table.'_lang'] ?? [] as $field => $desc) {
             $data[$field] = $desc + ['lang' => true];
         }
         return array_diff_key($data, $this->ignore);
@@ -105,7 +108,7 @@ abstract class ViewController extends AbstractController
                 'lang' => isset($desc['lang']),
                 'required' => $desc['default'] === ''
             ];
-            $table = $input[$field]['lang'] ? $this->model::$table.'_lang' : $this->model::$table;
+            $table = $input[$field]['lang'] ? $this->model->table.'_lang' : $this->model->table;
             switch (1) {
                 case $desc['type'] === 'tinyint':
                     $input[$field] += [

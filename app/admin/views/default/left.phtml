@@ -55,12 +55,12 @@
     <div class="aside-footer border-top p-3">
         <form action="/change/" method="get" name="change">
             <select class="custom-select col-lg-5" onchange="document.change.submit()" name="lang_id">
-            <?php foreach (\LangModel::getIds() as $text => $id) {
+            <?php foreach (LangModel::getInstance()->getIds() as $text => $id) {
                 echo '<option value="'.$id.'"'.(APP_LANG_ID === (int) $id ? ' selected="selected"' : '').'>'.$text.'</option>';
             }?>
             </select>
             <select class="custom-select col-lg-5" onchange="document.change.submit()" name="app_id">
-            <?php foreach (\AppModel::getIds() as $text => $id) {
+            <?php foreach (AppModel::getInstance()->getIds() as $text => $id) {
                 echo '<option value="'.$id.'"'.(APP_ID === (int) $id ? ' selected="selected"' : '').'>'.$text.'</option>';
             }?>
             </select>

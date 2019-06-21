@@ -5,8 +5,9 @@ class Rbac_Group_ManagerController extends Base\ApiController
     {
         $data = $this->model->get();
         foreach ($data as &$v) {
-            $v['group_id'] = $this->model->getData('%p%s_rbac_group_lang', $v['group_id'])['name'];
-            $v['manager_id'] = $this->model->getData('%padmin_manager', $v['manager_id'])['firstname'].' '.$this->model->getData('%padmin_manager', $v['manager_id'])['lastname'];
+            $v['group_id'] = \Rbac\GroupModel::getInstance($v['group_id'])->getData(APP_LANG_ID)['name'];
+            $manager = \Manager\ManagerModel::getInstance($v['manager_id'])->getData();
+            $v['manager_id'] = $manager['firstname'].' '.$manager['lastname'];
             $v['status'] = l('status.'.$v['status']);
         }
         return $this->send($data);

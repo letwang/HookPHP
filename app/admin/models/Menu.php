@@ -23,7 +23,7 @@ class MenuModel extends Base\AbstractModel
         return PdoConnect::getInstance()->fetchAll(Yaconf::get('sql.MENU.GET_SELECT'), [APP_LANG_ID], PDO::FETCH_KEY_PAIR);
     }
 
-    public static function getMenu(): array
+    public function getMenu(): array
     {
         $utils = new ArrayUtils();
         $utils->idKey = 'id';

@@ -1,16 +1,16 @@
 <?php
 namespace Hook\Db;
 
-use Hook\Db\{RedisConnect, YacConnect};
+use Hook\Db\{RedisConnect};
 use Hook\Cache\Cache;
 
 class YacConnect extends Cache
 {
     public $handle;
 
-    public function __construct(string $name = 'default')
+    public function __construct(string $prefix = '')
     {
-        $this->handle = new \Yac($name);
+        $this->handle = new \Yac($prefix ? $prefix : 'default');
     }
 
     public function get(string $key, callable $callback = null, string $id = null, int $ttl = null)

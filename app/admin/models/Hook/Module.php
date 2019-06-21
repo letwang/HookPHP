@@ -12,6 +12,6 @@ class ModuleModel extends \Base\AbstractModel
 
     public function getSelect(): array
     {
-        return OrmConnect::getInstance('%s_hook_module')->select(['id', 'key'])->where(['status' => 1])->fetchAll(\PDO::FETCH_KEY_PAIR);
+        return OrmConnect::getInstance($this->table)->select(['id', 'key'])->where(['status' => 1])->fetchAll(\PDO::FETCH_KEY_PAIR);
     }
 }

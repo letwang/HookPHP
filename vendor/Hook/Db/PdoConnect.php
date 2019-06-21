@@ -13,15 +13,16 @@ class PdoConnect extends Cache
      * 
      * @param string $name
      */
-    public function __construct(string $name = 'default')
+    public function __construct(string $db = '')
     {
-        $dsn = 'mysql:host='.APP_CONFIG['mysql'][$name]['host'].';port='.APP_CONFIG['mysql'][$name]['port'];
-        $dsn .= ';dbname='.APP_CONFIG['mysql'][$name]['dbname'].';charset='.APP_CONFIG['mysql'][$name]['charset'];
+        $db = $db ? $db : 'default';
+        $dsn = 'mysql:host='.APP_CONFIG['mysql'][$db]['host'].';port='.APP_CONFIG['mysql'][$db]['port'];
+        $dsn .= ';dbname='.APP_CONFIG['mysql'][$db]['dbname'].';charset='.APP_CONFIG['mysql'][$db]['charset'];
         $this->handle = new \PDO(
             $dsn,
-            APP_CONFIG['mysql'][$name]['username'],
-            APP_CONFIG['mysql'][$name]['passwd'],
-            APP_CONFIG['mysql'][$name]['options']
+            APP_CONFIG['mysql'][$db]['username'],
+            APP_CONFIG['mysql'][$db]['passwd'],
+            APP_CONFIG['mysql'][$db]['options']
         );
     }
 

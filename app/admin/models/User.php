@@ -3,6 +3,7 @@ use Hook\Db\OrmConnect;
 
 class UserModel extends Base\AbstractModel
 {
+    public $table = 'admin_user';
     public $fields = [
         'status' => array('type' => parent::BOOL, 'require' => true, 'validate' => 'isBool'),
         'user' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isGenericName'),

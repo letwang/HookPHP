@@ -6,7 +6,6 @@ use Redis;
 use Yaconf;
 use Hook\Db\{OrmConnect, PdoConnect, RedisConnect, YacConnect};
 use Hook\Cache\Cache;
-USE Hook\Tools\Tools;
 
 class OrmConnect extends Cache
 {
@@ -24,7 +23,7 @@ class OrmConnect extends Cache
 
     public function __construct(string $table)
     {
-        $this->table = Tools::formatTableName($table);
+        $this->table = $table;
     }
 
     public function desc(): array

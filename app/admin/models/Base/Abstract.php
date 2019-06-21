@@ -2,6 +2,7 @@
 namespace Base;
 
 use Yaconf;
+use LangModel;
 use Hook\Db\{OrmConnect, PdoConnect, YacConnect};
 use Hook\Cache\Cache;
 use Hook\Validate\Validate;
@@ -27,10 +28,11 @@ abstract class AbstractModel extends Cache
     const DATE = 4;
     const NOTHING = 6;
 
-    public function __construct(int $id = null)
+    public function __construct($id = null)
     {
-        $this->id = $id;
-        $this->table = Tools::formatTableName($this->table);
+        $this->id = (int) $id;
+        $this->table = Tools::formatTableName('%p'.($this->table ?? '%s_'.strtolower(str_replace(['\\', 'Model'], ['_', ''], get_called_class()))));
+        $this->foreign = $this->foreign ?? substr(strrchr($this->table, '_'), 1).'_id';
         $this->ignore += $this->foreign ? [$this->foreign => true] : [];
         $this->definition = array_keys(array_diff_key(APP_TABLE[$this->table], $this->ignore));
         if (isset(APP_TABLE[$this->table.'_lang'])) {
@@ -39,19 +41,14 @@ abstract class AbstractModel extends Cache
         }
     }
 
-    public function getData(string $table = null, int $id = null, int $langId = null)
+    public function getData(int $langId = null)
     {
-        $table = Tools::formatTableName($table ?? $this->table);
-        if (substr($table, -4) === 'lang') {
-            $id = $id ? ($id.'_'.($langId ?? APP_LANG_ID)) : $id;
-        }
-
-        $key = sprintf(Yaconf::get('const')['table']['syn'], $table);
+        $key = sprintf(Yaconf::get('const')['table']['table'], $langId ? $this->tableLang : $this->table);
         $callback = function(\Redis $redis) use ($key) {
             return $redis->hGetAll($key);
         };
 
-        return YacConnect::getInstance()->get($key, $callback, $id);
+        return YacConnect::getInstance()->get($key, $callback, $this->id.($langId ? '_'.$langId : ''));
     }
 
     public function post(): int
@@ -121,7 +118,7 @@ abstract class AbstractModel extends Cache
 
     public function get()
     {
-        return array_values(self::getData(null, $this->id));
+        return array_values($this->getData());
     }
 
     private function getFields(): array
@@ -135,7 +132,7 @@ abstract class AbstractModel extends Cache
     {
         $this->validateFieldsLang();
         $fields = [];
-        foreach (\LangModel::getIds() as $langId) {
+        foreach (LangModel::getInstance()->getIds() as $langId) {
             $fields[$langId] = $this->formatFields($langId);
         }
         return $fields;
@@ -243,7 +240,7 @@ abstract class AbstractModel extends Cache
         }
 
         foreach ($this->definitionLang as $field) {
-            foreach (\LangModel::getIds() as $langId) {
+            foreach (LangModel::getInstance()->getIds() as $langId) {
                 $this->{$field}[$langId] = $_POST[$field.'_'.$langId] ?? null;
             }
         }
