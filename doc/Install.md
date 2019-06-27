@@ -24,7 +24,7 @@ sudo docker run -itd -p 8080:80 --name hookphp \
 -v `pwd`/docker/redis/redis.conf:/etc/redis/redis.conf \
 -v `pwd`/docker/log:/var/log \
 -v `pwd`/../:/usr/share/nginx/html \
-letwang/hookphp &&
+letwang/hookphp /bin/bash &&
 sudo docker exec -d hookphp bash /usr/share/nginx/html/HookPHP/docker/init.sh
 sudo docker ps -a &&
 sudo docker images

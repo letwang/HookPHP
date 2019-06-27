@@ -1,9 +1,10 @@
 <?php
 namespace Hook\Db;
 
-use Hook\Cache\Cache;
+use PDO;
 use SeasLog;
 use Hook\Tools\Tools;
+use Hook\Cache\Cache;
 
 class PdoConnect extends Cache
 {
@@ -18,7 +19,7 @@ class PdoConnect extends Cache
         $db = $db ? $db : 'default';
         $dsn = 'mysql:host='.APP_CONFIG['mysql'][$db]['host'].';port='.APP_CONFIG['mysql'][$db]['port'];
         $dsn .= ';dbname='.APP_CONFIG['mysql'][$db]['dbname'].';charset='.APP_CONFIG['mysql'][$db]['charset'];
-        $this->handle = new \PDO(
+        $this->handle = new PDO(
             $dsn,
             APP_CONFIG['mysql'][$db]['username'],
             APP_CONFIG['mysql'][$db]['passwd'],
@@ -27,22 +28,35 @@ class PdoConnect extends Cache
     }
 
     /**
-     * PDO::FETCH_KEY_PAIR 返回 以第一列为KEY，第二列为VALUE的 数据结构【如果KEY重复，则自动去重且保留最后一个KEY的VALUE】
-       PDO::FETCH_COLUMN | PDO::FETCH_GROUP 返回 以第一列为KEY，第二列为数组VALUE的元素 数据结构【如果KEY重复，则其值自动加入二维数组中】
-       PDO::FETCH_UNIQUE 返回 以第一列为KEY，其余列为数组VALUE的 数据结构【如果KEY重复，则自动去重且保留最后一个KEY的数组VALUE】
-       PDO::FETCH_GROUP 返回 以第一列为KEY，其余列为二数组VALUE的 数据结构【如果KEY重复，则其值自动加入二维数组中】
-       PDO::FETCH_OBJ 返回对象结构
+     * 返回所有行的数组数据
      * @param string $statement
      * @param array $parameter
-     * @param int $type
+     * @param int $type 数据结构：
+     * <div><ol>
+     * <li>PDO::FETCH_COLUMN
+     *  <p>返回第1列，[VALUE构成的索引数组]</p>
+     * </li>
+     * <li>PDO::FETCH_KEY_PAIR 或使用 PDO::FETCH_COLUMN | PDO::FETCH_UNIQUE
+     *  <p>返回前2列，[第一列为KEY => 第二列为VALUE]</p>
+     * </li>
+     * <li>PDO::FETCH_COLUMN | PDO::FETCH_GROUP
+     *  <p>返回前2列，[第一列为KEY => [第二列为VALUE，如果KEY重复，VALUE对应归类]]</p>
+     * </li>
+     * <li>PDO::FETCH_UNIQUE
+     *  <p>返回所有列，[第一列为KEY => [其余列为关联数组]]</p>
+     * </li>
+     * <li>PDO::FETCH_GROUP
+     *  <p>返回所有列，[第一列为KEY => [[其余列为关联数组，如果KEY重复，VALUE对应归类]]]</p>
+     * </li>
+     * <li>PDO::FETCH_OBJ
+     *  <p>返回所有列，对象形式</p>
+     * </li>
+     * </ol></div>
      * @return array
      */
-    public function fetchAll(string $statement, array $parameter = [], int $type = \PDO::FETCH_ASSOC): array
+    public function fetchAll(string $statement, array $parameter = [], int $type = null): array
     {
-        $rs = $this->query($statement, $parameter);
-        $results = $rs->fetchAll($type);
-        
-        return $results;
+        return $this->query($statement, $parameter)->fetchAll($type);
     }
 
     /**
@@ -52,16 +66,13 @@ class PdoConnect extends Cache
      * @param int $type
      * @return mixed[array|object|false]
      */
-    public function fetch(string $statement, array $parameter = [], int $type = \PDO::FETCH_ASSOC)
+    public function fetch(string $statement, array $parameter = [], int $type = null)
     {
-        $rs = $this->query($statement, $parameter);
-        $results = $rs->fetch($type);
-        
-        return $results;
+        return $this->query($statement, $parameter)->fetch($type);
     }
 
     /**
-     * 获取该行某列数据
+     * 获取第一行某列数据：默认第1列
      * @param string $statement
      * @param array $parameter
      * @param int $column
@@ -69,14 +80,11 @@ class PdoConnect extends Cache
      */
     public function fetchColumn(string $statement, array $parameter = [], int $column = 0)
     {
-        $rs = $this->query($statement, $parameter);
-        $results = $rs->fetchColumn($column);
-        
-        return $results;
+        return $this->query($statement, $parameter)->fetchColumn($column);
     }
 
     /**
-     * 
+     * 返回插入后受影响的行数以及自增ID值
      * @param string $statement
      * @param array $parameter
      * @return array
@@ -90,7 +98,7 @@ class PdoConnect extends Cache
     }
 
     /**
-     * 
+     * 返回更新后受影响的行数
      * @param string $statement
      * @param array $parameter
      * @return int
@@ -101,7 +109,7 @@ class PdoConnect extends Cache
     }
 
     /**
-     * 
+     * 返回删除后受影响的行数
      * @param string $statement
      * @param array $parameter
      * @return int
@@ -112,7 +120,7 @@ class PdoConnect extends Cache
     }
 
     /**
-     * 
+     * 根据参数类型，绑定对应类型
      * @param string $statement
      * @param array $parameter
      * @return \PDOStatement
@@ -126,16 +134,16 @@ class PdoConnect extends Cache
         foreach ($parameter as $key => $value) {
             switch (1) {
                 case is_int($value):
-                    $type = \PDO::PARAM_INT;
+                    $type = PDO::PARAM_INT;
                     break;
                 case is_bool($value):
-                    $type = \PDO::PARAM_BOOL;
+                    $type = PDO::PARAM_BOOL;
                     break;
                 case is_null($value):
-                    $type = \PDO::PARAM_NULL;
+                    $type = PDO::PARAM_NULL;
                     break;
                 default:
-                    $type = \PDO::PARAM_STR;
+                    $type = PDO::PARAM_STR;
                     break;
             }
             $rs->bindValue($flag ? ($key + 1) : $key, $value, $type);

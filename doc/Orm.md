@@ -52,7 +52,7 @@ $data = $orm->insert([
 ```
 # 更新
 ```
-$orm->where(['id' => $data['lastInsertId']])->limit(50)->update([
+$orm->where(['id' => $data['lastInsertId']])->limit(0, 50)->update([
 	'app_id' => 1,
 	'status' => 2,
 	'date_add' => time(true),
@@ -63,7 +63,7 @@ $orm->where(['id' => $data['lastInsertId']])->limit(50)->update([
 ```
 # 删除
 ```
-$orm->where(['id' => $data['lastInsertId']])->limit(100)->delete(); #DELETE FROM `hp_iot_config` WHERE (`id`=?) LIMIT 100
+$orm->where(['id' => $data['lastInsertId']])->limit(0, 100)->delete(); #DELETE FROM `hp_iot_config` WHERE (`id`=?) LIMIT 100
 ```
 # 验证
 ```

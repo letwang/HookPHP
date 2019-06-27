@@ -1,7 +1,6 @@
 <?php
 namespace Hook\Db;
 
-use PDO;
 use Redis;
 use Yaconf;
 use Hook\Db\{OrmConnect, PdoConnect, RedisConnect, YacConnect};
@@ -11,15 +10,11 @@ class OrmConnect extends Cache
 {
     public $table = '';
 
-    private $ttl = 3600;
-    private $key;
-    private $hashKey;
-
     private $statement = '';
     private $parameter = [];
 
     private $operator = ['=' => '=', '>' => '>', '>=' => '>=', '<' => '<', '<=' => '<=', '!=' => '!=', 'LIKE' => 'LIKE', 'NOT LIKE' => 'NOT LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN', 'BETWEEN' => 'BETWEEN', 'NOT BETWEEN' => 'NOT BETWEEN', 'AND' => 'AND'];
-    private $expression = ['DISTINCT', 'DISTINCTROW', 'SQL_CALC_FOUND_ROWS'];
+    private $expression = ['DISTINCT', 'DISTINCTROW'];
 
     public function __construct(string $table)
     {
@@ -96,64 +91,33 @@ class OrmConnect extends Cache
         return $this;
     }
 
-    public function limit(int $count = 30, int $offset = null): self
+    public function limit(int $offset = 0, int $count = 30): self
     {
-        $this->statement .= ' LIMIT '.($offset === null ? '' : $offset.',').$count;
+        $this->statement .= ' LIMIT ?, ?';
+        $this->parameter[] = $offset;
+        $this->parameter[] = $count;
         return $this;
     }
 
-    public function fetchAll(int $type = PDO::FETCH_ASSOC)
+    public function fetchAll(int $type = null, int $ttl = 3600)
     {
-        $this->check($type);
-
-        $value = RedisConnect::getInstance()->getHash($this->key, $this->hashKey, function(Redis $redis) use ($type) {
-            return PdoConnect::getInstance()->fetchAll($this->statement, $this->parameter, $type);
-        }, $this->ttl);
-
-        $this->clean();
-        return $value;
+        return $this->fetchCache('fetchAll', $type, $ttl);
     }
 
-    public function fetch(int $type = PDO::FETCH_ASSOC)
+    public function fetch(int $type = null, int $ttl = 3600)
     {
-        $this->check($type);
-
-        $value = RedisConnect::getInstance()->getHash($this->key, $this->hashKey, function(Redis $redis) use ($type) {
-            return PdoConnect::getInstance()->fetch($this->statement, $this->parameter, $type);
-        }, $this->ttl);
-
-        $this->clean();
-        return $value;
+        return $this->fetchCache('fetch', $type, $ttl);
     }
 
-    public function fetchColumn(int $column = 0)
+    public function fetchColumn(int $column = 0, int $ttl = 3600)
     {
-        $this->check($column);
-
-        $value = RedisConnect::getInstance()->getHash($this->key, $this->hashKey, function(Redis $redis) use ($column) {
-            return PdoConnect::getInstance()->fetchColumn($this->statement, $this->parameter, $column);
-        }, $this->ttl);
-
-        $this->clean();
-        return $value;
-    }
-
-    public function count(): int
-    {
-        $this->statement = 'SELECT FOUND_ROWS()';
-        $this->parameter = [];
-
-        $data = PdoConnect::getInstance()->fetchColumn($this->statement, $this->parameter);$this->clean();
-        return $data;
+        return $this->fetchCache('fetchColumn', $column, $ttl);
     }
 
     public function insert(array $parameter): array
     {
-        $this->statement = 'INSERT INTO `'.$this->table.'`(`'.join('`,`', array_keys($parameter)).'`)VALUES(:'.join(',:', array_keys($parameter)).')';
-        $this->parameter = $parameter;
-
-        $this->check();$data = PdoConnect::getInstance()->insert($this->statement, $this->parameter);$this->clean();
-        return $data;
+        list($statement, $parameter) = $this->safeCheck('INSERT INTO `'.$this->table.'`(`'.join('`,`', array_keys($parameter)).'`)VALUES(:'.join(',:', array_keys($parameter)).')', $parameter);
+        return PdoConnect::getInstance()->insert($statement, $parameter);
     }
 
     public function update(array $assignment): int
@@ -165,19 +129,14 @@ class OrmConnect extends Cache
             $parameter[] = $value;
         }
 
-        $this->statement = 'UPDATE `'.$this->table.'` SET '.substr($statement, 0, -1).' '.$this->statement;
-        $this->parameter = array_merge($parameter, $this->parameter);
-
-        $this->check();$data = PdoConnect::getInstance()->update($this->statement, $this->parameter);$this->clean();
-        return $data;
+        list($statement, $parameter) = $this->safeCheck('UPDATE `'.$this->table.'` SET '.substr($statement, 0, -1).' '.$this->statement, array_merge($parameter, $this->parameter));
+        return PdoConnect::getInstance()->update($statement, $parameter);
     }
 
     public function delete(): int
     {
-        $this->statement = 'DELETE FROM `'.$this->table.'` '.$this->statement;
-
-        $this->check();$data = PdoConnect::getInstance()->delete($this->statement, $this->parameter);$this->clean();
-        return $data;
+        list($statement, $parameter) = $this->safeCheck('DELETE FROM `'.$this->table.'` '.$this->statement, $this->parameter);
+        return PdoConnect::getInstance()->delete($statement, $parameter);
     }
 
     public function validate(string $type): array
@@ -249,29 +208,33 @@ class OrmConnect extends Cache
         return $data;
     }
 
-    private function check(int $flag = null)
+    private function safeCheck(string $statement, array $parameter): array
     {
-        if ($flag !== null) {
-            $this->key = sprintf(Yaconf::get('const')['table']['cache'], $this->table);
-            $this->hashKey = md5($this->statement.igbinary_serialize($this->parameter).$flag);
-        }
-
-        $key = md5($this->statement);
+        $key = md5($statement);
         if (!YacConnect::getInstance()->handle->get($key)) {
-            preg_match_all('/`(\w+)`/u', $this->statement, $matches);
+            preg_match_all('/`(\w+)`/u', $statement, $matches);
             $white = APP_TABLE[$this->table] + [$this->table => []];
             foreach (array_flip($matches[1]) as $column => $index) {
                 if (!isset($white[$column])) {
-                    throw new \Exception('db hack #'.$index.' ['.$this->statement.']');
+                    throw new \Exception('db hack #'.$index.' ['.$statement.']');
                 }
             }
-            YacConnect::getInstance()->handle->set($key, true, $this->ttl);
+            YacConnect::getInstance()->handle->set($key, true);
         }
+
+        return [$this->statement, $this->parameter, $this->statement = '', $this->parameter = []];
     }
 
-    private function clean(): void
+    private function fetchCache(string $callable, int $type = null, int $ttl)
     {
-        $this->statement = '';
-        $this->parameter = [];
+        list($statement, $parameter) = $this->safeCheck($this->statement, $this->parameter);
+        return RedisConnect::getInstance()->getHash(
+            sprintf(Yaconf::get('const')['table']['cache'], $this->table),
+            md5($callable.$type.$statement.igbinary_serialize($parameter)),
+            function() use ($callable, $statement, $parameter, $type) {
+                return PdoConnect::getInstance()->{$callable}($statement, $parameter, $type);
+            },
+            $ttl
+        );
     }
 }

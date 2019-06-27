@@ -5,7 +5,7 @@ use Hook\Db\{PdoConnect};
 
 class Process
 {
-    public static function get(array $param = [], int $style = \PDO::FETCH_ASSOC, $argument = null, array $args = [])
+    public static function get(array $param = [], int $style = null, $argument = null, array $args = [])
     {
         if (! isset($param['sql']) || ! isset($param['placeholder']) || ! is_array($param['placeholder'])) {
             return false;

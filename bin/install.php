@@ -22,7 +22,7 @@ function init(string $appName = APP_NAME)
     $redis = RedisConnect::getInstance()->handle;
     foreach ($pdo->fetchAll(Yaconf::get('sql.TABLE.GET_ALL'), [APP_CONFIG['application']['prefix'].$appName.'_%'], PDO::FETCH_NUM) as list($table)) {
         $orm = OrmConnect::getInstance($table);
-        $redis->del(sprintf(Yaconf::get('const')['table']['table'], $table));
+        $redis->del(sprintf(Yaconf::get('const')['table']['meta'], $table));
         foreach ($orm->select(['*'])->fetchAll() as $value) {
             $result &= synData(['table' => $table, 'eventType' => 'INSERT', 'after' => $value], $redis);
         }
@@ -48,7 +48,7 @@ function init(string $appName = APP_NAME)
 
 function synData(array $data, \Redis $redis): bool
 {
-    $key = sprintf(Yaconf::get('const')['table']['table'], $data['table']);
+    $key = sprintf(Yaconf::get('const')['table']['meta'], $data['table']);
     $hashkey = $data['after']['id'].(substr($data['table'], -4) === 'lang' ? '_'.$data['after']['lang_id'] : '');
     $value = $data['after'];
     switch ($data['eventType']) {

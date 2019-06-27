@@ -43,7 +43,7 @@ abstract class AbstractModel extends Cache
 
     public function getData(int $langId = null)
     {
-        $key = sprintf(Yaconf::get('const')['table']['table'], $langId ? $this->tableLang : $this->table);
+        $key = sprintf(Yaconf::get('const')['table']['meta'], $langId ? $this->tableLang : $this->table);
         $callback = function(\Redis $redis) use ($key) {
             return $redis->hGetAll($key);
         };
