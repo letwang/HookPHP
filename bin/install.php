@@ -34,7 +34,7 @@ function init(string $appName = APP_NAME)
             $data .= $field['Field'].'.default='.$field['Default'].PHP_EOL;
             $data .= $field['Field'].'.extra='.$field['Extra'].PHP_EOL;
 
-            $validate = $orm->validate($field['Type']);
+            $validate = validate($field['Type']);
             $data .= $field['Field'].'.min='.$validate['min'].PHP_EOL;
             $data .= $field['Field'].'.max='.$validate['max'].PHP_EOL;
         }
@@ -67,4 +67,67 @@ function synData(array $data, \Redis $redis): bool
     $redis->sAdd(Yaconf::get('const')['yac']['expired_key'], $data['table']);
 
     return true;
+}
+
+function validate(string $type): array
+{
+    $unsigned = strpos($type, 'unsigned');
+    $data = ['min' => null, 'max' => null];
+    switch (1) {
+        case strpos($type, 'tinyint') === 0:
+            $data = ['min' => -128, 'max' => 127];
+            if ($unsigned) {
+                $data = ['min' => 0, 'max' => strpos($type, '1') > 0 ? 1 : 255];
+            }
+            break;
+        case strpos($type, 'smallint') === 0:
+            $data = ['min' => -32768, 'max' => 32767];
+            if ($unsigned) {
+                $data = ['min' => 0, 'max' => 65535];
+            }
+            break;
+        case strpos($type, 'mediumint') === 0:
+            $data = ['min' => -8388608, 'max' => 8388607];
+            if ($unsigned) {
+                $data = ['min' => 0, 'max' => 16777215];
+            }
+            break;
+        case strpos($type, 'int') === 0:
+            $data = ['min' => -2147483648, 'max' => 2147483647];
+            if ($unsigned) {
+                $data = ['min' => 0, 'max' => 4294967295];
+            }
+            break;
+        case strpos($type, 'bigint') === 0:
+            $data = ['min' => -9223372036854775808, 'max' => 9223372036854775807];
+            if ($unsigned) {
+                $data = ['min' => 0, 'max' => 18446744073709551615];
+            }
+            break;
+        case strpos($type, 'enum') === 0:
+            $type = array_flip(preg_replace(['/enum\(/', '/\)/', '/\'/'], '', explode("','", $type)));
+            $data = ['min' => 0, 'max' => count($type)];
+            return $data;
+            break;
+        case strpos($type, 'char') !== false:
+            $func = function ($value) {return mb_strlen($value);};
+            $data = ['min' => 0, 'max' => (int) preg_replace(['/var/', '/char/', '/\(/', '/\)/'], '', $type)];
+            break;
+        case strpos($type, 'binary') !== false:
+            $data = ['min' => 0, 'max' => (int) preg_replace(['/var/', '/binary/', '/\(/', '/\)/'], '', $type)];
+            break;
+        case strpos($type, 'tinytext') === 0 || strpos($type, 'tinyblob') === 0:
+            $data = ['min' => 0, 'max' => 255];//255B
+            break;
+        case strpos($type, 'text') === 0 || strpos($type, 'blob') === 0:
+            $data = ['min' => 0, 'max' => 65535];//64K
+            break;
+        case strpos($type, 'mediumtext') === 0 || strpos($type, 'mediumblob') === 0:
+            $data = ['min' => 0, 'max' => 16777215];//16M
+            break;
+        case strpos($type, 'longtext') === 0 || strpos($type, 'longblob') === 0:
+            $data = ['min' => 0, 'max' => 4294967295];//4G
+            break;
+    }
+    return $data;
 }

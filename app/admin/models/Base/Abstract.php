@@ -7,6 +7,7 @@ use Hook\Db\{OrmConnect, PdoConnect, YacConnect};
 use Hook\Cache\Cache;
 use Hook\Validate\Validate;
 use Hook\Tools\Tools;
+use Hook\Db\RedisConnect;
 
 abstract class AbstractModel extends Cache
 {
@@ -43,12 +44,16 @@ abstract class AbstractModel extends Cache
 
     public function getData(int $langId = null)
     {
+        $id = $this->id.($langId ? '_'.$langId : '');
         $key = sprintf(Yaconf::get('const')['table']['meta'], $langId ? $this->tableLang : $this->table);
-        $callback = function(\Redis $redis) use ($key) {
-            return $redis->hGetAll($key);
-        };
 
-        return YacConnect::getInstance()->get($key, $callback, $this->id.($langId ? '_'.$langId : ''));
+        $data = YacConnect::getInstance()->handle->get($key);
+        if (!$data) {
+            $data = RedisConnect::getInstance()->handle->hGetAll($key);
+            YacConnect::getInstance()->handle->set($key, $data);
+        }
+
+        return $id ? ($data[$id] ?? null) : $data;
     }
 
     public function post(): int

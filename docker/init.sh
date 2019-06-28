@@ -15,3 +15,4 @@ php app/iot/bin/install.php &&
 php app/paas/bin/install.php &&
 php app/payment/bin/install.php &&
 php app/store/bin/install.php
+/bin/bash

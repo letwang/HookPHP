@@ -25,16 +25,4 @@ class RedisConnect extends Cache
 
         $this->handle->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_IGBINARY);
     }
-
-    public function getHash(string $key, string $hashKey, callable $callback = null, int $ttl = null)
-    {
-        if ($this->handle->hExists($key, $hashKey)) {
-            return $this->handle->hGet($key, $hashKey);
-        } else {
-            $value = $callback($this->handle);
-            $this->handle->hSet($key, $hashKey, $value);
-            $this->handle->setTimeout($key, $ttl);
-            return $value;
-        }
-    }
 }
