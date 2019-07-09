@@ -1,7 +1,7 @@
 #!/bin/sh
 mysqld &
 mongod &
-redis-server &
+redis-server /etc/redis/redis.conf &
 service php7.3-fpm start
 service nginx start
 cd /usr/share/nginx/html/HookPHP/
