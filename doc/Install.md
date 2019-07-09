@@ -10,7 +10,7 @@
 ## 2.Docker
 ```
 git clone https://github.com/letwang/HookPHP.git && cd HookPHP &&
-sudo docker run -itd -p 81:80 --name hookphp \
+sudo docker run -itd -p 81:80 -p 3307:3306 -p 6380:6379 -p 27018:27017 --name hookphp \
 -v `pwd`/docker/mongodb/mongod.conf:/etc/mongod.conf \
 -v `pwd`/docker/mysql/mysql.cnf:/etc/mysql/conf.d/mysql.cnf \
 -v `pwd`/docker/nginx/nginx.conf:/etc/nginx/nginx.conf \
