@@ -182,7 +182,7 @@ class OrmConnect extends Cache
         } else {
             $data = PdoConnect::getInstance()->{$callable}($statement, $parameter, $type);
             RedisConnect::getInstance()->handle->hSet($key, $hashKey, $data);
-            RedisConnect::getInstance()->handle->setTimeout($key, $ttl);
+            RedisConnect::getInstance()->handle->expire($key, $ttl);
             return $data;
         }
     }
