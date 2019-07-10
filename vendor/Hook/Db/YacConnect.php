@@ -26,7 +26,9 @@ class YacConnect extends Cache
 
         foreach ($this->redis->handle->sMembers($expiredKey) as $table) {
             foreach (Yaconf::get('const')['table'] as $key) {
-                $this->handle->delete(sprintf($key, $table));
+                $key = sprintf($key, $table);
+                $this->handle->delete($key);
+                $this->redis->handle->del($key);
             }
         }
         $this->redis->handle->del($expiredKey);

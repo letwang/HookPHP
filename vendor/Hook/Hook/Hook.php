@@ -3,12 +3,17 @@ namespace Hook\Hook;
 
 use \Yaconf;
 use Hook\Db\{PdoConnect};
+use Hook\Cache\Cache;
 
 class Hook
 {
     public static function getModulesForHook()
     {
-        return PdoConnect::getInstance()->fetchAll(Yaconf::get('sql.HOOK.MODULE.GET_ALL'), [], \PDO::FETCH_COLUMN | \PDO::FETCH_GROUP);;
+        $data = &Cache::static(__METHOD__);
+        if ($data === null) {
+            $data = PdoConnect::getInstance()->fetchAll(Yaconf::get('sql.HOOK.MODULE.GET_ALL'), [], \PDO::FETCH_COLUMN | \PDO::FETCH_GROUP);
+        }
+        return $data;
     }
 
     public static function run($key, $args = null)

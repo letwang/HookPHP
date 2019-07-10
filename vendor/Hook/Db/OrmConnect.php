@@ -98,7 +98,14 @@ class OrmConnect extends Cache
 
     public function limit(int $count = 30, int $offset = null): self
     {
-        $this->statement .= ' LIMIT '.($offset === null ? '' : $offset.',').$count;
+        if ($offset === null) {
+            $this->statement .= ' LIMIT ?';
+            $this->parameter[] = $count;
+        } else {
+            $this->statement .= ' LIMIT ?, ?';
+            $this->parameter[] = $offset;
+            $this->parameter[] = $count;
+        }
         return $this;
     }
 

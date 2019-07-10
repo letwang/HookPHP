@@ -1,6 +1,6 @@
 #!/bin/sh
 mysqld &
-mongod &
+mongod --bind_ip_all &
 redis-server /etc/redis/redis.conf &
 service php7.3-fpm start
 service nginx start
