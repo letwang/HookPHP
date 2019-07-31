@@ -2,36 +2,33 @@
 namespace Hook\Db;
 
 use Yaconf;
-use Hook\Db\{RedisConnect};
 use Hook\Cache\Cache;
 
 class YacConnect extends Cache
 {
     public $handle;
-    public $redis;
 
     public function __construct(string $prefix = '')
     {
         $this->handle = new \Yac($prefix ? $prefix : 'default');
-        $this->redis = RedisConnect::getInstance();
     }
 
-    public function flushTable(): bool
+    public function flush(): bool
     {
+        $redis = RedisConnect::getInstance();
         $expiredKey = Yaconf::get('const')['yac']['expired_key'];
 
-        if (!$this->redis->handle->exists($expiredKey)) {
-            return true;
+        if (!$redis->handle->exists($expiredKey)) {
+            return false;
         }
 
-        foreach ($this->redis->handle->sMembers($expiredKey) as $table) {
-            foreach (Yaconf::get('const')['table'] as $key) {
-                $key = sprintf($key, $table);
-                $this->handle->delete($key);
-                $this->redis->handle->del($key);
-            }
+        $keys = [];
+        foreach ($redis->handle->sMembers($expiredKey) as $table) {
+            $keys[] = sprintf(Yaconf::get('const')['table']['single'], $table);
         }
-        $this->redis->handle->del($expiredKey);
+
+        $this->handle->delete($keys);
+        $redis->handle->unlink($expiredKey);
 
         return true;
     }

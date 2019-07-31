@@ -16,7 +16,7 @@ abstract class AbstractController extends \Yaf\Controller_Abstract
     protected function init()
     {
         $this->id = (int) $this->getRequest()->getParam('id');
-        $this->languages = \LangModel::getInstance()->getData();
+        $this->languages = \LangModel::getInstance()->get();
 
         $this->model = (str_replace('_', '\\', $this->_request->controller).'Model')::getInstance($this->id);
 

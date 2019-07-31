@@ -1,13 +1,11 @@
 <?php
 namespace Base;
 
-use Yaconf;
 use LangModel;
-use Hook\Db\{OrmConnect, PdoConnect, YacConnect};
+use Hook\Db\{OrmConnect};
 use Hook\Cache\Cache;
 use Hook\Validate\Validate;
 use Hook\Tools\Tools;
-use Hook\Db\RedisConnect;
 
 abstract class AbstractModel extends Cache
 {
@@ -40,20 +38,7 @@ abstract class AbstractModel extends Cache
             $this->tableLang = $this->table.'_lang';
             $this->definitionLang = array_keys(array_diff_key(APP_TABLE[$this->tableLang], $this->ignore));
         }
-    }
-
-    public function getData(int $langId = null)
-    {
-        $id = $this->id.($langId ? '_'.$langId : '');
-        $key = sprintf(Yaconf::get('const')['table']['meta'], $langId ? $this->tableLang : $this->table);
-
-        $data = YacConnect::getInstance()->handle->get($key);
-        if (!$data) {
-            $data = RedisConnect::getInstance()->handle->hGetAll($key);
-            YacConnect::getInstance()->handle->set($key, $data);
-        }
-
-        return $id ? ($data[$id] ?? null) : $data;
+        parent::__construct();
     }
 
     public function post(): int
@@ -61,7 +46,7 @@ abstract class AbstractModel extends Cache
         $this->beforePost();
         $this->copyFromPost();
         try {
-            PdoConnect::getInstance()->handle->beginTransaction();
+            $this->pdo->handle->beginTransaction();
 
             $parameter = $this->getFields();
             $parameter += isset(APP_TABLE[$this->table]['date_add']) ? ['date_add' => time()] : [];
@@ -76,9 +61,9 @@ abstract class AbstractModel extends Cache
                 }
             }
 
-            return PdoConnect::getInstance()->handle->commit() && $this->afterPost($result['lastInsertId']) ? $result['lastInsertId']: 0;
+            return $this->pdo->handle->commit() && $this->afterPost($result['lastInsertId']) ? $result['lastInsertId']: 0;
         } catch (\Throwable $e) {
-            PdoConnect::getInstance()->handle->rollBack();
+            $this->pdo->handle->rollBack();
             AbstractController::send([], 100003, $e->getMessage(), 500);
         }
     }
@@ -87,13 +72,13 @@ abstract class AbstractModel extends Cache
     {
         $this->beforeDelete();
         try {
-            PdoConnect::getInstance()->handle->beginTransaction();
+            $this->pdo->handle->beginTransaction();
 
             OrmConnect::getInstance($this->table)->where(['id' => $this->id])->delete();
 
-            return PdoConnect::getInstance()->handle->commit() && $this->afterDelete();
+            return $this->pdo->handle->commit() && $this->afterDelete();
         } catch (\Throwable $e) {
-            PdoConnect::getInstance()->handle->rollBack();
+            $this->pdo->handle->rollBack();
             AbstractController::send([], 100005, $e->getMessage(), 500);
         }
     }
@@ -103,7 +88,7 @@ abstract class AbstractModel extends Cache
         $this->beforePut();
         $this->copyFromPost();
         try {
-            PdoConnect::getInstance()->handle->beginTransaction();
+            $this->pdo->handle->beginTransaction();
 
             OrmConnect::getInstance($this->table)->where(['id' => $this->id])->update($this->getFields());
 
@@ -114,16 +99,24 @@ abstract class AbstractModel extends Cache
                 }
             }
 
-            return PdoConnect::getInstance()->handle->commit() && $this->afterPut();
+            return $this->pdo->handle->commit() && $this->afterPut();
         } catch (\Throwable $e) {
-            PdoConnect::getInstance()->handle->rollBack();
+            $this->pdo->handle->rollBack();
             AbstractController::send([], 100004, $e->getMessage(), 500);
         }
     }
 
-    public function get()
+    public function get(int $langId = null)
     {
-        return array_values($this->getData());
+        $orm = OrmConnect::getInstance($langId ? $this->tableLang : $this->table)->select(['*']);
+        if ($this->id) {
+            $orm->where(['id' => $this->id]);
+            if ($langId) {
+                $orm->where(['lang_id' => $langId]);
+            }
+            return $orm->fetch();
+        }
+        return $orm->fetchAll();
     }
 
     private function getFields(): array

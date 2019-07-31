@@ -1,5 +1,4 @@
 <?php
-use Hook\Db\{PdoConnect};
 use Hook\Data\ArrayUtils;
 
 class MenuModel extends Base\AbstractModel
@@ -15,12 +14,12 @@ class MenuModel extends Base\AbstractModel
 
     public function get(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Yaconf::get('sql.MENU.GET_ALL'), [APP_LANG_ID]);
+        return $this->pdo->fetchAll(Yaconf::get('sql.MENU.GET_ALL'), [APP_LANG_ID]);
     }
 
     public function getSelect(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Yaconf::get('sql.MENU.GET_SELECT'), [APP_LANG_ID], PDO::FETCH_KEY_PAIR);
+        return $this->pdo->fetchAll(Yaconf::get('sql.MENU.GET_SELECT'), [APP_LANG_ID], PDO::FETCH_KEY_PAIR);
     }
 
     public function getMenu(): array
@@ -28,7 +27,7 @@ class MenuModel extends Base\AbstractModel
         $utils = new ArrayUtils();
         $utils->idKey = 'id';
         $utils->parentIdKey = 'parent';
-        $data = $utils->classify(PdoConnect::getInstance()->fetchAll(Yaconf::get('sql.MENU.GET_MENU'), [APP_LANG_ID]));
+        $data = $utils->classify($this->pdo->fetchAll(Yaconf::get('sql.MENU.GET_MENU'), [APP_LANG_ID]));
         return $data;
     }
 }

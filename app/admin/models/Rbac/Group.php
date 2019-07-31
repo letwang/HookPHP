@@ -2,7 +2,6 @@
 namespace Rbac;
 
 use \Yaconf;
-use Hook\Db\{PdoConnect};
 
 class GroupModel extends \Base\AbstractModel
 {
@@ -13,11 +12,11 @@ class GroupModel extends \Base\AbstractModel
 
     public function get(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Yaconf::get('sql.RBAC.GROUP.GET_ALL'), [APP_LANG_ID]);
+        return $this->pdo->fetchAll(Yaconf::get('sql.RBAC.GROUP.GET_ALL'), [APP_LANG_ID]);
     }
 
     public function getSelect(): array
     {
-        return PdoConnect::getInstance()->fetchAll(Yaconf::get('sql.RBAC.GROUP.GET_SELECT'), [APP_LANG_ID], \PDO::FETCH_KEY_PAIR);
+        return $this->pdo->fetchAll(Yaconf::get('sql.RBAC.GROUP.GET_SELECT'), [APP_LANG_ID], \PDO::FETCH_KEY_PAIR);
     }
 }

@@ -19,7 +19,7 @@ class Bootstrap extends Bootstrap_Abstract
         }
         defined('APP_LANG_ID') || define('APP_LANG_ID', LangModel::getInstance()->getDefaultId());
 
-        YacConnect::getInstance()->flushTable();
+        YacConnect::getInstance()->flush();
     }
 }
 

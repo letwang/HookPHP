@@ -2,7 +2,7 @@
 require __DIR__.'/../init.php';
 require __DIR__.'/../../../bin/install.php';
 
-use Hook\Db\{RedisConnect};
+use Hook\Db\{OrmConnect};
 
 $connection = new AMQPConnection();
 $connection->connect();
@@ -15,12 +15,10 @@ $queue->setFlags(AMQP_NOPARAM);
 $queue->declareQueue();
 $queue->bind('canal');
 
-$redis = RedisConnect::getInstance()->handle;
-
-$queue->consume(function ($envelope, $queue) use ($redis) {
+$queue->consume(function ($envelope, $queue) {
     $data = json_decode($envelope->getBody(), true);
     if ($data['db'] === APP_CONFIG['mysql']['default']['dbname']) {
-        synData($data, $redis);
+        OrmConnect::flush($data['table']);
     }
     $queue->nack($envelope->getDeliveryTag());
 });

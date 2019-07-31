@@ -2,7 +2,6 @@
 namespace Hook\Db;
 
 use Yaconf;
-use Hook\Db\{OrmConnect, PdoConnect, RedisConnect, YacConnect};
 use Hook\Cache\Cache;
 
 class OrmConnect extends Cache
@@ -18,6 +17,7 @@ class OrmConnect extends Cache
     public function __construct(string $table)
     {
         $this->table = $table;
+        parent::__construct();
     }
 
     public function __destruct()
@@ -111,22 +111,22 @@ class OrmConnect extends Cache
 
     public function fetchAll(int $type = null, int $ttl = 3600)
     {
-        return $this->getData(__FUNCTION__, $type, $ttl);
+        return $this->getSingleData(__FUNCTION__, $type, $ttl);
     }
 
     public function fetch(int $type = null, int $ttl = 3600)
     {
-        return $this->getData(__FUNCTION__, $type, $ttl);
+        return $this->getSingleData(__FUNCTION__, $type, $ttl);
     }
 
     public function fetchColumn(int $column = 0, int $ttl = 3600)
     {
-        return $this->getData(__FUNCTION__, $column, $ttl);
+        return $this->getSingleData(__FUNCTION__, $column, $ttl);
     }
 
     public function insert(array $parameter): array
     {
-        return PdoConnect::getInstance()->insert(
+        return $this->pdo->insert(
             $this->checkStatement('INSERT INTO `'.$this->table.'`(`'.join('`,`', array_keys($parameter)).'`)VALUES(:'.join(',:', array_keys($parameter)).')'),
             $parameter
        );
@@ -142,7 +142,7 @@ class OrmConnect extends Cache
         }
         $parameter = array_merge($parameter, $this->parameter);
 
-        return PdoConnect::getInstance()->update(
+        return $this->pdo->update(
             $this->checkStatement('UPDATE `'.$this->table.'` SET '.substr($statement, 0, -1).' '.$this->statement),
             $parameter
         );
@@ -151,7 +151,7 @@ class OrmConnect extends Cache
     public function delete(): int
     {
         $parameter = $this->parameter;
-        return PdoConnect::getInstance()->delete(
+        return $this->pdo->delete(
             $this->checkStatement('DELETE FROM `'.$this->table.'` '.$this->statement),
             $parameter
         );
@@ -162,7 +162,7 @@ class OrmConnect extends Cache
         $this->__destruct();
 
         $key = md5($statement);
-        if (!YacConnect::getInstance()->handle->get($key)) {
+        if (!$this->yac->handle->get($key)) {
             preg_match_all('/`(\w+)`/u', $statement, $matches);
             $white = APP_TABLE[$this->table] + [$this->table => [], 'COUNT(*)' => []];
             foreach (array_flip($matches[1]) as $column => $index) {
@@ -170,27 +170,82 @@ class OrmConnect extends Cache
                     throw new \Exception('db hack #'.$index.' ['.$statement.']');
                 }
             }
-            YacConnect::getInstance()->handle->set($key, true);
+            $this->yac->handle->set($key, true);
         }
 
         return $statement;
     }
 
-    private function getData(string $callable, int $type = null, int $ttl)
+    private function getSingleData(string $callable, int $type = null, int $ttl)
     {
         $parameter = $this->parameter;
         $statement = $this->checkStatement($this->statement);
 
-        $key = sprintf(Yaconf::get('const')['table']['cache'], $this->table);
+        if (!$ttl) {
+            return $this->pdo->{$callable}($statement, $parameter, $type);
+        }
+
+        $key = sprintf(Yaconf::get('const')['table']['single'], $this->table);
         $hashKey = md5($callable.$type.$statement.igbinary_serialize($parameter));
 
-        if (RedisConnect::getInstance()->handle->hExists($key, $hashKey)) {
-            return RedisConnect::getInstance()->handle->hGet($key, $hashKey);
+        if ($this->redis->handle->hExists($key, $hashKey)) {
+            return $this->redis->handle->hGet($key, $hashKey);
         } else {
-            $data = PdoConnect::getInstance()->{$callable}($statement, $parameter, $type);
-            RedisConnect::getInstance()->handle->hSet($key, $hashKey, $data);
-            RedisConnect::getInstance()->handle->expire($key, $ttl);
+            $data = $this->pdo->{$callable}($statement, $parameter, $type);
+            $this->redis->handle->hSet($key, $hashKey, $data);
+            $this->redis->handle->expire($key, $ttl);
             return $data;
         }
+    }
+
+    private static function getJoinData(string $statement, array $parameter, string $callable, int $type, int $ttl)
+    {
+        if (!$ttl) {
+            return $this->pdo->{$callable}($statement, $parameter, $type);
+        }
+        preg_match_all('/(?:FROM|JOIN)\s+`(\w+)`/isu', $statement, $matches);
+        $key = md5($callable.$type.$statement.igbinary_serialize($parameter));
+
+        if ($this->redis->handle->exists($key)) {
+            return $this->redis->handle->get($key);
+        } else {
+            $data = $this->pdo->{$callable}($statement, $parameter, $type);
+            $pipe = $this->redis->handle->multi();
+            foreach ($matches[1] as $table) {
+                $pipe->hSetNx($table, $key, 1);
+                $pipe->expire($table, $ttl);
+            }
+            $pipe->setEx($key, $ttl, $data);
+            return $data;
+        }
+    }
+
+    public static function queryAll(string $statement, array $parameter = [], int $type = PDO::FETCH_ASSOC, int $ttl = 3600)
+    {
+        return self::getJoinData($statement, $parameter, 'fetchAll', $type, $ttl);
+    }
+
+    public static function query(string $statement, array $parameter = [], int $type = PDO::FETCH_ASSOC, int $ttl = 3600)
+    {
+        return self::getJoinData($statement, $parameter, 'fetch', $type, $ttl);
+    }
+
+    public static function queryColumn(string $statement, array $parameter = [], int $column = 0, int $ttl = 3600)
+    {
+        return self::getJoinData($statement, $parameter, 'fetchColumn', $column, $ttl);
+    }
+
+    public static function flush(string $table): bool
+    {
+        $keys = [];
+
+        $table = sprintf(Yaconf::get('const')['table']['single'], $table);
+        $this->redis->handle->exists($table) && $keys[] = $table;
+
+        $table = sprintf(Yaconf::get('const')['table']['join'], $table);
+        $this->redis->handle->exists($table) && $keys = array_merge($keys, [$table], $this->redis->handle->hKeys($table));
+
+        $keys && $this->redis->handle->unlink($keys);
+        $this->redis->handle->sAdd(Yaconf::get('const')['yac']['expired_key'], $table);
     }
 }

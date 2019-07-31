@@ -1,7 +1,7 @@
 <?php
 isset($app) || exit('请至平台中运行：php app/[admin|iot|paas|payment|store]/bin/install.php'.PHP_EOL);
 
-use Hook\Db\{OrmConnect, PdoConnect, RedisConnect};
+use Hook\Db\{PdoConnect};
 
 function init(string $appName = APP_NAME)
 {
@@ -19,13 +19,7 @@ function init(string $appName = APP_NAME)
     $result = $pdo->handle->commit();
 
     $data = '';
-    $redis = RedisConnect::getInstance()->handle;
     foreach ($pdo->fetchAll(Yaconf::get('sql.TABLE.GET_ALL'), [APP_CONFIG['application']['prefix'].$appName.'_%'], PDO::FETCH_NUM) as list($table)) {
-        $orm = OrmConnect::getInstance($table);
-        $redis->del(sprintf(Yaconf::get('const')['table']['meta'], $table));
-        foreach ($orm->select(['*'])->fetchAll() as $value) {
-            $result &= synData(['table' => $table, 'eventType' => 'INSERT', 'after' => $value], $redis);
-        }
         $data .= '['.$table.']'.PHP_EOL;
         foreach ($pdo->fetchAll('DESC `'.$table.'`') as $field) {
             $data .= $field['Field'].'.type='.substr($field['Type'], 0, strpos($field['Type'], '(')).PHP_EOL;
@@ -44,29 +38,6 @@ function init(string $appName = APP_NAME)
     shell_exec('sudo service php7.3-fpm restart');
 
     echo "初始化\e[3".($result ? 2 : 1)."m ".$appName." \e[0m平台数据完毕\n";
-}
-
-function synData(array $data, \Redis $redis): bool
-{
-    $key = sprintf(Yaconf::get('const')['table']['meta'], $data['table']);
-    $hashkey = $data['after']['id'].(substr($data['table'], -4) === 'lang' ? '_'.$data['after']['lang_id'] : '');
-    $value = $data['after'];
-    switch ($data['eventType']) {
-        case 'INSERT':
-            $redis->hSetNx($key, $hashkey, $value);
-            break;
-        case 'UPDATE':
-            $redis->hSet($key, $hashkey, $value);
-            break;
-        case 'DELETE':
-            $redis->hDel($key, $hashkey);
-            break;
-    }
-
-    $redis->del(sprintf(Yaconf::get('const')['table']['cache'], $data['table']));
-    $redis->sAdd(Yaconf::get('const')['yac']['expired_key'], $data['table']);
-
-    return true;
 }
 
 function validate(string $type): array
