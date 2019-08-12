@@ -49,21 +49,21 @@ password:	12345678
 # [Description][2]
 
 # [Requirements]
-Linux(Ubuntu etc.)
-Nginx 1.17
-MySQL 8.0
-ProxySQL 2.0
-PHP 7.4
-[PHP extensions][3]
-Redis 5.0
-Redis Cluster
-MongoDB 4.2
-MongoDB Cluster
-RabbitMQ 3.7.17
-Sphinx 3.1.1
-Varnish 6.2.0
-Composer 1.9
-Tika 1.22
+- Linux(Ubuntu etc.)
+- Nginx 1.17
+- MySQL 8.0
+- ProxySQL 2.0
+- PHP 7.4
+- [PHP extensions][3]
+- Redis 5.0
+- Redis Cluster
+- MongoDB 4.2
+- MongoDB Cluster
+- RabbitMQ 3.7.17
+- Sphinx 3.1.1
+- Varnish 6.2.0
+- Composer 1.9
+- Tika 1.22
 
 [1]: https://my.oschina.net/cart/blog/3061173
 [2]: https://my.oschina.net/cart/blog/2986804
