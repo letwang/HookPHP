@@ -14,7 +14,7 @@ class OrmConnect extends Cache
     private $operator = ['=' => '=', '>' => '>', '>=' => '>=', '<' => '<', '<=' => '<=', '!=' => '!=', 'LIKE' => 'LIKE', 'NOT LIKE' => 'NOT LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN', 'BETWEEN' => 'BETWEEN', 'NOT BETWEEN' => 'NOT BETWEEN', 'AND' => 'AND'];
     private $expression = ['DISTINCT', 'DISTINCTROW'];
 
-    public function __construct(string $table)
+    public function __construct(string $table = null)
     {
         $this->table = $table;
         parent::__construct();
@@ -246,6 +246,7 @@ class OrmConnect extends Cache
         $this->redis->handle->exists($table) && $keys = array_merge($keys, [$table], $this->redis->handle->hKeys($table));
 
         $keys && $this->redis->handle->unlink($keys);
+
         $this->redis->handle->sAdd(Yaconf::get('const')['yac']['expired_key'], $table);
     }
 }
