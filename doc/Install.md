@@ -7,7 +7,7 @@
 127.0.0.1 www.payment.com
 127.0.0.1 www.store.com
 ```
-## 2.Docker
+## 2.[Docker][1]
 ```
 git clone https://github.com/letwang/HookPHP.git && cd HookPHP &&
 sudo docker run -itd -p 81:80 -p 3307:3306 -p 6380:6379 -p 27018:27017 --name hookphp \
@@ -24,18 +24,7 @@ sudo docker run -itd -p 81:80 -p 3307:3306 -p 6380:6379 -p 27018:27017 --name ho
 -v `pwd`/../:/usr/share/nginx/html \
 letwang/hookphp zsh && sudo docker exec -it hookphp zsh /usr/share/nginx/html/HookPHP/docker/init.sh
 ```
-# [Command][1]
-```
-# Entering Container
-sudo docker exec -it hookphp zsh
-
-# Exit Container
-exit
-
-# Delete Container
-sudo docker rm -f hookphp
-```
-# Demo
+## 3.Demo
 ```
 http://www.admin.com:81/
 http://www.iot.com:81/
@@ -46,27 +35,19 @@ http://www.store.com:81/
 account:	admin@hookphp.com
 password:	12345678
 ```
-# [Description][2]
+# [Command][2]
+```
+# Entering Container
+sudo docker exec -it hookphp zsh
 
-# [Requirements]
-- Linux(Ubuntu etc.)
-- Supervisor 4.0
-- Nginx 1.17
-- MySQL 8.0
-- ProxySQL 2.0
-- PHP 7.4
-- [PHP extensions][3]
-- Redis 5.0
-- Redis Cluster
-- MongoDB 4.2
-- MongoDB Cluster
-- RabbitMQ 3.7.17
-- Sphinx 3.1.1
-- Varnish 6.2.0
-- Composer 1.9
-- Tika 1.22
-- Canal 1.1.4
+# Exit Container
+exit
 
-[1]: https://my.oschina.net/cart/blog/3061173
-[2]: https://my.oschina.net/cart/blog/2986804
-[3]: https://github.com/letwang/HookPHP/blob/master/composer.json
+# Delete Container
+sudo docker rm -f hookphp
+```
+# [Description][3]
+
+[1]: https://hub.docker.com/r/letwang/hookphp
+[2]: https://my.oschina.net/cart/blog/3061173
+[3]: https://my.oschina.net/cart/blog/2986804
