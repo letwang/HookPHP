@@ -9,6 +9,11 @@
 # 文档
 [中文][1] | [English][1] | [Français][1] | [Español][1] | [Deutsch][1] | [Italiano][1] | [Português][1] | [日本語][1] | [Русский][1] | [Nederlands][1] | [العربية][1] | [Norsk][1]
 
+# 参与
+如果你觉得此项目很好，请点击右上角的Star，让更多的人看到，一起腾飞！
+
+如果你想贡献代码，请直接在线新增、编辑源码，Github会自动帮你Fork项目，你要做的就是点击提交，比如基于HookPHP [开发平台][2]、[开发模块][3]、[开发插件][4]等。
+
 # 架构
 ![HookPHP_架构](https://github.com/letwang/HookPHP/blob/master/public/demo/architecture.png?raw=true)
 
@@ -17,11 +22,6 @@
 
 # 教程
 ![HookPHP_社区_知识星球](https://github.com/letwang/HookPHP/blob/master/public/demo/zsxq.png?raw=true)
-
-# 参与
-如果你觉得此项目很好，请点击右上角的Star，让更多的人看到，一起腾飞！
-
-如果你想贡献代码，请直接在线新增、编辑源码，Github会自动帮你Fork项目，你要做的就是点击提交，比如基于HookPHP [开发平台][2]、[开发模块][3]、[开发插件][4]等。
 
 # 演示
 ![HookPHP_演示_1](https://github.com/letwang/HookPHP/blob/master/public/demo/1.png?raw=true)
