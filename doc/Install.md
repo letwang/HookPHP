@@ -50,6 +50,7 @@ password:	12345678
 
 # [Requirements]
 - Linux(Ubuntu etc.)
+- Supervisor 4.0
 - Nginx 1.17
 - MySQL 8.0
 - ProxySQL 2.0
@@ -64,6 +65,7 @@ password:	12345678
 - Varnish 6.2.0
 - Composer 1.9
 - Tika 1.22
+- Canal 1.1.4
 
 [1]: https://my.oschina.net/cart/blog/3061173
 [2]: https://my.oschina.net/cart/blog/2986804
