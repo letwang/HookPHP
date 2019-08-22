@@ -6,8 +6,7 @@
 
 虽然中间几次创业，看过太多的源码，也曾服务于海外多家机构，但越是这样越发现自己的渺小：**一个人无法改变太多，需要带动整个群体一起进步！**。于是内心酝酿近10年的PHP框架诞生了！
 
-# 文档
-[中文][1] | [English][1] | [Français][1] | [Español][1] | [Deutsch][1] | [Italiano][1] | [Português][1] | [日本語][1] | [Русский][1] | [Nederlands][1] | [العربية][1] | [Norsk][1]
+# [文档][1]
 
 # 参与
 如果你觉得此项目很好，请点击右上角的Star，让更多的人看到，一起腾飞！
@@ -26,7 +25,7 @@
 # 演示
 ![HookPHP_演示_1](https://github.com/letwang/HookPHP/blob/master/public/demo/1.png?raw=true)
 
-[1]: https://github.com/letwang/HookPHP/blob/master/doc/
+[1]: https://github.com/letwang/HookPHP/wiki
 [2]: https://github.com/letwang/HookPHP/blob/master/app/
 [3]: https://github.com/letwang/HookPHP/blob/master/app/admin/modules/
 [4]: https://github.com/letwang/HookPHP/blob/master/app/admin/hooks/
