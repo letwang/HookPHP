@@ -192,8 +192,7 @@ class OrmConnect extends Cache
             return $this->redis->handle->hGet($key, $hashKey);
         } else {
             $data = $this->pdo->{$callable}($statement, $parameter, $type);
-            $this->redis->handle->hSet($key, $hashKey, $data);
-            $this->redis->handle->expire($key, $ttl);
+            $this->redis->handle->multi()->hSet($key, $hashKey, $data)->expire($key, $ttl)->exec();
             return $data;
         }
     }
@@ -210,12 +209,11 @@ class OrmConnect extends Cache
             return $this->redis->handle->get($key);
         } else {
             $data = $this->pdo->{$callable}($statement, $parameter, $type);
-            $pipe = $this->redis->handle->multi();
+            $redis = $this->redis->handle->multi();
             foreach ($matches[1] as $table) {
-                $pipe->hSetNx($table, $key, 1);
-                $pipe->expire($table, $ttl);
+                $redis->hSetNx($table, $key, 1)->expire($table, $ttl);
             }
-            $pipe->setEx($key, $ttl, $data);
+            $redis->setEx($key, $ttl, $data)->exec();
             return $data;
         }
     }

@@ -1,7 +1,8 @@
 <?php
 use Hook\HookModel;
+use Hook\ModuleModel;
 
-class Hook_ModuleController extends Base\ViewController
+class Hook_Hook_ModuleController extends Base\ViewController
 {
     protected function renderForm(): void
     {
@@ -18,7 +19,7 @@ class Hook_ModuleController extends Base\ViewController
             'name' => 'module_id',
             'label' => l($this->_request->controller.'.module_id'),
             'lang' => false,
-            'values' => [['options' => $this->model->getSelect()]]
+            'values' => [['options' => ModuleModel::getInstance($this->id)->getSelect()]]
         ];
     }
 }

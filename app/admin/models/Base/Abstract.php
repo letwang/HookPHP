@@ -106,7 +106,12 @@ abstract class AbstractModel extends Cache
         }
     }
 
-    public function get(int $langId = null)
+    public function get(): array
+    {
+        return $this->getData();
+    }
+
+    public function getData(int $langId = null)
     {
         $orm = OrmConnect::getInstance($langId ? $this->tableLang : $this->table)->select(['*']);
         if ($this->id) {
