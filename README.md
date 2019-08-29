@@ -22,6 +22,25 @@
 # 教程
 ![HookPHP_社区_知识星球](https://github.com/letwang/HookPHP/blob/master/public/demo/zsxq.png?raw=true)
 
+# Docker快速启动
+```bash
+git clone https://github.com/letwang/HookPHP.git
+cd HookPHP
+$ docker run -itd -p 81:80 -p 3307:3306 -p 6380:6379 -p 27018:27017 --name hookphp \
+-v `pwd`/docker/mongodb/mongod.conf:/etc/mongod.conf \
+-v `pwd`/docker/mysql/mysql.cnf:/etc/mysql/conf.d/mysql.cnf \
+-v `pwd`/docker/nginx/nginx.conf:/etc/nginx/nginx.conf \
+-v `pwd`/docker/nginx/conf.d:/etc/nginx/conf.d \
+-v `pwd`/docker/php/7.3/cli/php.ini:/etc/php/7.3/cli/php.ini \
+-v `pwd`/docker/php/7.3/fpm/php-fpm.conf:/etc/php/7.3/fpm/php-fpm.conf \
+-v `pwd`/docker/php/7.3/fpm/php.ini:/etc/php/7.3/fpm/php.ini \
+-v `pwd`/docker/php/7.3/fpm/pool.d:/etc/php/7.3/fpm/pool.d \
+-v `pwd`/docker/redis/redis.conf:/etc/redis/redis.conf \
+-v `pwd`/docker/log:/var/log \
+-v `pwd`/../:/usr/share/nginx/html \
+letwang/hookphp zsh && docker exec -it hookphp zsh /usr/share/nginx/html/HookPHP/docker/init.sh
+```
+
 # 演示
 ![HookPHP_演示_1](https://github.com/letwang/HookPHP/blob/master/public/demo/1.png?raw=true)
 
