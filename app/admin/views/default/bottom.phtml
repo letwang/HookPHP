@@ -1,7 +1,7 @@
 <?php echo \Hook\Hook\Hook::run('displayFoot');?>
 <script><?php
 $data = [];
-foreach (Yaconf::get('regexp')['core'] as $key => $value) {
+foreach (Yaconf::get('dicRegexp')['core'] as $key => $value) {
     $data[] = $key.':/'.$value.'/';
 }
 echo 'var config = {regexp:{',join(',', $data),'}};';

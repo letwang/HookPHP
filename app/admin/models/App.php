@@ -12,7 +12,7 @@ class AppModel extends Base\AbstractModel
 
     public function get(): array
     {
-        return $this->pdo->fetchAll(Yaconf::get('sql.APP.GET_All'), [APP_LANG_ID]);
+        return $this->pdo->fetchAll(Yaconf::get('dicPdo.APP.GET_All'), [APP_LANG_ID]);
     }
 
     public function getIds(): array

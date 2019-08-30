@@ -25,5 +25,5 @@ class Bootstrap extends Bootstrap_Abstract
 
 function l(string $key)
 {
-    return Yaconf::get('admin_lang_'.APP_LANG_NAME.'.'.$key, $key);
+    return Yaconf::get('adminLang'.ucwords(APP_LANG_NAME).'.'.$key, $key);
 }

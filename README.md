@@ -14,16 +14,16 @@
 如果你想贡献代码，请直接在线新增、编辑源码，Github会自动帮你Fork项目，你要做的就是点击提交，比如基于HookPHP [开发平台][2]、[开发模块][3]、[开发插件][4]等。
 
 # 架构
-![HookPHP_架构](https://github.com/letwang/HookPHP/blob/master/public/demo/architecture.png?raw=true)
+![HookPHP_架构](https://github.com/letwang/HookPHP/blob/master/demo/architecture.png?raw=true)
 
 # 社区
-![HookPHP_社区_QQ](https://github.com/letwang/HookPHP/blob/master/public/demo/qq.jpg?raw=true)
+![HookPHP_社区_QQ](https://github.com/letwang/HookPHP/blob/master/demo/qq.jpg?raw=true)
 
 # 教程
-![HookPHP_社区_知识星球](https://github.com/letwang/HookPHP/blob/master/public/demo/zsxq.png?raw=true)
+![HookPHP_社区_知识星球](https://github.com/letwang/HookPHP/blob/master/demo/zsxq.png?raw=true)
 
 # 演示
-![HookPHP_演示_1](https://github.com/letwang/HookPHP/blob/master/public/demo/1.png?raw=true)
+![HookPHP_演示_1](https://github.com/letwang/HookPHP/blob/master/demo/1.png?raw=true)
 
 [1]: https://github.com/letwang/HookPHP/wiki
 [2]: https://github.com/letwang/HookPHP/blob/master/app/

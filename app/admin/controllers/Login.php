@@ -35,7 +35,7 @@ class LoginController extends Base\ViewController
             session_regenerate_id(true);
 
             Header::redirect($referer);
-            return true;
+            return false;
         }
         
         $this->_view->error = [l('Login.fail')];
@@ -45,6 +45,6 @@ class LoginController extends Base\ViewController
     {
         session_destroy();
         Header::redirect('/');
-        return true;
+        return false;
     }
 }

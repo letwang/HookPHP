@@ -16,7 +16,7 @@ class YacConnect extends Cache
     public function flush(): bool
     {
         $redis = RedisConnect::getInstance();
-        $expiredKey = Yaconf::get('const')['yac']['expired_key'];
+        $expiredKey = Yaconf::get('dicYac')['expired_key'];
 
         if (!$redis->handle->exists($expiredKey)) {
             return false;
@@ -24,7 +24,7 @@ class YacConnect extends Cache
 
         $keys = [];
         foreach ($redis->handle->sMembers($expiredKey) as $table) {
-            $keys[] = sprintf(Yaconf::get('const')['table']['single'], $table);
+            $keys[] = sprintf(Yaconf::get('dicRedis')['table']['single'], $table);
         }
 
         $this->handle->delete($keys);

@@ -9,17 +9,17 @@ function init(string $appName = APP_NAME)
     $pdo = PdoConnect::getInstance();
 
     $pdo->handle->beginTransaction();
-    foreach (Yaconf::get('sql.INSTALL.'.($appName === 'admin' ? 'ADMIN' : 'APP').'.STRUCT') as $sql) {
+    foreach (Yaconf::get('dicPdo.INSTALL.'.($appName === 'admin' ? 'ADMIN' : 'APP').'.STRUCT') as $sql) {
         $sql = str_replace('%d', APP_CONFIG['mysql']['default']['dbname'], $sql);
         $pdo->query($sql);
     }
-    foreach (Yaconf::get('sql.INSTALL.'.($appName === 'admin' ? 'ADMIN' : 'APP').'.DATA') as $sql) {
+    foreach (Yaconf::get('dicPdo.INSTALL.'.($appName === 'admin' ? 'ADMIN' : 'APP').'.DATA') as $sql) {
         $pdo->query($sql);
     }
     $result = $pdo->handle->commit();
 
     $data = '';
-    foreach ($pdo->fetchAll(Yaconf::get('sql.TABLE.GET_ALL'), [APP_CONFIG['application']['prefix'].$appName.'_%'], PDO::FETCH_NUM) as list($table)) {
+    foreach ($pdo->fetchAll(Yaconf::get('dicPdo.TABLE.GET_ALL'), [APP_CONFIG['application']['prefix'].$appName.'_%'], PDO::FETCH_NUM) as list($table)) {
         $data .= '['.$table.']'.PHP_EOL;
         foreach ($pdo->fetchAll('DESC `'.$table.'`') as $field) {
             $data .= $field['Field'].'.type='.substr($field['Type'], 0, strpos($field['Type'], '(')).PHP_EOL;
@@ -34,7 +34,7 @@ function init(string $appName = APP_NAME)
         }
         $data .= PHP_EOL;
     }
-    $result &= file_put_contents(getcwd().'/conf/'.$appName.'_table.ini', $data) > 0;
+    $result &= file_put_contents(getcwd().'/conf/'.$appName.'Table.ini', $data) > 0;
     shell_exec('sudo service php7.3-fpm restart');
 
     echo "初始化\e[3".($result ? 2 : 1)."m ".$appName." \e[0m平台数据完毕\n";

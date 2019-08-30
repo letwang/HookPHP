@@ -185,14 +185,14 @@ class OrmConnect extends Cache
             return $this->pdo->{$callable}($statement, $parameter, $type);
         }
 
-        $key = sprintf(Yaconf::get('const')['table']['single'], $this->table);
+        $key = sprintf(Yaconf::get('dicRedis')['table']['single'], $this->table);
         $hashKey = md5($callable.$type.$statement.igbinary_serialize($parameter));
 
         if ($this->redis->handle->hExists($key, $hashKey)) {
             return $this->redis->handle->hGet($key, $hashKey);
         } else {
             $data = $this->pdo->{$callable}($statement, $parameter, $type);
-            $this->redis->handle->multi()->hSet($key, $hashKey, $data)->expire($key, $ttl)->exec();
+            $this->redis->handle->multi()->hSetNx($key, $hashKey, $data)->expire($key, $ttl)->exec();
             return $data;
         }
     }
@@ -237,14 +237,14 @@ class OrmConnect extends Cache
     {
         $keys = [];
 
-        $table = sprintf(Yaconf::get('const')['table']['single'], $table);
+        $table = sprintf(Yaconf::get('dicRedis')['table']['single'], $table);
         $this->redis->handle->exists($table) && $keys[] = $table;
 
-        $table = sprintf(Yaconf::get('const')['table']['join'], $table);
+        $table = sprintf(Yaconf::get('dicRedis')['table']['join'], $table);
         $this->redis->handle->exists($table) && $keys = array_merge($keys, [$table], $this->redis->handle->hKeys($table));
 
         $keys && $this->redis->handle->unlink($keys);
 
-        $this->redis->handle->sAdd(Yaconf::get('const')['yac']['expired_key'], $table);
+        $this->redis->handle->sAdd(Yaconf::get('dicYac')['expired_key'], $table);
     }
 }

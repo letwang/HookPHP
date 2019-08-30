@@ -1,5 +1,5 @@
 <?php
-require __DIR__.'/../init.php';
+require __DIR__ . '/../Init.php';
 
 # 单表实例化
 $orm = Hook\Db\OrmConnect::getInstance('hp_iot_config');

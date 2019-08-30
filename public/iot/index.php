@@ -1,3 +1,3 @@
 <?php
-require __DIR__.'/../../app/iot/init.php';
+require __DIR__ . '/../../app/iot/Init.php';
 $app->bootstrap()->run();

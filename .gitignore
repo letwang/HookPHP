@@ -1,6 +1,5 @@
-.buildpath
-.project
-.settings/
+.idea/
+.DS_Store
 
 *.log
 *.jar

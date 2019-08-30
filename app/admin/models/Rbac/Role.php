@@ -12,11 +12,11 @@ class RoleModel extends \Base\AbstractModel
 
     public function get(): array
     {
-        return $this->pdo->fetchAll(Yaconf::get('sql.RBAC.ROLE.GET_ALL'), [APP_LANG_ID]);
+        return $this->pdo->fetchAll(Yaconf::get('dicPdo.RBAC.ROLE.GET_ALL'), [APP_LANG_ID]);
     }
 
     public function getSelect(): array
     {
-        return $this->pdo->fetchAll(Yaconf::get('sql.RBAC.ROLE.GET_SELECT'), [APP_LANG_ID], \PDO::FETCH_KEY_PAIR);
+        return $this->pdo->fetchAll(Yaconf::get('dicPdo.RBAC.ROLE.GET_SELECT'), [APP_LANG_ID], \PDO::FETCH_KEY_PAIR);
     }
 }

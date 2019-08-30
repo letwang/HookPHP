@@ -17,9 +17,9 @@ abstract class AbstractModel extends Cache
     public $fields = [];
     public $ignore = ['id' => true, 'date_add' => true, 'date_upd' => true, 'lang_id' => true];
 
-    private $tableLang;
-    private $definition;
-    private $definitionLang;
+    private $tableLang = '';
+    private $definition = [];
+    private $definitionLang = [];
 
     const INT = 1;
     const BOOL = 2;
