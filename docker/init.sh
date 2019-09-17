@@ -2,6 +2,7 @@
 mysqld &
 mongod --bind_ip_all &
 redis-server /etc/redis/redis.conf &
+rarabbitmq-server &
 service php7.3-fpm start
 service nginx start
 cd /usr/share/nginx/html/HookPHP/
