@@ -1,7 +1,7 @@
-[![Total Downloads](https://poser.pugx.org/letwang/HookPHP/downloads)](https://packagist.org/packages/letwang/HookPHP)
-[![Latest Stable Version](https://poser.pugx.org/letwang/HookPHP/v/stable)](https://packagist.org/packages/letwang/HookPHP)
+[![Total Downloads](https://poser.pugx.org/letwang/hookphp/downloads)](https://packagist.org/packages/letwang/hookphp)
+[![Latest Stable Version](https://poser.pugx.org/letwang/hookphp/v/stable)](https://packagist.org/packages/letwang/hookphp)
 [![PHP Version](https://img.shields.io/badge/php-%3E%3D7.4-8892BF.svg)](http://www.php.net/)
-[![License](https://poser.pugx.org/letwang/HookPHP/license)](https://packagist.org/packages/letwang/HookPHP)
+[![License](https://poser.pugx.org/letwang/hookphp/license)](https://packagist.org/packages/letwang/hookphp)
 # 简介
 创作此框架的作者是LetWang，2007年ASP，2008年ASP.NET(C#)，从2009年一直PHP。
 
