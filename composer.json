@@ -1,4 +1,26 @@
 {
+    "name": "letwang/HookPHP",
+    "description": "HookPHP基于C扩展搭建内置AI编程的架构系统-支持微服务部署|热插拔业务组件-集成业务模型|权限模型|UI组件库|多模板|多平台|多域名|多终端|多语言-含常驻内存|前后分离|API平台|LUA",
+    "keywords": [
+        "HookPHP",
+        "C扩展",
+        "AI编程",
+        "微服务",
+        "热插拔",
+        "业务模型",
+        "常驻内存",
+        "前后分离",
+        "OpenResty",
+        "API网关"
+    ],
+    "homepage": "https://github.com/letwang/HookPHP",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "letwang",
+            "email": "498936940@qq.com"
+        }
+    ],
     "require": {
         "php": ">=7.3.4",
         "ext-gd": ">=2.2.5",
