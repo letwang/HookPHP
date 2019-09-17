@@ -56,8 +56,7 @@
         "ext-swoole": ">=4.3.2",
         "ext-zend-opcache": "*"
     },
-    "version": "0.0.2",
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
         "sort-packages": true
