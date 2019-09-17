@@ -55,5 +55,10 @@
         "ext-xhprof": ">=2.1.0",
         "ext-swoole": ">=4.3.2",
         "ext-zend-opcache": "*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true
     }
 }
