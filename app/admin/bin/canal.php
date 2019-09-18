@@ -18,7 +18,7 @@ $queue->bind('canal');
 $queue->consume(function ($envelope, $queue) {
     $data = json_decode($envelope->getBody(), true);
     if ($data['db'] === APP_CONFIG['mysql']['default']['dbname']) {
-        OrmConnect::flush($data['table']);
+        OrmConnect::getInstance($data['table'])->flush();
     }
     $queue->nack($envelope->getDeliveryTag());
 });

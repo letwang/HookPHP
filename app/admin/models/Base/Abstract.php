@@ -61,7 +61,7 @@ abstract class AbstractModel extends Cache
                 }
             }
 
-            return $this->pdo->handle->commit() && $this->afterPost($result['lastInsertId']) ? $result['lastInsertId']: 0;
+            return $this->pdo->handle->commit() && $this->afterPost() ? $result['lastInsertId']: 0;
         } catch (\Throwable $e) {
             $this->pdo->handle->rollBack();
             AbstractController::send([], 100003, $e->getMessage(), 500);
@@ -254,8 +254,10 @@ abstract class AbstractModel extends Cache
         return true;
     }
 
-    protected function afterPost(int $id): bool
+    protected function afterPost(): bool
     {
+        OrmConnect::getInstance($this->table)->flush();
+        $this->tableLang && OrmConnect::getInstance($this->tableLang)->flush();
         return true;
     }
 
@@ -266,7 +268,7 @@ abstract class AbstractModel extends Cache
 
     protected function afterPut(): bool
     {
-        return $this->afterPost($this->id);
+        return $this->afterPost();
     }
 
     protected function beforeDelete(): bool
@@ -276,6 +278,6 @@ abstract class AbstractModel extends Cache
 
     protected function afterDelete(): bool
     {
-        return true;
+        return $this->afterPost();
     }
 }

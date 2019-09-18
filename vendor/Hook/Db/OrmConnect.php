@@ -11,7 +11,7 @@ class OrmConnect extends Cache
     private $statement = '';
     private $parameter = [];
 
-    private $operator = ['=' => '=', '>' => '>', '>=' => '>=', '<' => '<', '<=' => '<=', '!=' => '!=', 'LIKE' => 'LIKE', 'NOT LIKE' => 'NOT LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN', 'BETWEEN' => 'BETWEEN', 'NOT BETWEEN' => 'NOT BETWEEN', 'AND' => 'AND'];
+    private $operator = ['=' => '=', '>' => '>', '>=' => '>=', '<' => '<', '<=' => '<=', '!=' => '!=', 'LIKE' => 'LIKE', 'NOT LIKE' => 'NOT LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN', 'BETWEEN' => 'BETWEEN', 'NOT BETWEEN' => 'NOT BETWEEN', 'AND' => 'AND', 'IS' => 'IS', 'IS NOT' => 'IS NOT'];
     private $expression = ['DISTINCT', 'DISTINCTROW'];
 
     public function __construct(string $table = null)
@@ -157,6 +157,36 @@ class OrmConnect extends Cache
         );
     }
 
+    public function queryAll(string $statement, array $parameter = [], int $type = PDO::FETCH_ASSOC, int $ttl = 3600)
+    {
+        return $this->getJoinData($statement, $parameter, 'fetchAll', $type, $ttl);
+    }
+
+    public function query(string $statement, array $parameter = [], int $type = PDO::FETCH_ASSOC, int $ttl = 3600)
+    {
+        return $this->getJoinData($statement, $parameter, 'fetch', $type, $ttl);
+    }
+
+    public function queryColumn(string $statement, array $parameter = [], int $column = 0, int $ttl = 3600)
+    {
+        return $this->getJoinData($statement, $parameter, 'fetchColumn', $column, $ttl);
+    }
+
+    public function flush(): bool
+    {
+        $keys = [];
+
+        $table = sprintf(Yaconf::get('dicRedis')['table']['single'], $this->table);
+        $this->redis->handle->exists($table) && $keys[] = $table;
+
+        $table = sprintf(Yaconf::get('dicRedis')['table']['join'], $this->table);
+        $this->redis->handle->exists($table) && $keys = array_merge($keys, [$table], $this->redis->handle->hKeys($table));
+
+        $keys && $this->redis->handle->unlink($keys);
+
+        return true;
+    }
+
     private function checkStatement(string $statement): string
     {
         $this->__destruct();
@@ -197,7 +227,7 @@ class OrmConnect extends Cache
         }
     }
 
-    private static function getJoinData(string $statement, array $parameter, string $callable, int $type, int $ttl)
+    private function getJoinData(string $statement, array $parameter, string $callable, int $type, int $ttl)
     {
         if (!$ttl) {
             return $this->pdo->{$callable}($statement, $parameter, $type);
@@ -211,40 +241,11 @@ class OrmConnect extends Cache
             $data = $this->pdo->{$callable}($statement, $parameter, $type);
             $redis = $this->redis->handle->multi();
             foreach ($matches[1] as $table) {
+                $table = sprintf(Yaconf::get('dicRedis')['table']['join'], $table);
                 $redis->hSetNx($table, $key, 1)->expire($table, $ttl);
             }
             $redis->setEx($key, $ttl, $data)->exec();
             return $data;
         }
-    }
-
-    public static function queryAll(string $statement, array $parameter = [], int $type = PDO::FETCH_ASSOC, int $ttl = 3600)
-    {
-        return self::getJoinData($statement, $parameter, 'fetchAll', $type, $ttl);
-    }
-
-    public static function query(string $statement, array $parameter = [], int $type = PDO::FETCH_ASSOC, int $ttl = 3600)
-    {
-        return self::getJoinData($statement, $parameter, 'fetch', $type, $ttl);
-    }
-
-    public static function queryColumn(string $statement, array $parameter = [], int $column = 0, int $ttl = 3600)
-    {
-        return self::getJoinData($statement, $parameter, 'fetchColumn', $column, $ttl);
-    }
-
-    public static function flush(string $table): bool
-    {
-        $keys = [];
-
-        $table = sprintf(Yaconf::get('dicRedis')['table']['single'], $table);
-        $this->redis->handle->exists($table) && $keys[] = $table;
-
-        $table = sprintf(Yaconf::get('dicRedis')['table']['join'], $table);
-        $this->redis->handle->exists($table) && $keys = array_merge($keys, [$table], $this->redis->handle->hKeys($table));
-
-        $keys && $this->redis->handle->unlink($keys);
-
-        $this->redis->handle->sAdd(Yaconf::get('dicYac')['expired_key'], $table);
     }
 }

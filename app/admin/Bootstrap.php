@@ -1,7 +1,5 @@
 <?php
 use Yaf\{Dispatcher, Bootstrap_Abstract};
-use Hook\Db\{YacConnect};
-
 
 class Bootstrap extends Bootstrap_Abstract
 {
@@ -18,8 +16,6 @@ class Bootstrap extends Bootstrap_Abstract
             defined($key) || define($key, $value);
         }
         defined('APP_LANG_ID') || define('APP_LANG_ID', LangModel::getInstance()->getDefaultId());
-
-        YacConnect::getInstance()->flush();
     }
 }
 

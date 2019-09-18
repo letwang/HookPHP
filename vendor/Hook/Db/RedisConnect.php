@@ -19,9 +19,8 @@ class RedisConnect extends Cache
             APP_CONFIG['redis'][$db]['reserved'],
             APP_CONFIG['redis'][$db]['interval']
         );
-        if (! empty(APP_CONFIG['redis'][$db]['auth'])) {
-            $this->handle->auth(APP_CONFIG['redis'][$db]['auth']);
-        }
+
+        !empty(APP_CONFIG['redis'][$db]['auth']) && $this->handle->auth(APP_CONFIG['redis'][$db]['auth']);
 
         $this->handle->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_IGBINARY);
     }
