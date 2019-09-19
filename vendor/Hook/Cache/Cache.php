@@ -18,7 +18,7 @@ class Cache
 
     public static function getInstance(string $name = '', string $key = 'default'): self
     {
-        $class = get_called_class();
+        $class = static::class;
         $instance = &self::static($class);
         if (isset($instance[$name][$key])) {
             return $instance[$name][$key];

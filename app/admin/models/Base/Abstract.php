@@ -30,7 +30,7 @@ abstract class AbstractModel extends Cache
     public function __construct($id = null)
     {
         $this->id = (int) $id;
-        $this->table = Tools::formatTableName('%p'.($this->table ?? '%s_'.strtolower(str_replace(['\\', 'Model'], ['_', ''], get_called_class()))));
+        $this->table = Tools::formatTableName('%p'.($this->table ?? '%s_'.strtolower(str_replace(['\\', 'Model'], ['_', ''], static::class))));
         $this->foreign = $this->foreign ?? substr(strrchr($this->table, '_'), 1).'_id';
         $this->ignore += $this->foreign ? [$this->foreign => true] : [];
         $this->definition = array_keys(array_diff_key(APP_TABLE[$this->table], $this->ignore));
