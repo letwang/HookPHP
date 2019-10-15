@@ -5,9 +5,9 @@ class AppModel extends Base\AbstractModel
 {
     public $table = 'admin_app';
     public $fields = [
-        'status' => array('type' => parent::BOOL, 'require' => true, 'validate' => 'isBool'),
-        'key' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isGenericName'),
-        'description' => array('require' => true),
+        'status' => ['type' => parent::BOOL, 'validate' => 'isBool'],
+        'key' => ['required' => true, 'validate' => 'isGenericName'],
+        'description' => ['type' => parent::HTML],
     ];
 
     public function get(): array

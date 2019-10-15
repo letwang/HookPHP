@@ -5,10 +5,10 @@ class LangModel extends Base\AbstractModel
 {
     public $table = 'admin_lang_i18n';
     public $fields = [
-        'status' => array('type' => parent::BOOL, 'require' => true, 'validate' => 'isBool'),
-        'iso' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isIsoCode'),
-        'lang' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isLanguageCode'),
-        'name' => array('require' => true, 'validate' => 'isGenericName'),
+        'status' => ['type' => parent::BOOL, 'validate' => 'isBool'],
+        'iso' => ['required' => true, 'validate' => 'isIsoCode'],
+        'lang' => ['required' => true, 'validate' => 'isLanguageCode'],
+        'name' => ['validate' => 'isGenericName'],
     ];
 
     public function getIds(): array

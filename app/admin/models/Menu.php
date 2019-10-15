@@ -4,12 +4,12 @@ use Hook\Data\ArrayUtils;
 class MenuModel extends Base\AbstractModel
 {
     public $fields = [
-        'parent' => array('type' => parent::INT, 'require' => false, 'validate' => 'isInt'),
-        'status' => array('type' => parent::BOOL, 'require' => true, 'validate' => 'isBool'),
-        'position' => array('type' => parent::INT, 'require' => true, 'validate' => 'isInt'),
-        'url' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isGenericName'),
-        'icon' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isGenericName'),
-        'name' => array('require' => true, 'validate' => 'isGenericName'),
+        'parent' => ['type' => parent::INT, 'validate' => 'isInt'],
+        'status' => ['type' => parent::BOOL, 'validate' => 'isBool'],
+        'position' => ['type' => parent::INT, 'validate' => 'isInt'],
+        'url' => ['validate' => 'isGenericName'],
+        'icon' => ['validate' => 'isGenericName'],
+        'name' => ['validate' => 'isGenericName'],
     ];
 
     public function get(): array

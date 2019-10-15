@@ -25,6 +25,7 @@ abstract class AbstractModel extends Cache
     const BOOL = 2;
     const FLOAT = 3;
     const DATE = 4;
+    const HTML = 5;
     const NOTHING = 6;
 
     public function __construct($id = null)
@@ -175,14 +176,15 @@ abstract class AbstractModel extends Cache
     {
         $desc = APP_TABLE[$this->table][$field] ?? APP_TABLE[$this->tableLang][$field];
 
-        if (!empty($this->fields[$field]['require']) && Validate::isEmpty($value)) {
+        if (!empty($this->fields[$field]['required']) && Validate::isEmpty($value)) {
+            return sprintf('The %s field is required.', $field);
+        }
+
+        if (Validate::isEmpty($value)) {
             if ($langId) {
-                $value = $this->{$field}[$langId] = $this->{$field}[APP_LANG_ID] ?: $desc['default'];
+                $value = $this->{$field}[$langId] = $desc['default'];
             } else {
                 $value = $this->$field = $desc['default'];
-            }
-            if (Validate::isEmpty($value)) {
-                return sprintf('The %s field is required.', $field);
             }
         }
 
@@ -196,7 +198,8 @@ abstract class AbstractModel extends Cache
                 return sprintf('The %s field must be from %d to %d', $field, $desc['min'], $desc['max']);
             }
         }
-        if (isset($this->fields[$field]['validate']) && !call_user_func(['Hook\Validate\Validate', $this->fields[$field]['validate']], $value)) {
+
+        if (isset($this->fields[$field]['validate']) && !Validate::isEmpty($value) && !call_user_func(['Hook\Validate\Validate', $this->fields[$field]['validate']], $value)) {
             return sprintf('The %s field is invalid.', $field);
         }
         return '';
@@ -228,11 +231,12 @@ abstract class AbstractModel extends Cache
             case self::FLOAT:
                 return (float) $value;
             case self::DATE:
-                return Tools::dateFormat($value);
-            case self::NOTHING:
-                return $value;
-            default:
+                return $value ?: date('Y-m-d H:i:s');
+            case self::HTML:
                 return Tools::safeOutPut($value);
+            case self::NOTHING:
+            default:
+                return $value;
         }
     }
 

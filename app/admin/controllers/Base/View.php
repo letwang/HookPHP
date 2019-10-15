@@ -106,7 +106,7 @@ abstract class ViewController extends AbstractController
                 'name' => $field,
                 'label' => l($this->_request->controller.'.'.$field),
                 'lang' => isset($desc['lang']),
-                'required' => $desc['default'] === ''
+                'required' => $this->model->fields[$field]['required'] ?? false
             ];
             $table = $input[$field]['lang'] ? $this->model->table.'_lang' : $this->model->table;
             switch (1) {

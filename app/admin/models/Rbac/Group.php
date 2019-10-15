@@ -6,8 +6,8 @@ use \Yaconf;
 class GroupModel extends \Base\AbstractModel
 {
     public $fields = [
-        'status' => array('type' => parent::BOOL, 'require' => true, 'validate' => 'isBool'),
-        'name' => array('require' => true, 'validate' => 'isGenericName'),
+        'status' => ['type' => parent::BOOL, 'validate' => 'isBool'],
+        'name' => ['required' => true, 'validate' => 'isGenericName'],
     ];
 
     public function get(): array

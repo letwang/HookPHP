@@ -6,11 +6,11 @@ use \Yaconf;
 class HookModel extends \Base\AbstractModel
 {
     public $fields = [
-        'position' => array('type' => parent::INT, 'require' => true, 'validate' => 'isInt'),
-        'key' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isGenericName'),
-        'name' => array('require' => true, 'validate' => 'isGenericName'),
-        'title' => array('require' => true, 'validate' => 'isGenericName'),
-        'description' => array('require' => true),
+        'position' => ['type' => parent::INT, 'required' => true, 'validate' => 'isInt'],
+        'key' => ['required' => true, 'validate' => 'isGenericName'],
+        'name' => ['required' => true, 'validate' => 'isGenericName'],
+        'title' => ['required' => true, 'validate' => 'isGenericName'],
+        'description' => ['type' => parent::HTML],
     ];
 
     public function get(): array

@@ -5,8 +5,8 @@ use Hook\Db\OrmConnect;
 class ModuleModel extends \Base\AbstractModel
 {
     public $fields = [
-        'version' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isGenericName'),
-        'key' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isGenericName'),
+        'version' => ['required' => true, 'validate' => 'isGenericName'],
+        'key' => ['required' => true, 'validate' => 'isGenericName'],
     ];
 
     public function getSelect(): array

@@ -4,8 +4,8 @@ use Hook\Db\{OrmConnect};
 class ConfigModel extends Base\AbstractModel
 {
     public $fields = [
-        'key' => array('type' => parent::NOTHING, 'require' => true, 'validate' => 'isGenericName'),
-        'value' => array('require' => true),
+        'key' => ['required' => true, 'validate' => 'isGenericName'],
+        'value' => ['required' => true],
     ];
 
     public function getDefined(): array
