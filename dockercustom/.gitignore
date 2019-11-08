@@ -4,6 +4,10 @@
 nohup.out
 docker-compose.yml
 docker-compose.yml.*
-www/*
-!www/localhost/
+www/HookPHP/app
+www/HookPHP/bin
+www/HookPHP/log
+www/HookPHP/public
+www/HookPHP/vendor
+!www/HookPHP/conf/*.ini
 logs/*
