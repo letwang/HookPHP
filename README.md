@@ -1,61 +1,53 @@
-[![Total Downloads](https://poser.pugx.org/letwang/hookphp/downloads)](https://packagist.org/packages/letwang/hookphp)
+[English](./README.md) | 中文
+
 [![Latest Stable Version](https://poser.pugx.org/letwang/hookphp/v/stable)](https://packagist.org/packages/letwang/hookphp)
 [![PHP Version](https://img.shields.io/badge/php-%3E%3D7.4-8892BF.svg)](http://www.php.net/)
 [![License](https://poser.pugx.org/letwang/hookphp/license)](https://packagist.org/packages/letwang/hookphp)
-# 简介
-创作此框架的作者是LetWang，2007年ASP，2008年ASP.NET(C#)，从2009年一直PHP。
 
-虽然中间几次创业，看过太多的源码，也曾服务于海外多家机构，但越是这样越发现自己的渺小：**一个人无法改变太多，需要带动整个群体一起进步！**。于是内心酝酿近10年的PHP框架诞生了！
+# HookPHP
 
-# [文档][1]
+[HookPHP是基于C扩展搭建内置AI编程的架构系统-支持微服务部署|热插拔业务组件-集成业务模型|权限模型|UI组件库|多模板|多平台|多域名|多终端|多语言-含常驻内存|前后分离|API平台|LUA](https://my.oschina.net/cart/blog/2986804)
 
-# 参与
-如果你觉得此项目很好，请点击右上角的Star，让更多的人看到，一起腾飞！
+## 安装
 
-如果你想贡献代码，请直接在线新增、编辑源码，Github会自动帮你Fork项目，你要做的就是点击提交，比如基于HookPHP [开发平台][2]、[开发模块][3]、[开发插件][4]等。
+[https://github.com/letwang/HookPHP/wiki](https://github.com/letwang/HookPHP/wiki)
 
-# 架构
-![HookPHP_架构](https://github.com/letwang/HookPHP/blob/master/demo/architecture.png?raw=true)
+## 环境
+[https://hub.docker.com/r/letwang/hookphp](https://hub.docker.com/r/letwang/hookphp)
 
-# 社区
-![HookPHP_社区_QQ](https://github.com/letwang/HookPHP/blob/master/demo/qq.jpg?raw=true)
+## 类库
 
-# 教程
-![HookPHP_社区_知识星球](https://github.com/letwang/HookPHP/blob/master/demo/zsxq.png?raw=true)
+- [**类库**](https://github.com/letwang/HookPHP/tree/master/vendor/) 核心通用类库，可移植
 
-# 演示
-![HookPHP_演示_1](https://github.com/letwang/HookPHP/blob/master/demo/1.png?raw=true)
+## 开发 & 讨论
 
-[1]: https://github.com/letwang/HookPHP/wiki
-[2]: https://github.com/letwang/HookPHP/blob/master/app/
-[3]: https://github.com/letwang/HookPHP/blob/master/app/admin/modules/
-[4]: https://github.com/letwang/HookPHP/blob/master/app/admin/hooks/
+- __[架构](https://github.com/letwang/HookPHP/blob/master/demo/architecture.png?raw=true)__
+- __[演示](https://github.com/letwang/HookPHP/blob/master/demo/1.png?raw=true)__
+- __[文档](https://github.com/letwang/HookPHP/wiki)__
+- __[开发 平台](https://github.com/letwang/HookPHP/blob/master/app/)__
+- __[开发 模块](https://github.com/letwang/HookPHP/blob/master/app/admin/modules/)__
+- __[开发 插件](https://github.com/letwang/HookPHP/blob/master/app/admin/hooks/)__
+- __[社区 QQ](https://github.com/letwang/HookPHP/blob/master/demo/qq.jpg?raw=true)__
+- __[社区 知识星球](https://github.com/letwang/HookPHP/blob/master/demo/zsxq.png?raw=true)__
 
-# 简介
-创作此框架的作者是LetWang，2007年ASP，2008年ASP.NET(C#)，从2009年一直PHP。
+## 贡献
 
-虽然中间几次创业，看过太多的源码，也曾服务于海外多家机构，但越是这样越发现自己的渺小：**一个人无法改变太多，需要带动整个群体一起进步！**。于是内心酝酿近10年的PHP框架诞生了！
+非常欢迎您对HookPHP的开发作出贡献，你可以选择以下方式向我们贡献：
 
-# [文档][1]
+- [发布issue进行问题反馈和建议](https://github.com/letwang/HookPHP/issues)
+- 通过Pull Request提交修复
+- 完善我们的文档和例子
 
-# 参与
-如果你觉得此项目很好，请点击右上角的Star，让更多的人看到，一起腾飞！
+项目的发展离不开无私贡献者的努力! [[Contributor](https://github.com/letwang/HookPHP/graphs/contributors)].
 
-如果你想贡献代码，请直接在线新增、编辑源码，Github会自动帮你Fork项目，你要做的就是点击提交，比如基于HookPHP [开发平台][2]、[开发模块][3]、[开发插件][4]等。
+## 赞助
 
-# 架构
-![HookPHP_架构](https://github.com/letwang/HookPHP/blob/master/demo/architecture.png?raw=true)
+成为我们的资金赞助方，帮助我们维持我们的社区。
 
-# 社区
-![HookPHP_社区_QQ](https://github.com/letwang/HookPHP/blob/master/demo/qq.jpg?raw=true)
+以组织/公司的名义赞助HookPHP项目的发展，您的LOGO和链接可以呈现在下方。
 
-# 教程
-![HookPHP_社区_知识星球](https://github.com/letwang/HookPHP/blob/master/demo/zsxq.png?raw=true)
+如果您看好HookPHP，请点击右上角的Star，让更多的人使用，一起腾飞！
 
-# 演示
-![HookPHP_演示_1](https://github.com/letwang/HookPHP/blob/master/demo/1.png?raw=true)
+## 开源协议
 
-[1]: https://github.com/letwang/HookPHP/wiki
-[2]: https://github.com/letwang/HookPHP/blob/master/app/
-[3]: https://github.com/letwang/HookPHP/blob/master/app/admin/modules/
-[4]: https://github.com/letwang/HookPHP/blob/master/app/admin/hooks/
+[Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
