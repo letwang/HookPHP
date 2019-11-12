@@ -109,7 +109,7 @@ class OrmConnect extends Cache
         return $this;
     }
 
-    public function fetchAll(int $type = null, int $ttl = 3600)
+    public function fetchAll(int $type = null, int $ttl = 3600): array
     {
         return $this->getSingleData(__FUNCTION__, $type, $ttl);
     }
@@ -157,7 +157,7 @@ class OrmConnect extends Cache
         );
     }
 
-    public function queryAll(string $statement, array $parameter = [], int $type = PDO::FETCH_ASSOC, int $ttl = 3600)
+    public function queryAll(string $statement, array $parameter = [], int $type = PDO::FETCH_ASSOC, int $ttl = 3600): array
     {
         return $this->getJoinData($statement, $parameter, 'fetchAll', $type, $ttl);
     }
