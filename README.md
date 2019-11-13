@@ -19,7 +19,7 @@
 
 - [**类库**](https://github.com/letwang/HookPHP/tree/master/vendor/) 核心通用类库，可移植
 
-## 开发 & 讨论
+## 开发
 
 - __[架构](https://github.com/letwang/HookPHP/blob/master/demo/architecture.png?raw=true)__
 - __[演示](https://github.com/letwang/HookPHP/blob/master/demo/1.png?raw=true)__
@@ -48,6 +48,6 @@
 
 如果您看好HookPHP，请点击右上角的Star，让更多的人使用，一起腾飞！
 
-## 开源协议
+## 协议
 
 [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
