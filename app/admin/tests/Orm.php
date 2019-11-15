@@ -13,145 +13,156 @@ function getCode(string $method): string
         $content = file_get_contents(__FILE__);
     }
     preg_match('/([^\}]*?)function '.$method.'\(/isu', $content, $matches);
+    preg_match('/\<.*?\>(.*?)\<\/.*?\>/isu', $matches[1], $matches);
 
-    return preg_replace(['/\//isu', '/\*\*|\*\s/isu'], '', explode('@example', $matches[1])[1]);
+    return str_replace('* ', '', $matches[1]);
 }
 
 /**
- * @example $orm = Hook\Db\OrmConnect::getInstance('hp_iot_config')
- */
-function 单表实例化(): object
+ * @param string $例子 <code>
+ * $orm = Hook\Db\OrmConnect::getInstance('hp_iot_config')
+ </code>*/
+function 单表实例化($例子): object
 {
     global $orm;eval(getCode(__METHOD__).";");
     return (new Hook\Db\OrmConnect) instanceof $orm ? $orm : false;
 }
 
 /**
- * @example $data = $orm->desc();
- */
-function 查看表结构(): array
+ * @param string $例子 <code>
+ * $data = $orm->desc();
+ </code>*/
+function 查看表结构($例子): array
 {
     global $orm;eval(getCode(__METHOD__).";");
     return count($data) === 6 ? $data : false;
 }
 
 /**
- * @example $data = $orm->exist();
- */
-function 检测表是否存在(): bool
+ * @param string $例子 <code>
+ * $data = $orm->exist();
+ </code>*/
+function 检测表是否存在($例子): bool
 {
     global $orm;eval(getCode(__METHOD__).";");
     return $data ? true : null;
 }
 
 /**
- * @example $data = $orm->exist('id');
- */
-function 检测字段是否存在(): bool
+ * @param string $例子 <code>
+ * $data = $orm->exist('id');
+ </code>*/
+function 检测字段是否存在($例子): bool
 {
     global $orm;eval(getCode(__METHOD__).";");
     return $data ? true : null;
 }
 
 /**
- * @example $data = $orm->select()
+ * @param string $例子 <code>
+ * $data = $orm->select()
  * ->where(['id' => 1])
  * ->limit(1)
  * ->fetchColumn() > 0;
- */
-function 检测记录是否存在(): bool
+ </code>*/
+function 检测记录是否存在($例子): bool
 {
     global $orm;eval(getCode(__METHOD__).";");
     return $data ? true : null;
 }
 
 /**
- * @example $data = $orm->select([])->where(['id' => ['>' => 0]])->fetchColumn();
- */
-function 统计(): string
+ * @param string $例子 <code>
+ * $data = $orm->select([])->where(['id' => ['>' => 0]])->fetchColumn();
+ </code>*/
+function 统计($例子): string
 {
     global $orm;eval(getCode(__METHOD__).";");
     return $data === '4' ? $data : false;
 }
 
 /**
- * @example $data = $orm->select(['*'])
+ * @param string $例子 <pre>
+ * $data = $orm->select(['*'])
  * ->where(['id' => ['>' => 0]])
  * ->group(['status', 'id'])
  * ->order(['status' => 'ASC', 'id' => 'DESC'])
  * ->limit(3, 0)
  * ->fetchAll();
- */
-function 查询所有(): array
+ </pre>*/
+function 查询所有($例子): array
 {
     global $orm;eval(getCode(__METHOD__).";");
     return count($data) === 3 ? $data : false;
 }
 
 /**
- * @example $data = $orm->select(['*'])
+ * @param string $例子 <code>
+ * $data = $orm->select(['*'])
  * ->where(['id' => 1])
  * ->limit(1)
  * ->fetch();
- */
-function 查询一行(): array
+ </code>*/
+function 查询一行($例子): array
 {
     global $orm;eval(getCode(__METHOD__).";");
     return $data['id'] === '1' ? $data : false;
 }
 
 /**
- * @example $data = $orm->select(['id'])
+ * @param string $例子 <code>
+ * $data = $orm->select(['id'])
  * ->where(['id' => 1])
  * ->limit(1)
  * ->fetchColumn();
- */
-function 查询一个值(): string
+ </code>*/
+function 查询一个值($例子): string
 {
     global $orm;eval(getCode(__METHOD__).";");
     return $data === '1' ? $data : false;
 }
 
 /**
- * @example $data = $orm->insert(
- * ['status' => 1,'date_add' => microtime(true),'date_upd' => microtime(true),'key' => 'testKey','value' => 'testValue']
- * );
- */
-function 插入(): array
+ * @param string $例子 <pre>
+ * $data = $orm->insert(['status' => 1,'date_add' => microtime(true),'date_upd' => microtime(true),'key' => 'testKey','value' => 'testValue']);
+ </pre>*/
+function 插入($例子): array
 {
     global $orm;eval(getCode(__METHOD__).";");
     return $data['lastInsertId'] > 0 ? $data : false;
 }
 
 /**
- * @example $data = $orm->where(['key' => 'testKey'])->limit(1)->update(['status' => 2]);
- */
-function 更新(): int
+ * @param string $例子 <code>
+ * $data = $orm->where(['key' => 'testKey'])->limit(1)->update(['status' => 2]);
+ </code>*/
+function 更新($例子): int
 {
     global $orm;eval(getCode(__METHOD__).";");
     return $data === 1 ? true : false;
 }
 
 /**
- * @example $data = $orm->where(['key' => 'testKey'])->limit(1)->delete();
- */
-function 删除(): int
+ * @param string $例子 <code>
+ * $data = $orm->where(['key' => 'testKey'])->limit(1)->delete();
+ </code>*/
+function 删除($例子): int
 {
     global $orm;eval(getCode(__METHOD__).";");
     return $data === 1 ? true : false;
 }
 
 /**
- * @example 任意地方传入任意不存在的字段，系统会自动触发安全警报，达到调试目的
- */
-function 调试(): bool
+ * @param string $例子 <code>
+ * 任意地方传入任意不存在的字段，系统会自动触发安全警报，达到调试目的
+ </code>*/
+function 调试($例子): bool
 {
     return true;
 }
 
 /**
- * @example
- *
+ * @param string $例子 <pre>
 $orm = Hook\Db\OrmConnect::getInstance('hp_iot_config')
 $orm->select(['*'], ['DISTINCT']);// SELECT DISTINCT
  
@@ -202,43 +213,38 @@ $orm->where(['status' => ['IS' => NULL]]);
  
 //条件 IS NOT NULL
 $orm->where(['status' => ['IS NOT' => NULL]]);
- 
-//...
+
 var_dump($orm->fetchAll());
- */
-function 链式(): bool
+ </pre>*/
+function 链式($例子): bool
 {
     return true;
 }
 
 /**
- * @example
- * 下面6个方法，默认返回的数据可能需要程序二次加工，不过我们还可以通过PDO自带的参数达到同样的目的，以达到我们想要的数据算法结构：
-单表3个查询方法：
-    fetchAll()：
-        1.fetchAll(PDO::FETCH_COLUMN) //返回第1列，[VALUE构成的索引数组] 【等同 Dbio::queryColumn】
-        2.fetchAll(PDO::FETCH_KEY_PAIR) //返回前2列，[第一列为KEY => 第二列为VALUE]
-        3.fetchAll(PDO::FETCH_COLUMN | PDO::FETCH_GROUP) //返回前2列，[第一列为KEY => [第二列为VALUE，如果KEY重复，VALUE对应归类]]
-        4.fetchAll(PDO::FETCH_UNIQUE | PDO::FETCH_ASSOC) //返回所有列，[第一列为KEY => [其余列为关联数组]]
-        5.fetchAll(PDO::FETCH_GROUP | PDO::FETCH_ASSOC) //返回所有列，[第一列为KEY => [[其余列为关联数组，如果KEY重复，VALUE对应归类]]]
-        6.fetchAll(PDO::FETCH_OBJ) //返回所有列，对象形式
-    fetch()：
-        调整 $type 参数：默认的基本够用，一般无需调整；用法 类似 单表fetchAll
-    fetchColumn()：
-        调整 $column 参数：默认值 0
-        0 取 第1个字段值
-        1 取 第2个字段值
-        2 取 第3个字段值
-        ...
-多表3个查询方法
-    queryAll()：
-        用法，类似 单表fetchAll
-    query()：
-        用法，类似 单表fetch
-    queryColumn()：
-        用法，类似 单表fetchColumn
+ * @param string $例子 <pre>
+下面6个方法，默认返回的数据可能需要程序二次加工，不过我们还可以通过PDO自带的参数达到同样的目的，以达到我们想要的数据算法结构：<ol>
+    <li>单表3个查询方法：</li><ol>
+            <li>fetchAll()：</li><ol>
+                <li>fetchAll(PDO::FETCH_COLUMN) //返回第1列，[VALUE构成的索引数组] 【等同 Dbio::queryColumn】</li>
+                <li>fetchAll(PDO::FETCH_KEY_PAIR) //返回前2列，[第一列为KEY => 第二列为VALUE]</li>
+                <li>fetchAll(PDO::FETCH_COLUMN | PDO::FETCH_GROUP) //返回前2列，[第一列为KEY => [第二列为VALUE，如果KEY重复，VALUE对应归类]]</li>
+                <li>fetchAll(PDO::FETCH_UNIQUE | PDO::FETCH_ASSOC) //返回所有列，[第一列为KEY => [其余列为关联数组]]</li>
+                <li>fetchAll(PDO::FETCH_GROUP | PDO::FETCH_ASSOC) //返回所有列，[第一列为KEY => [[其余列为关联数组，如果KEY重复，VALUE对应归类]]]</li>
+                <li>fetchAll(PDO::FETCH_OBJ) //返回所有列，对象形式</li></ol>
+            <li>fetch()：</li> 调整 $type 参数：默认的基本够用，一般无需调整；用法 类似 单表fetchAll
+            <li>fetchColumn()：</li> 调整 $column 参数：默认值 0<ol>
+                <li>0 取 第1个字段值</li>
+                <li>1 取 第2个字段值</li>
+                <li>2 取 第3个字段值</li>
+                <li>...</li></ol></ol>
+    <li>多表3个查询方法</li><ol>
+            <li>queryAll()：</li> 用法，类似 单表fetchAll
+            <li>query()：</li> 用法，类似 单表fetch
+            <li>queryColumn()：</li> 用法，类似 单表fetchColumn</ol>
+</ol></pre>
  */
-function 结构(): bool
+function 结构($例子): bool
 {
     return true;
 }
@@ -247,5 +253,5 @@ foreach (get_defined_functions()['user'] as $callback) {
     if (preg_match('/\w+/is', $callback)) {
         continue;
     }
-    var_dump($callback . ':' . (call_user_func($callback) ? '成功' : '失败'));
+    var_dump($callback . ':' . (call_user_func($callback, '') ? '成功' : '失败'));
 }
