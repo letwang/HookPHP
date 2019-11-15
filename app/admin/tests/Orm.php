@@ -3,11 +3,28 @@ require __DIR__ . '/../Init.php';
 
 /**
  * 从注释中解析可执行代码
- * @param string $method
+ * @param string $method 需要解析文档的方法名
+ * @param string $class 类的绝对名称，例如：Hook\\HookModel\\Hook_Hook_ModuleController
  * @return string
  */
-function getCode(string $method): string
+function getCode(string $method, string $class = ''): string
 {
+    if ( !empty($class) ) {
+		$reflectionClass  = new ReflectionClass($class);
+		$reflectionMethod = $reflectionClass->getMethod($method);
+		$doc              = $reflectionMethod->getDocComment();
+		if ( empty($doc) ) {
+			return false;
+		}
+		preg_match("/<code>([\s\S]+)<\/code>/", $doc, $matches);
+
+		if ( ! isset($matches[1]) ) {
+			return false;
+		}
+		$result = trim(preg_replace("/(\n\s+\*\s)/i", "\n", $matches[1]));
+
+		return $result;
+    }
     static $content = null;
     if (!$content) {
         $content = file_get_contents(__FILE__);
