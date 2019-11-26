@@ -1,3 +1,4 @@
 <?php
-require __DIR__ . '/../../app/iot/Init.php';
+require dirname(__FILE__,3). '/app/iot/Init.php';
+
 $app->bootstrap()->run();
