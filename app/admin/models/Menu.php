@@ -19,7 +19,15 @@ class MenuModel extends Base\AbstractModel
 
     public function getSelect(): array
     {
-        return $this->pdo->fetchAll(Yaconf::get('dicPdo.MENU.GET_SELECT'), [APP_LANG_ID], PDO::FETCH_KEY_PAIR);
+        $result = ['' => '顶级分类'];
+        $data = $this->getMenu();
+        foreach ($data as &$value) {
+            $result[$value['id']] = $value['name'];
+            foreach ($value['childs'] as &$v) {
+                $result[$v['id']] = '|----'.$v['name'];
+            }
+        }
+        return $result;
     }
 
     public function getMenu(): array
