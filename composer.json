@@ -60,5 +60,11 @@
     "prefer-stable": true,
     "config": {
         "sort-packages": true
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
+        }
     }
 }
