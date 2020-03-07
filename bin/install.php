@@ -35,7 +35,7 @@ function init(string $appName = APP_NAME)
         $data .= PHP_EOL;
     }
     $result &= file_put_contents(getcwd().'/conf/'.$appName.'Table.ini', $data) > 0;
-    shell_exec('sudo service php7.3-fpm restart');
+    shell_exec('sudo service php7.4-fpm restart');
 
     echo "初始化\e[3".($result ? 2 : 1)."m ".$appName." \e[0m平台数据完毕\n";
 }
