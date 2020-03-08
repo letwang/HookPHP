@@ -8,7 +8,7 @@ use Hook\Cache\Cache;
 
 class PdoConnect extends Cache
 {
-    public $handle;
+    public object $handle;
 
     /**
      * 

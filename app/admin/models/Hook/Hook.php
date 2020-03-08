@@ -5,7 +5,7 @@ use \Yaconf;
 
 class HookModel extends \Base\AbstractModel
 {
-    public $fields = [
+    public array $fields = [
         'position' => ['type' => parent::INT, 'required' => true, 'validate' => 'isInt'],
         'key' => ['required' => true, 'validate' => 'isGenericName'],
         'name' => ['required' => true, 'validate' => 'isGenericName'],

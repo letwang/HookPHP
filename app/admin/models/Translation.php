@@ -1,5 +1,5 @@
 <?php
 class TranslationModel extends Base\AbstractModel
 {
-    public $table = 'admin_translation';
+    public string $table = 'admin_translation';
 }

@@ -4,9 +4,9 @@ namespace Hook\Crypt;
 class PassWord
 {
 
-    public static $algo = PASSWORD_ARGON2I;
+    public static int $algo = PASSWORD_ARGON2I;
 
-    public static $cost = 10;
+    public static int $cost = 10;
 
     public static function hash($password)
     {

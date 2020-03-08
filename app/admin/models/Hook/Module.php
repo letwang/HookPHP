@@ -4,7 +4,7 @@ use Hook\Db\OrmConnect;
 
 class ModuleModel extends \Base\AbstractModel
 {
-    public $fields = [
+    public array $fields = [
         'version' => ['required' => true, 'validate' => 'isGenericName'],
         'key' => ['required' => true, 'validate' => 'isGenericName'],
     ];

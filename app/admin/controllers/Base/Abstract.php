@@ -4,14 +4,10 @@ use Hook\Http\Header;
 
 abstract class AbstractController extends \Yaf\Controller_Abstract
 {
-    protected $id;
-    protected $languages = [];
+    protected int $id;
+    protected array $languages = [];
 
-    /**
-     *
-     * @var \Base\AbstractModel
-     */
-    protected $model;
+    protected object $model;
 
     protected function init()
     {
@@ -58,6 +54,6 @@ abstract class AbstractController extends \Yaf\Controller_Abstract
                 }
             }
         }
-        exit(json_encode(['id' => mt_rand(), 'code' => $code, 'msg' => $msg, 'data' => $data]));
+        exit(json_encode(['id' => mt_rand(), 'code' => $code, 'msg' => $msg, 'data' => $data], JSON_UNESCAPED_UNICODE));
     }
 }

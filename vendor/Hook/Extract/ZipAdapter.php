@@ -7,7 +7,7 @@ use Hook\Extract\ExtractInterface;
 class ZipAdapter extends AbstractAdapter implements ExtractInterface
 {
 
-    public $handle = null;
+    public object $handle = null;
 
     public function __construct($file)
     {

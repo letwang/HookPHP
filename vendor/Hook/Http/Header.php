@@ -4,7 +4,7 @@ namespace Hook\Http;
 class Header
 {
 
-    public static $httpResponseCode = [
+    public static array $httpResponseCode = [
         // INFORMATIONAL CODES
         100 => 'Continue',
         101 => 'Switching Protocols',

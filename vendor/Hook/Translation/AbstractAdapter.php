@@ -7,9 +7,15 @@ use Hook\Translation\TranslationInterface;
 abstract class AbstractAdapter implements TranslationInterface
 {
 
-    public $key, $id_lang_from, $id_lang_to;
+    public string $key;
+    public int $id_lang_from;
+    public int $id_lang_to;
 
-    public $id, $key_crc32, $crawlers, $db, $table;
+    public int $id;
+    public int $key_crc32;
+    public object $crawlers;
+    public object $db;
+    public string $table;
 
     public function __construct($crawlers, $db, $table)
     {

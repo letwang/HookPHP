@@ -3,7 +3,7 @@ use Hook\Db\{OrmConnect};
 
 class ConfigModel extends Base\AbstractModel
 {
-    public $fields = [
+    public array $fields = [
         'key' => ['required' => true, 'validate' => 'isGenericName'],
         'value' => ['required' => true],
     ];

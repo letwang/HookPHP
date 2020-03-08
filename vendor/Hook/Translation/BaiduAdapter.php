@@ -7,9 +7,9 @@ use Hook\Translation\TranslationInterface;
 class BaiduAdapter extends AbstractAdapter implements TranslationInterface
 {
 
-    public static $URL = 'http://fanyi.baidu.com/v2transapi';
+    public static array $URL = 'http://fanyi.baidu.com/v2transapi';
 
-    public static $LANG = [
+    public static array $LANG = [
         1 => 'zh',
         2 => 'en'
     ];

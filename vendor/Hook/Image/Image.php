@@ -4,7 +4,7 @@ namespace Hook\Image;
 class Image
 {
 
-    public static $type = [
+    public static array $type = [
         1 => 'gif',
         2 => 'jpeg',
         3 => 'png'

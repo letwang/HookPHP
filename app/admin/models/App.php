@@ -3,8 +3,8 @@ use Hook\Db\{OrmConnect};
 
 class AppModel extends Base\AbstractModel
 {
-    public $table = 'admin_app';
-    public $fields = [
+    public string $table = 'admin_app';
+    public array $fields = [
         'status' => ['type' => parent::BOOL, 'validate' => 'isBool'],
         'key' => ['required' => true, 'validate' => 'isGenericName'],
         'description' => ['type' => parent::HTML],

@@ -6,13 +6,13 @@ use Hook\Cache\Cache;
 
 class OrmConnect extends Cache
 {
-    private $table = '';
+    private string $table = '';
 
-    private $statement = '';
-    private $parameter = [];
+    private string $statement = '';
+    private array $parameter = [];
 
-    private $operator = ['=' => '=', '>' => '>', '>=' => '>=', '<' => '<', '<=' => '<=', '!=' => '!=', 'LIKE' => 'LIKE', 'NOT LIKE' => 'NOT LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN', 'BETWEEN' => 'BETWEEN', 'NOT BETWEEN' => 'NOT BETWEEN', 'AND' => 'AND', 'IS' => 'IS', 'IS NOT' => 'IS NOT'];
-    private $expression = ['DISTINCT', 'DISTINCTROW'];
+    private array $operator = ['=' => '=', '>' => '>', '>=' => '>=', '<' => '<', '<=' => '<=', '!=' => '!=', 'LIKE' => 'LIKE', 'NOT LIKE' => 'NOT LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN', 'BETWEEN' => 'BETWEEN', 'NOT BETWEEN' => 'NOT BETWEEN', 'AND' => 'AND', 'IS' => 'IS', 'IS NOT' => 'IS NOT'];
+    private array $expression = ['DISTINCT', 'DISTINCTROW'];
 
     public function __construct(string $table = null)
     {

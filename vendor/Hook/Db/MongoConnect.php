@@ -5,7 +5,7 @@ use Hook\Cache\Cache;
 
 class MongoConnect extends Cache
 {
-    public $handle;
+    public object $handle;
     
     public function __construct(string $db = '')
     {

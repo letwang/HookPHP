@@ -4,9 +4,10 @@ namespace Hook\Http;
 class Curl
 {
 
-    public $curlHandle, $fileHandle;
+    public resource $curlHandle;
+    public resource $fileHandle;
 
-    public $agent = [
+    public array $agent = [
         'Mozilla/5.0 (Windows NT 6.%u; rv:31.%u) Gecko/20100101 Firefox/%u0.%u',
         'Mozilla/5.0 (Windows NT 6.%u; Trident/7.%u; rv:50.%u) like Gecko',
         'Mozilla/5.0 (Windows NT 6.%u) AppleWebKit/537.%u6 (KHTML, like Gecko) Chrome/50.%u.1%u16.153 Safari/5%u7.%u6',
@@ -15,7 +16,7 @@ class Curl
         'Opera/9.80 (Windows NT 6.%u; U; en) Presto/2.%u.%u0 Version/10.%u0'
     ];
 
-    public $header = [
+    public array $header = [
         'Accept: text/html,application/xhtml+xml,application/xml;q=0.%u,*/*;q=0.%u',
         'Accept-Language: zh-CN,zh;q=0.%u,en-US;q=0.%u',
         'Connection: keep-alive',
@@ -23,7 +24,7 @@ class Curl
         'Cache-Control: no-cache',
     ];
 
-    public $options = [
+    public array $options = [
         CURLOPT_VERBOSE => false,
         CURLOPT_CUSTOMREQUEST => 'GET',
         CURLOPT_FOLLOWLOCATION => true,

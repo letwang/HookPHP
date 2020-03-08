@@ -7,9 +7,9 @@ use Hook\Translation\TranslationInterface;
 class GoogleAdapter extends AbstractAdapter implements TranslationInterface
 {
 
-    public static $URL = 'http://translate.google.cn/translate_a/single?client=t&sl=%s&tl=%s&hl=%s&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&dt=at&ie=UTF-8&oe=UTF-8&otf=1&srcrom=1&ssel=0&tsel=4&tk=%s&q=';
+    public static string $URL = 'http://translate.google.cn/translate_a/single?client=t&sl=%s&tl=%s&hl=%s&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&dt=at&ie=UTF-8&oe=UTF-8&otf=1&srcrom=1&ssel=0&tsel=4&tk=%s&q=';
 
-    public static $LANG = [
+    public static array $LANG = [
         1 => 'zh-CN',
         2 => 'en',
         3 => 'fr'

@@ -4,9 +4,9 @@ namespace Hook\Data;
 class ArrayUtils
 {
 
-    public $idKey = '';
+    public string $idKey = '';
 
-    public $parentIdKey = '';
+    public string $parentIdKey = '';
 
     public function classify($array, $parent_id = 0)
     {

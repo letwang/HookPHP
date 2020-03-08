@@ -5,8 +5,8 @@ use Hook\Db\OrmConnect;
 
 class ManagerModel extends \Base\AbstractModel
 {
-    public $table = 'admin_manager';
-    public $fields = [
+    public string $table = 'admin_manager';
+    public array $fields = [
         'status' => ['type' => parent::BOOL, 'validate' => 'isBool'],
         'user' => ['required' => true, 'validate' => 'isGenericName'],
         'pass' => ['required' => true],

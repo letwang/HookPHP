@@ -9,17 +9,17 @@ use Hook\Tools\Tools;
 
 abstract class AbstractModel extends Cache
 {
-    public $table;
-    public $foreign;
+    public string $table;
+    public string $foreign;
 
-    public $id;
+    public int $id;
 
-    public $fields = [];
-    public $ignore = ['id' => true, 'date_add' => true, 'date_upd' => true, 'lang_id' => true];
+    public array $fields = [];
+    public array $ignore = ['id' => true, 'date_add' => true, 'date_upd' => true, 'lang_id' => true];
 
-    private $tableLang = '';
-    private $definition = [];
-    private $definitionLang = [];
+    private string $tableLang = '';
+    private array $definition = [];
+    private array $definitionLang = [];
 
     const INT = 1;
     const BOOL = 2;

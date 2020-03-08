@@ -6,7 +6,7 @@ use Hook\Cache\Cache;
 
 class RedisConnect extends Cache
 {
-    public $handle;
+    public object $handle;
     
     public function __construct(string $db = '')
     {

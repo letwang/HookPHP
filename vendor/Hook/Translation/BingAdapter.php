@@ -8,18 +8,18 @@ use Hook\Tools\Tools;
 class BingAdapter extends AbstractAdapter implements TranslationInterface
 {
 
-    public static $URL = 'http://api.microsofttranslator.com/v2/ajax.svc/TranslateArray2?appId="%s"&texts=["%s"]&from="%s"&to="%s"&options={}&oncomplete=onComplete_0&onerror=onError_0&_=%s';
+    public static array $URL = 'http://api.microsofttranslator.com/v2/ajax.svc/TranslateArray2?appId="%s"&texts=["%s"]&from="%s"&to="%s"&options={}&oncomplete=onComplete_0&onerror=onError_0&_=%s';
 
-    public static $LANG = [
+    public static array $LANG = [
         1 => 'zh-CHS',
         2 => 'en'
     ];
 
-    public $app_id;
+    public string $app_id;
 
-    public $app_id_times = 0;
+    public int $app_id_times = 0;
 
-    public $app_id_times_max = 100;
+    public int $app_id_times_max = 100;
 
     public function __construct($crawlers, $db, $table)
     {

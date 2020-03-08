@@ -5,7 +5,7 @@ use Hook\Cache\Cache;
 
 class Module extends Cache
 {
-    public $module;
+    public object $module;
 
     public function __construct(string $module)
     {

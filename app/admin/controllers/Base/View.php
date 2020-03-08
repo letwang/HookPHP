@@ -5,9 +5,9 @@ use MenuModel;
 
 abstract class ViewController extends AbstractController
 {
-    protected $list = [];
-    protected $form = [];
-    protected $ignore = [];
+    protected array $list = [];
+    protected array $form = [];
+    protected array $ignore = [];
 
     protected function init()
     {
@@ -63,7 +63,7 @@ abstract class ViewController extends AbstractController
         foreach ($this->form['fields']['data'][0]['form']['input'] as $field => $input) {
             if ($input['lang']) {
                 foreach ($this->languages as $language) {
-                    $this->form['value'][$field][$language['id']] = $this->model->getData($language['id'])[$field];
+                    $this->form['value'][$field][$language['id']] = $this->model->getData($language['id'])[$field] ?? '';
                 }
             } else {
                 $this->form['value'][$field] = $this->model->getData()[$field];

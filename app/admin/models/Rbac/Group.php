@@ -5,7 +5,7 @@ use \Yaconf;
 
 class GroupModel extends \Base\AbstractModel
 {
-    public $fields = [
+    public array $fields = [
         'status' => ['type' => parent::BOOL, 'validate' => 'isBool'],
         'name' => ['required' => true, 'validate' => 'isGenericName'],
     ];

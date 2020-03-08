@@ -3,8 +3,8 @@ use Hook\Db\OrmConnect;
 
 class LangModel extends Base\AbstractModel
 {
-    public $table = 'admin_lang_i18n';
-    public $fields = [
+    public string $table = 'admin_lang_i18n';
+    public array $fields = [
         'status' => ['type' => parent::BOOL, 'validate' => 'isBool'],
         'iso' => ['required' => true, 'validate' => 'isIsoCode'],
         'lang' => ['required' => true, 'validate' => 'isLanguageCode'],

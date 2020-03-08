@@ -5,9 +5,9 @@ use Hook\Db\{PdoConnect, RedisConnect, YacConnect};
 
 class Cache
 {
-    public $pdo;
-    public $redis;
-    public $yac;
+    public object $pdo;
+    public object $redis;
+    public object $yac;
 
     public function __construct()
     {

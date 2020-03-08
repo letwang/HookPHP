@@ -3,12 +3,6 @@ use Hook\Http\Header, Hook\Crypt\PassWord;
 
 class LoginController extends Base\ViewController
 {
-    /**
-     * 
-     * @var \LoginModel
-     */
-    protected $model;
-
     public function getAction()
     {
         $this->_view->referer = $this->getRequest()->getParam('referer', '/');

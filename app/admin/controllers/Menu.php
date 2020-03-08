@@ -1,12 +1,6 @@
 <?php
 class MenuController extends Base\ViewController
 {
-    /**
-     * 
-     * @var MenuModel
-     */
-    protected $model;
-
     protected function renderForm(): void
     {
         parent::renderForm();

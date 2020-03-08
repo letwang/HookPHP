@@ -3,7 +3,7 @@ use Hook\Data\ArrayUtils;
 
 class MenuModel extends Base\AbstractModel
 {
-    public $fields = [
+    public array $fields = [
         'parent' => ['type' => parent::INT, 'validate' => 'isInt'],
         'status' => ['type' => parent::BOOL, 'validate' => 'isBool'],
         'position' => ['type' => parent::INT, 'validate' => 'isInt'],

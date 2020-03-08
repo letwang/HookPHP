@@ -4,27 +4,27 @@ namespace Hook\Batch;
 class Insert
 {
 
-    public $sql = 'INSERT INTO `test` VALUES';
+    public string $sql = 'INSERT INTO `test` VALUES';
 
-    public $sqlCount = 1;
+    public int $sqlCount = 1;
 
-    public $sqlCountMax = 100;
+    public int $sqlCountMax = 100;
 
-    public $sqlArray = [];
+    public array $sqlArray = [];
 
-    public $childCount = 1;
+    public int $childCount = 1;
 
-    public $childCountMax = 10000;
+    public int $childCountMax = 10000;
 
-    public $childArray = [];
+    public array $childArray = [];
 
-    public $data = [];
+    public array $data = [];
 
-    public $status = [];
+    public array $status = [];
 
-    public $functionFormatSql = 'formatSql';
+    public string $functionFormatSql = 'formatSql';
 
-    public $functionRunSql = 'runSql';
+    public string $functionRunSql = 'runSql';
 
     public function __construct(array $array)
     {

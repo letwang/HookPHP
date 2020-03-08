@@ -2,9 +2,9 @@
 namespace Base;
 abstract class ViewController extends AbstractController
 {
-    protected $list = [];
-    protected $form = [];
-    protected $ignore = [];
+    protected array $list = [];
+    protected array $form = [];
+    protected array $ignore = [];
 
     protected function init()
     {
