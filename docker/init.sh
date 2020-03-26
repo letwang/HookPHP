@@ -12,7 +12,7 @@ composer install
 PATH=/usr/local/openresty/nginx/sbin:$PATH
 export PATH
 nginx -p openresty/ -c conf/nginx.conf
-if [ ! -f "vendor/Hook/Tika/tika-app-1.23.jar" ];then
+if [ ! -f "vendor/Hook/Tika/tika-app-1.24.jar" ];then
     wget -P vendor/Hook/Tika http://mirrors.tuna.tsinghua.edu.cn/apache/tika/tika-app-1.23.jar
 fi
 sleep 5
