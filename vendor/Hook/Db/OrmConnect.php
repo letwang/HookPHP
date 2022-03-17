@@ -1,7 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace Hook\Db;
 
-use Yaconf;
+use PDO;
 use Hook\Cache\Cache;
 
 class OrmConnect extends Cache
@@ -42,7 +44,7 @@ class OrmConnect extends Cache
             $this->statement .= join(' ', array_intersect($expression, $this->expression));
         }
         if ($column) {
-            $this->statement .= '`'.join('`,`', $column).'`';
+            $this->statement .= $column === ['*'] ? '*' : '`'.join('`,`', $column).'`';
         } else {
             $this->statement .= 'COUNT(*)';
         }
@@ -109,12 +111,12 @@ class OrmConnect extends Cache
         return $this;
     }
 
-    public function fetchAll(int $type = null, int $ttl = 3600): array
+    public function fetchAll(int $type = PDO::FETCH_ASSOC, int $ttl = 3600): array
     {
         return $this->getSingleData(__FUNCTION__, $type, $ttl);
     }
 
-    public function fetch(int $type = null, int $ttl = 3600)
+    public function fetch(int $type = PDO::FETCH_ASSOC, int $ttl = 3600)
     {
         return $this->getSingleData(__FUNCTION__, $type, $ttl);
     }
@@ -176,10 +178,10 @@ class OrmConnect extends Cache
     {
         $keys = [];
 
-        $table = sprintf(Yaconf::get('dicRedis')['table']['single'], $this->table);
+        $table = sprintf(apcu_fetch('global')['database']['redis']['table']['single'], $this->table);
         $this->redis->handle->exists($table) && $keys[] = $table;
 
-        $table = sprintf(Yaconf::get('dicRedis')['table']['join'], $this->table);
+        $table = sprintf(apcu_fetch('global')['database']['redis']['table']['join'], $this->table);
         $this->redis->handle->exists($table) && $keys = array_merge($keys, [$table], $this->redis->handle->hKeys($table));
 
         $keys && $this->redis->handle->unlink($keys);
@@ -192,7 +194,7 @@ class OrmConnect extends Cache
         $this->__destruct();
 
         $key = md5($statement);
-        if (!$this->yac->handle->get($key)) {
+        if (!apcu_exists($key)) {
             preg_match_all('/`(\w+)`/u', $statement, $matches);
             $white = APP_TABLE[$this->table] + [$this->table => [], 'COUNT(*)' => []];
             foreach (array_flip($matches[1]) as $column => $index) {
@@ -200,13 +202,13 @@ class OrmConnect extends Cache
                     throw new \Exception('db hack #'.$index.' ['.$statement.']');
                 }
             }
-            $this->yac->handle->set($key, true);
+            apcu_store($key, true);
         }
 
         return $statement;
     }
 
-    private function getSingleData(string $callable, int $type = null, int $ttl)
+    private function getSingleData(string $callable, int $type, int $ttl)
     {
         $parameter = $this->parameter;
         $statement = $this->checkStatement($this->statement);
@@ -215,7 +217,7 @@ class OrmConnect extends Cache
             return $this->pdo->{$callable}($statement, $parameter, $type);
         }
 
-        $key = sprintf(Yaconf::get('dicRedis')['table']['single'], $this->table);
+        $key = sprintf(apcu_fetch('global')['database']['redis']['table']['single'], $this->table);
         $hashKey = md5($callable.$type.$statement.igbinary_serialize($parameter));
 
         if ($this->redis->handle->hExists($key, $hashKey)) {
@@ -241,7 +243,7 @@ class OrmConnect extends Cache
             $data = $this->pdo->{$callable}($statement, $parameter, $type);
             $redis = $this->redis->handle->multi();
             foreach ($matches[1] as $table) {
-                $table = sprintf(Yaconf::get('dicRedis')['table']['join'], $table);
+                $table = sprintf(apcu_fetch('global')['database']['redis']['table']['join'], $table);
                 $redis->hSetNx($table, $key, 1)->expire($table, $ttl);
             }
             $redis->setEx($key, $ttl, $data)->exec();

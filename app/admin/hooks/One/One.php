@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 class One
 {
     public function hookRouterStartup($args)

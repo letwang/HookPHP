@@ -1,24 +1,88 @@
 <?php require __DIR__.'/../top.phtml';?>
-
 <title><?php echo $this->title;?></title>
 <meta name="description" content="<?php echo $this->description;?>" />
 <meta name="keywords" content="<?php echo $this->keywords;?>" />
+<meta name="theme-color" content="#7952b3">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" rel="stylesheet" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+<link href="/assets/css/signin.css" rel="stylesheet">
 </head>
 <body class="text-center">
-	<div class="container">
-		<form class="form-signin" role="form" method="post" action="/login/post/">
-		    <img class="mb-4" src="/assets/images/brand.png" />
-			<h2 class="form-signin-heading">Please sign in</h2>
-			<input type="email" name="user" class="form-control" placeholder="Email address" required autofocus>
-			<br />
-			<input type="password" name="pass" class="form-control" placeholder="Password" required>
-			<div class="checkbox">
-				<label><input type="checkbox" name="remember" value="1"> Remember me</label>
-			</div>
-			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-			<p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
-			<input type="hidden" name="referer" value="<?php echo $this->referer;?>" />
-			<input type="hidden" name="token" value="<?php echo md5(uniqid(mt_rand(), true));?>" />
-		</form>
-	</div>
+<main class="form-signin">
+    <form class="needs-validation">
+        <img class="mb-4" src="https://getbootstrap.com/docs/5.1/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+        <div id="alert"></div>
+        <div class="form-floating">
+            <input type="email" class="form-control" name="user" placeholder="name@example.com" required>
+            <label for="floatingInput">Email address</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" name="pass" placeholder="Password" required>
+            <input type="hidden" name="referer" value="<?php echo $this->referer;?>" />
+            <input type="hidden" name="token" value="<?php echo md5(uniqid(mt_rand(), true));?>" />
+            <label for="floatingPassword">Password</label>
+        </div>
+
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" name="remember" value="1"> Remember me
+            </label>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+        <hr class="my-4">
+        <button class="py-2 mb-2 btn btn-outline-secondary" type="button">
+            <i class="fab fa-twitter" aria-label="Twitter"></i>
+        </button>
+        <button class="py-2 mb-2 btn btn-outline-secondary" type="button">
+            <i class="fab fa-facebook" aria-label="Facebook"></i>
+        </button>
+        <button class="py-2 mb-2 btn btn-outline-secondary" type="button">
+            <i class="fab fa-github" aria-label="GitHub"></i>
+        </button>
+        <button class="py-2 mb-2 btn btn-outline-secondary" type="button">
+            <i class="fab fa-qq" aria-label="QQ"></i>
+        </button>
+        <button class="py-2 mb-2 btn btn-outline-secondary" type="button">
+            <i class="fab fa-weixin" aria-label="Weixin"></i>
+        </button>
+        <button class="py-2 mb-2 btn btn-outline-secondary" type="button">
+            <i class="fab fa-alipay" aria-label="Alipay"></i>
+        </button>
+        <p class="mt-5 mb-3 text-muted">&copy; 2007–<?php echo date('Y');?> <?php echo $this->title;?></p>
+    </form>
+</main>
+<script>
+    $('.needs-validation').submit(function (event) {
+        event.preventDefault();
+        if (!$(this)[0].checkValidity()) {
+            event.stopPropagation();
+        } else {
+            $.ajax({
+                method: 'POST',
+                url: '/api/login/v1',
+                data: {
+                    user: $("input[name='user']").val(),
+                    pass: $("input[name='pass']").val(),
+                    token: $("input[name='token']").val(),
+                    referer: $("input[name='referer']").val(),
+                    remember: $("input[name='remember']").val()
+                },
+                dataType: 'json'
+            }).done(function(data, textStatus, jqXHR) {
+                if (data.code === 'ok') {
+                    $('#alert').html('<div class="alert alert-success alert-dismissible" role="alert">'+data.msg+'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+                    location.href = data.data.referer;
+                } else {
+                    $('#alert').html('<div class="alert alert-danger alert-dismissible" role="alert">'+data.msg+'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+                }
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                $('#alert').html('<div class="alert alert-dark alert-dismissible" role="alert">'+textStatus+'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>')
+            });
+        }
+        $(this).addClass('was-validated');
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
 <?php require __DIR__.'/../bottom.phtml';?>

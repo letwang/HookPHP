@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 use Hook\Data\ArrayUtils;
 
 class MenuModel extends Base\AbstractModel
@@ -14,7 +16,7 @@ class MenuModel extends Base\AbstractModel
 
     public function get(): array
     {
-        return $this->pdo->fetchAll(Yaconf::get('dicPdo.MENU.GET_ALL'), [APP_LANG_ID]);
+        return $this->orm->queryAll(apcu_fetch('global')['sql']['MENU']['GET_ALL'], [APP_LANG_ID]);
     }
 
     public function getSelect(): array
@@ -35,7 +37,7 @@ class MenuModel extends Base\AbstractModel
         $utils = new ArrayUtils();
         $utils->idKey = 'id';
         $utils->parentIdKey = 'parent';
-        $data = $utils->classify($this->pdo->fetchAll(Yaconf::get('dicPdo.MENU.GET_MENU'), [APP_LANG_ID]));
+        $data = $utils->classify($this->orm->queryAll(apcu_fetch('global')['sql']['MENU']['GET_MENU'], [APP_LANG_ID]));
         return $data;
     }
 }

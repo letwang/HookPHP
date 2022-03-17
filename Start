@@ -1,0 +1,26 @@
+#!/bin/sh
+sed -i 's/index.php$1/index.php?$1/' /etc/openresty/conf.d/hookphp.conf
+service openresty start
+
+service php8.1-fpm start
+
+service redis-server start
+
+service rabbitmq-server start
+rabbitmq-plugins enable rabbitmq_management rabbitmq_shovel rabbitmq_shovel_management &&
+rabbitmqctl add_user admin 123456 &&
+rabbitmqctl set_user_tags admin administrator &&
+rabbitmqctl set_permissions -p / admin '.*' '.*' '.*' &&
+rabbitmqctl delete_user guest
+
+mysqld --user=root &
+
+mongod -f /etc/mongod.conf &
+
+supervisord -c /etc/supervisord.conf
+
+composer update
+
+chmod 777 -R ./log
+
+zsh

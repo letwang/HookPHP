@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Hook\Db;
 
 use PDO;
@@ -54,7 +56,7 @@ class PdoConnect extends Cache
      * </ol></div>
      * @return array
      */
-    public function fetchAll(string $statement, array $parameter = [], int $type = null): array
+    public function fetchAll(string $statement, array $parameter = [], int $type = PDO::FETCH_ASSOC): array
     {
         return $this->query($statement, $parameter)->fetchAll($type);
     }

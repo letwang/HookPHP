@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 use Hook\Db\{OrmConnect};
 
 class AppModel extends Base\AbstractModel
@@ -12,7 +14,7 @@ class AppModel extends Base\AbstractModel
 
     public function get(): array
     {
-        return $this->pdo->fetchAll(Yaconf::get('dicPdo.APP.GET_All'), [APP_LANG_ID]);
+        return $this->orm->queryAll(apcu_fetch('global')['sql']['APP']['GET_All'], [APP_LANG_ID]);
     }
 
     public function getIds(): array

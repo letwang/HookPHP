@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Hook\Db;
 
 use Redis;
@@ -14,10 +16,10 @@ class RedisConnect extends Cache
         $this->handle = new \Redis();
         $this->handle->connect(
             APP_CONFIG['redis'][$db]['host'],
-            APP_CONFIG['redis'][$db]['port'],
-            APP_CONFIG['redis'][$db]['timeout'],
+            (int) APP_CONFIG['redis'][$db]['port'],
+            (float) APP_CONFIG['redis'][$db]['timeout'],
             APP_CONFIG['redis'][$db]['reserved'],
-            APP_CONFIG['redis'][$db]['interval']
+            (int) APP_CONFIG['redis'][$db]['interval']
         );
 
         !empty(APP_CONFIG['redis'][$db]['auth']) && $this->handle->auth(APP_CONFIG['redis'][$db]['auth']);
