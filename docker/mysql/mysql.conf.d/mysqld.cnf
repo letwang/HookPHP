@@ -1,7 +1,0 @@
-[mysqld]
-pid-file	= /var/run/mysqld/mysqld.pid
-socket		= /var/run/mysqld/mysqld.sock
-datadir		= /var/lib/mysql
-log-error	= /var/log/mysql/error.log
-user = root
-innodb_force_recovery = 0

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 use Yaf\{Plugin_Abstract, Request_Abstract, Response_Abstract};
 use Hook\Hook\Hook;
 

@@ -1,0 +1,22 @@
+#!/bin/sh
+service openresty start
+
+service php8.1-fpm start
+
+service redis-server start
+
+service rabbitmq-server start
+
+mysqld --user=root &
+
+mongod -f /etc/mongod.conf &
+
+supervisord -c /etc/supervisord.conf
+
+composer update
+
+cd web &&
+yarn build &&
+cd ../
+
+zsh

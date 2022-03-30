@@ -1,9 +1,11 @@
 <?php
+declare(strict_types=1);
+
 use Yaf\{Dispatcher, Bootstrap_Abstract};
 
 class Bootstrap extends Bootstrap_Abstract
 {
-    public function _init(Dispatcher $dispatcher)
+    public function _initConfig(Dispatcher $dispatcher)
     {
         $dispatcher->registerPlugin(new HookPlugin());
 
@@ -11,7 +13,7 @@ class Bootstrap extends Bootstrap_Abstract
     }
 }
 
-function l(string $key)
+function l()
 {
-    return Yaconf::get(APP_NAME.'LangZh-cn.'.$key, $key);
+    return apcu_fetch('admin')['zh-CN'] + apcu_fetch(APP_NAME)['zh-CN'];
 }

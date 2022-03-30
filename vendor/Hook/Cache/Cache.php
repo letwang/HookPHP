@@ -1,22 +1,22 @@
 <?php
+declare(strict_types=1);
+
 namespace Hook\Cache;
 
-use Hook\Db\{PdoConnect, RedisConnect, YacConnect};
+use Hook\Db\{PdoConnect, RedisConnect};
 
 class Cache
 {
     public object $pdo;
     public object $redis;
-    public object $yac;
 
     public function __construct()
     {
         $this->pdo = PdoConnect::getInstance();
         $this->redis = RedisConnect::getInstance();
-        $this->yac = YacConnect::getInstance();
     }
 
-    public static function getInstance(string $name = '', string $key = 'default'): self
+    public static function getInstance($name = '', string $key = 'default'): self
     {
         $class = static::class;
         $instance = &self::static($class);

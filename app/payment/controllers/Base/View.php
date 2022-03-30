@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Base;
 abstract class ViewController extends AbstractController
 {
@@ -6,35 +8,35 @@ abstract class ViewController extends AbstractController
     protected array $form = [];
     protected array $ignore = [];
 
-    protected function init()
+    public function init()
     {
         parent::init();
         $this->_view->setScriptPath(APP_CONFIG['application']['directory'].($this->_request->module === 'Index' ? '' : '/modules/'.$this->_request->module).'/views/default');
         $this->_view->assign(
             [
-                'title' => l('app.title'),
-                'keywords' => l('app.keywords'),
-                'description' => l('app.description'),
+                'title' => l()['app']['title'],
+                'keywords' => l()['app']['keywords'],
+                'description' => l()['app']['description'],
 
                 'module' => $this->_request->module,
-                'controller' => strtolower($this->_request->controller),
+                'controller' => $this->_request->controller,
                 'action' => $this->_request->action,
                 'uri' => $this->_request->getRequestUri(),
             ]
         );
     }
 
-    protected function postAction()
+    public function postAction()
     {
         
     }
 
-    protected function putAction()
+    public function putAction()
     {
         
     }
 
-    protected function getAction()
+    public function getAction()
     {
         
     }
