@@ -7,5 +7,12 @@ module.exports = defineConfig({
     name: 'web'
   },
 
-  outputDir: '../public/admin/dist'
+  outputDir: '../public/admin/dist',
+
+  configureWebpack: {
+    externals: {
+      jquery: 'jQuery',
+      bootstrap: 'bootstrap'
+    }
+  }
 })

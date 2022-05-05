@@ -5,8 +5,9 @@ import {createI18n} from 'vue-i18n/index'
 
 import i18n from './i18n/zh_CN'
 import './registerServiceWorker'
+import store from './store'
 
-createApp(App)
+createApp(App).use(store)
     .use(router)
     .use(createI18n({
         locale: 'zh_CN',

@@ -71,7 +71,7 @@
 
 <script>
 import $ from "jquery";
-import * as bootstrap from "bootstrap";
+import bootstrap from "bootstrap";
 
 export default {
   name: 'HelloWorld',
