@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 class Three
 {
     public function hookDisplayTop($args)

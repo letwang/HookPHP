@@ -1,32 +1,35 @@
 <?php
+declare(strict_types=1);
+
 namespace Base;
 use Yaf\Dispatcher;
 
 abstract class ApiController extends AbstractController
 {
-    protected function init()
+    public function init()
     {
         parent::init();
         Dispatcher::getInstance()->autoRender(false);
         $this->_request->setParam('version', $this->_request->action)->setActionName($this->_request->method);
+        $this->model = (str_replace('_', '\\', $this->_request->controller).'Model')::getInstance($this->id);
     }
 
-    protected function postAction()
+    public function postAction()
     {
         return $this->send($this->model->post());
     }
 
-    protected function deleteAction()
+    public function deleteAction()
     {
         return $this->send($this->model->delete());
     }
 
-    protected function putAction()
+    public function putAction()
     {
         return $this->send($this->model->put());
     }
 
-    protected function getAction()
+    public function getAction()
     {
         return $this->send($this->model->get());
     }

@@ -1,7 +1,11 @@
 <?php
+declare(strict_types=1);
+
+isset($_SERVER['REQUEST_ID']) && SeasLog::setRequestID($_SERVER['REQUEST_ID']);
+
 define('APP_NAME', 'store');
-define('APP_CONFIG', Yaconf::get(APP_NAME.YAF\ENVIRON));
-define('APP_TABLE', Yaconf::get('adminTable') + Yaconf::get(APP_NAME.'Table'));
+define('APP_CONFIG', apcu_fetch(APP_NAME)[YAF\ENVIRON]);
+define('APP_TABLE', apcu_fetch('admin')['table'] + apcu_fetch(APP_NAME)['table']);
 
 require __DIR__.'/../../vendor/autoload.php';
 

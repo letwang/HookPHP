@@ -2,25 +2,37 @@
 <title><?php echo $this->title;?></title>
 <meta name="description" content="<?php echo $this->description;?>" />
 <meta name="keywords" content="<?php echo $this->keywords;?>" />
+<link href="/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+<link href="/assets/css/app.min.css" rel="stylesheet" type="text/css" id="app-style" />
 </head>
-<body>
-<div class="app">
-  <?php require __DIR__.'/../head.phtml';?>
-  <?php require __DIR__.'/../left.phtml';?>
-  <main class="app-main">
-    <div class="wrapper">
-      <div class="page">
-        <div class="page-inner">
-          <header class="page-title-bar">
-            <!-- page title stuff goes here -->
-          </header>
-          <div class="page-section">
-            Index
-          </div>
+<body class="loading" data-layout-color="light" data-leftbar-theme="dark" data-layout-mode="fluid" data-rightbar-onstart="true">
+<div class="wrapper">
+    <?php require __DIR__.'/../left.phtml';?>
+    <div class="content-page">
+        <div class="content">
+            <?php require __DIR__.'/../topBar.phtml';?>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item"><a href="javascript: void(0);">Home</a></li>
+                                    <li class="breadcrumb-item"><a href="javascript: void(0);">Pages</a></li>
+                                    <li class="breadcrumb-item active">Starter</li>
+                                </ol>
+                            </div>
+                            <h4 class="page-title">Starter</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+        <?php require __DIR__.'/../footer.phtml';?>
     </div>
-    <?php require __DIR__.'/../foot.phtml';?>
-  </main>
 </div>
+<?php require __DIR__.'/../rightBar.phtml';?>
+
+<script src="/assets/js/vendor.min.js"></script>
+<script src="/assets/js/app.min.js"></script>
 <?php require __DIR__.'/../bottom.phtml';?>

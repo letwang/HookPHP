@@ -1,21 +1,18 @@
 <?php
+declare(strict_types=1);
+
 class Manager_ManagerController extends Base\ViewController
 {
-    protected function renderList(): void
-    {
-        $this->ignore += ['pass' => true];
-        parent::renderList();
-    }
-
-    protected function renderForm(): void
-    {
-        parent::renderForm();
-        $this->form['fields']['data'][0]['form']['input']['app_id'] = [
-            'type' => 'select',
-            'name' => 'app_id',
-            'label' => l($this->_request->controller.'.app_id'),
-            'lang' => false,
-            'values' => [['options' => array_flip(AppModel::getInstance()->getIds())]]
-        ];
-    }
+    public array $cols = [
+        ['data' => 'id'],
+        ['data' => 'app_id'],
+        ['data' => 'user'],
+        ['data' => 'email'],
+        ['data' => 'phone'],
+        ['data' => 'firstname'],
+        ['data' => 'lastname'],
+        ['data' => 'status'],
+        ['data' => 'date_add'],
+        ['data' => 'date_upd'],
+    ];
 }

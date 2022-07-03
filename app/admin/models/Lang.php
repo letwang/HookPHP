@@ -1,19 +1,25 @@
 <?php
+declare(strict_types=1);
+
 use Hook\Db\OrmConnect;
 
 class LangModel extends Base\AbstractModel
 {
     public string $table = 'admin_lang_i18n';
     public array $fields = [
-        'status' => ['type' => parent::BOOL, 'validate' => 'isBool'],
-        'iso' => ['required' => true, 'validate' => 'isIsoCode'],
-        'lang' => ['required' => true, 'validate' => 'isLanguageCode'],
-        'name' => ['validate' => 'isGenericName'],
+        'name' => ['validate' => 'isBool'],
+        'status' => ['type' => parent::BOOL, 'validate' => 'isGenericName'],
+        'iso_code' => ['required' => true, 'validate' => 'isIsoCode'],
+        'language_code' => ['required' => true, 'validate' => 'isGenericName'],
+        'locale' => ['required' => true, 'validate' => 'isGenericName'],
+        'date_format_lite' => ['required' => true, 'validate' => 'isGenericName'],
+        'date_format_full' => ['required' => true, 'validate' => 'isGenericName'],
+        'is_rtl' => ['required' => true, 'validate' => 'isGenericName'],
     ];
 
     public function getIds(): array
     {
-        return OrmConnect::getInstance($this->table)->select(['lang', 'id'])->where(['status' => 1])->fetchAll(PDO::FETCH_KEY_PAIR);
+        return OrmConnect::getInstance($this->table)->select(['locale', 'id'])->where(['status' => 1])->fetchAll(PDO::FETCH_KEY_PAIR);
     }
 
     public function getDefaultId(string $name = null): int

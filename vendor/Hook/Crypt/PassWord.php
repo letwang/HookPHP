@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
+
 namespace Hook\Crypt;
 
 class PassWord
 {
 
-    public static int $algo = PASSWORD_ARGON2I;
+    public static string $algo = PASSWORD_ARGON2I;
 
     public static int $cost = 10;
 

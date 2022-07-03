@@ -1,24 +1,115 @@
-<?php require __DIR__.'/../top.phtml';?>
-
-<title><?php echo $this->title;?></title>
-<meta name="description" content="<?php echo $this->description;?>" />
-<meta name="keywords" content="<?php echo $this->keywords;?>" />
+<?php require __DIR__ . '/../top.phtml'; ?>
+<title><?php echo $this->title; ?></title>
+<meta name="description" content="<?php echo $this->description; ?>"/>
+<meta name="keywords" content="<?php echo $this->keywords; ?>"/>
+<link href="/assets/css/icons.min.css" rel="stylesheet" type="text/css"/>
+<link href="/assets/css/app.min.css" rel="stylesheet" type="text/css" id="app-style"/>
 </head>
-<body class="text-center">
-	<div class="container">
-		<form class="form-signin" role="form" method="post" action="/login/post/">
-		    <img class="mb-4" src="/assets/images/brand.png" />
-			<h2 class="form-signin-heading">Please sign in</h2>
-			<input type="email" name="user" class="form-control" placeholder="Email address" required autofocus>
-			<br />
-			<input type="password" name="pass" class="form-control" placeholder="Password" required>
-			<div class="checkbox">
-				<label><input type="checkbox" name="remember" value="1"> Remember me</label>
-			</div>
-			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-			<p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
-			<input type="hidden" name="referer" value="<?php echo $this->referer;?>" />
-			<input type="hidden" name="token" value="<?php echo md5(uniqid(mt_rand(), true));?>" />
-		</form>
-	</div>
-<?php require __DIR__.'/../bottom.phtml';?>
+<body class="authentication-bg pb-0" data-layout-config='{"darkMode":false}'>
+<div class="auth-fluid">
+    <div class="auth-fluid-form-box">
+        <div class="align-items-center d-flex h-100">
+            <div class="card-body">
+                <div class="auth-brand text-center text-lg-start">
+                    <a href="javascript: void(0);" class="logo-dark">
+                        <span><img src="https://getbootstrap.com/docs/5.1/assets/brand/bootstrap-logo.svg" height="18"></span>
+                    </a>
+                    <a href="javascript: void(0);" class="logo-light">
+                        <span><img src="https://getbootstrap.com/docs/5.1/assets/brand/bootstrap-logo.svg" height="18"></span>
+                    </a>
+                </div>
+                <h4 class="mt-0">Sign In</h4>
+                <p class="text-muted mb-4">Enter your email address and password to access admin panel.</p>
+                <div id="alert"></div>
+                <form class="needs-validation">
+                    <div class="mb-3">
+                        <label for="user" class="form-label">Email address</label>
+                        <input class="form-control" type="email" id="user" name="user" required placeholder="Enter your email">
+                    </div>
+                    <div class="mb-3">
+                        <a href="/passwordreset" class="text-muted float-end"><small>Forgot your password?</small></a>
+                        <label for="pass" class="form-label">Password</label>
+                        <div class="input-group input-group-merge">
+                            <input class="form-control" type="password" id="pass" name="pass" required placeholder="Enter your password">
+                            <div class="input-group-text" data-password="false">
+                                <span class="password-eye"></span>
+                            </div>
+                        </div>
+                        <input type="hidden" name="referer" value="<?php echo $this->referer;?>" />
+                        <input type="hidden" name="token" value="<?php echo md5(uniqid(mt_rand(), true));?>" />
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="remember" name="remember" checked>
+                            <label class="form-check-label" for="remember">Remember me</label>
+                        </div>
+                    </div>
+                    <div class="d-grid mb-0 text-center">
+                        <button class="btn btn-primary" type="submit"><i class="mdi mdi-login"></i> Log In</button>
+                    </div>
+                    <div class="text-center mt-4">
+                        <p class="text-muted font-16">Sign in with</p>
+                        <ul class="social-list list-inline mt-3">
+                            <li class="list-inline-item">
+                                <a href="javascript: void(0);" class="social-list-item border-primary text-primary"><i class="mdi mdi-facebook"></i></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="javascript: void(0);" class="social-list-item border-danger text-danger"><i class="mdi mdi-google"></i></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="javascript: void(0);" class="social-list-item border-info text-info"><i class="mdi mdi-twitter"></i></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="javascript: void(0);" class="social-list-item border-secondary text-secondary"><i class="mdi mdi-github"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+                <footer class="footer footer-alt">
+                    <p class="text-muted">Don't have an account? <a href="/signup" class="text-muted ms-1"><b>Sign Up</b></a></p>
+                </footer>
+            </div>
+        </div>
+    </div>
+    <div class="auth-fluid-right text-center">
+        <div class="auth-user-testimonial">
+            <h2 class="mb-3">I love the HookPHP!</h2>
+            <p class="lead"><i class="mdi mdi-format-quote-open"></i> <?php echo $this->title;?>! . <i class="mdi mdi-format-quote-close"></i></p>
+            <p>- LetWang</p>
+        </div>
+    </div>
+</div>
+<script src="/assets/js/vendor.min.js"></script>
+<script src="/assets/js/app.min.js"></script>
+<script>
+    $('.needs-validation').submit(function (event) {
+        event.preventDefault();
+        if (!$(this)[0].checkValidity()) {
+            event.stopPropagation();
+        } else {
+            $.ajax({
+                method: 'POST',
+                url: '/api/login/v1',
+                data: {
+                    user: $("input[name='user']").val(),
+                    pass: $("input[name='pass']").val(),
+                    token: $("input[name='token']").val(),
+                    referer: $("input[name='referer']").val(),
+                    remember: $("input[name='remember']").val()
+                },
+                dataType: 'json'
+            }).done(function(data, textStatus, jqXHR) {
+                if (data.code === 'ok') {
+                    $('#alert').html('<div class="alert alert-success alert-dismissible" role="alert">'+data.msg+'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+                    location.href = data.data.referer;
+                } else {
+                    $('#alert').html('<div class="alert alert-danger alert-dismissible" role="alert">'+data.msg+'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+                }
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                $('#alert').html('<div class="alert alert-dark alert-dismissible" role="alert">'+textStatus+'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>')
+            });
+        }
+        $(this).addClass('was-validated');
+    });
+</script>
+<?php require __DIR__ . '/../bottom.phtml'; ?>

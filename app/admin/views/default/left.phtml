@@ -1,70 +1,30 @@
-<aside class="app-aside app-aside-expand-md app-aside-light">
-  <div class="aside-content">
-    <header class="aside-header d-block d-md-none">
-      <button class="btn-account" type="button" data-toggle="collapse" data-target="#dropdown-aside">
-        <span class="user-avatar user-avatar-lg">
-          <img src="/assets/images/avatars/profile.jpg" alt=""></span>
-        <span class="account-icon">
-          <span class="fa fa-caret-down fa-lg"></span>
-        </span>
-        <span class="account-summary">
-          <span class="account-name">Beni Arisandi</span>
-          <span class="account-description">Marketing Manager</span></span>
-      </button>
-      <div id="dropdown-aside" class="dropdown-aside collapse">
-        <div class="pb-3">
-          <a class="dropdown-item" href="#">
-            <span class="dropdown-icon oi oi-person"></span>Profile</a>
-          <a class="dropdown-item" href="/login/out/">
-            <span class="dropdown-icon oi oi-account-logout"></span>Logout</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#!">Help Center</a>
-          <a class="dropdown-item" href="#!">Ask Forum</a>
-          <a class="dropdown-item" href="#!">Keyboard Shortcuts</a></div>
-      </div>
-    </header>
-    <section class="aside-menu overflow-hidden">
-      <nav id="stacked-menu" class="stacked-menu">
-        <ul class="menu">
-          <li class="menu-item">
-            <a href="/" class="menu-link">
-              <span class="menu-icon fa fa-home"></span>
-              <span class="menu-text">Dashboard</span>
-              <span class="badge badge-success">20+</span>
-            </a>
-          </li>
-          <?php
-          foreach ($this->menus as $menu)
-          {
-          ?><li class="menu-item has-child"><a href="#" class="menu-link"><span class="menu-icon oi oi-<?php
-          echo $menu['icon'];
-          ?>"></span><span class="menu-text"><?php
-          echo $menu['name'];?></span></a><ul class="menu"><?php
-              foreach ($menu['childs'] as $menu)
-              {
-                  $active = strpos($this->uri, $menu['url']) ? ' has-active': '';
-              ?><li class="menu-item<?php echo $active;
-              ?>"><a href="/<?php echo $menu['url'];?>" class="menu-link"><?php echo $menu['name'];
-              ?></a></li><?php
-              }
-              ?></ul></li><?php
-          }?><script>$('#stacked-menu').find('.has-active').parent().parent().addClass('has-active');</script>
+<div class="leftside-menu">
+    <a href="index" class="logo text-center logo-light">
+        <span class="logo-lg"><img src="https://getbootstrap.com/docs/5.1/assets/brand/bootstrap-logo.svg" height="16"></span>
+        <span class="logo-sm"><img src="https://getbootstrap.com/docs/5.1/assets/brand/bootstrap-logo.svg" height="16"></span>
+    </a>
+    <a href="index" class="logo text-center logo-dark">
+        <span class="logo-lg"><img src="https://getbootstrap.com/docs/5.1/assets/brand/bootstrap-logo.svg" height="16"></span>
+        <span class="logo-sm"><img src="https://getbootstrap.com/docs/5.1/assets/brand/bootstrap-logo.svg" height="16"></span>
+    </a>
+    <div class="h-100" id="leftside-menu-container" data-simplebar>
+        <ul class="side-nav">
+            <li class="side-nav-title side-nav-item">Navigation</li>
+            <?php foreach ($this->menus as $menu) { ?>
+                <li class="side-nav-item">
+                    <a data-bs-toggle="collapse" href="#m<?php echo $menu['id']; ?>" aria-expanded="false" aria-controls="m<?php echo $menu['id']; ?>" class="side-nav-link">
+                        <i class="<?php echo $menu['icon']; ?>"></i><span> <?php echo $menu['name']; ?> </span><span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="m<?php echo $menu['id']; ?>">
+                        <ul class="side-nav-second-level">
+                            <?php foreach ($menu['childs'] as $menu) {?>
+                                <li><a href="<?php echo $menu['url']; ?>"><?php echo $menu['name']; ?></a></li>
+                            <?php } ?>
+                        </ul>
+                    </div>
+                </li>
+            <?php } ?>
         </ul>
-      </nav>
-    </section>
-    <div class="aside-footer border-top p-3">
-        <form action="/change/" method="get" name="change">
-            <select class="custom-select col-lg-5" onchange="document.change.submit()" name="lang_id">
-            <?php foreach (LangModel::getInstance()->getIds() as $text => $id) {
-                echo '<option value="'.$id.'"'.(APP_LANG_ID === (int) $id ? ' selected="selected"' : '').'>'.$text.'</option>';
-            }?>
-            </select>
-            <select class="custom-select col-lg-5" onchange="document.change.submit()" name="app_id">
-            <?php foreach (AppModel::getInstance()->getIds() as $text => $id) {
-                echo '<option value="'.$id.'"'.(APP_ID === (int) $id ? ' selected="selected"' : '').'>'.$text.'</option>';
-            }?>
-            </select>
-        </form>
+        <div class="clearfix"></div>
     </div>
-  </div>
-</aside>
+</div>

@@ -1,7 +1,7 @@
 <?php
-namespace Hook\Validate;
+declare(strict_types=1);
 
-use Yaconf;
+namespace Hook\Validate;
 
 class Validate
 {
@@ -17,12 +17,12 @@ class Validate
 
     public static function isEmail(string $value): bool
     {
-        return preg_match('/^'.Yaconf::get('dicRegexp')['core']['email'].'$/', $value);
+        return preg_match('/^'.apcu_fetch('global')['regexp']['core']['email'].'$/', $value);
     }
 
     public static function isUrl(string $value): bool
     {
-        return preg_match('/^'.Yaconf::get('dicRegexp')['core']['url'].'$/', $value);
+        return preg_match('/^'.apcu_fetch('global')['regexp']['core']['url'].'$/', $value);
     }
 
     public static function isMd5(string $value): bool
@@ -37,7 +37,7 @@ class Validate
 
     public static function isFloat(string $value): bool
     {
-        return preg_match('/^'.Yaconf::get('dicRegexp')['core']['float'].'$/', $value);
+        return preg_match('/^'.apcu_fetch('global')['regexp']['core']['float'].'$/', $value);
     }
 
     public static function isBool(string $value): bool
@@ -47,7 +47,7 @@ class Validate
 
     public static function isInt(string $value): bool
     {
-        return preg_match('/^'.Yaconf::get('dicRegexp')['core']['int'].'$/', $value);
+        return preg_match('/^'.apcu_fetch('global')['regexp']['core']['int'].'$/', $value);
     }
 
     public static function isPrice(string $value): bool
@@ -67,12 +67,12 @@ class Validate
 
     public static function isPhone(string $value): bool
     {
-        return preg_match('/^'.Yaconf::get('dicRegexp')['core']['phone'].'$/', $value);
+        return preg_match('/^'.apcu_fetch('global')['regexp']['core']['phone'].'$/', $value);
     }
 
     public static function isMobile(string $value): bool
     {
-        return preg_match('/^'.Yaconf::get('dicRegexp')['core']['mobile'].'$/', $value);
+        return preg_match('/^'.apcu_fetch('global')['regexp']['core']['mobile'].'$/', $value);
     }
 
     public static function isGenericName(string $value): bool
@@ -82,41 +82,41 @@ class Validate
 
     public static function isZh(string $value): bool
     {
-        return preg_match('/^'.Yaconf::get('dicRegexp')['core']['zh'].'$/', $value);
+        return preg_match('/^'.apcu_fetch('global')['regexp']['core']['zh'].'$/', $value);
     }
 
     public static function isMb(string $value): bool
     {
-        return preg_match('/^'.Yaconf::get('dicRegexp')['core']['mb'].'$/', $value);
+        return preg_match('/^'.apcu_fetch('global')['regexp']['core']['mb'].'$/', $value);
     }
 
     public static function isQq(string $value): bool
     {
-        return preg_match('/^'.Yaconf::get('dicRegexp')['core']['qq'].'$/', $value);
+        return preg_match('/^'.apcu_fetch('global')['regexp']['core']['qq'].'$/', $value);
     }
 
     public static function isPostal(string $value): bool
     {
-        return preg_match('/^'.Yaconf::get('dicRegexp')['core']['postal'].'$/', $value);
+        return preg_match('/^'.apcu_fetch('global')['regexp']['core']['postal'].'$/', $value);
     }
 
     public static function isIpv4(string $value): bool
     {
-        return preg_match('/^'.Yaconf::get('dicRegexp')['core']['ipv4'].'$/', $value);
+        return preg_match('/^'.apcu_fetch('global')['regexp']['core']['ipv4'].'$/', $value);
     }
 
     public static function isCard(string $value): bool
     {
-        return preg_match('/^'.Yaconf::get('dicRegexp')['core']['card'].'$/', $value);
+        return preg_match('/^'.apcu_fetch('global')['regexp']['core']['card'].'$/', $value);
     }
 
     public static function isDate(string $value): bool
     {
-        return preg_match('/^'.Yaconf::get('dicRegexp')['core']['date'].'$/', $value);
+        return preg_match('/^'.apcu_fetch('global')['regexp']['core']['date'].'$/', $value);
     }
 
     public static function isName(string $value): bool
     {
-        return preg_match('/^'.Yaconf::get('dicRegexp')['core']['name'].'$/', $value);
+        return preg_match('/^'.apcu_fetch('global')['regexp']['core']['name'].'$/', $value);
     }
 }

@@ -1,10 +1,10 @@
 .idea/
 .DS_Store
 
+composer.lock
+
 *.log
 *.pid
 *.jar
 
-composer.lock
-vendor/autoload.php
-vendor/composer
+vendor/*

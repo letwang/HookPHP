@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Base;
 
 use LangModel;
@@ -9,6 +11,8 @@ use Hook\Tools\Tools;
 
 abstract class AbstractModel extends Cache
 {
+    public object $orm;
+
     public string $table;
     public string $foreign;
 
@@ -30,6 +34,8 @@ abstract class AbstractModel extends Cache
 
     public function __construct($id = null)
     {
+        $this->orm = OrmConnect::getInstance();
+
         $this->id = (int) $id;
         $this->table = Tools::formatTableName('%p'.($this->table ?? '%s_'.strtolower(str_replace(['\\', 'Model'], ['_', ''], static::class))));
         $this->foreign = $this->foreign ?? substr(strrchr($this->table, '_'), 1).'_id';
@@ -65,7 +71,7 @@ abstract class AbstractModel extends Cache
             return $this->pdo->handle->commit() && $this->afterPost() ? $result['lastInsertId']: 0;
         } catch (\Throwable $e) {
             $this->pdo->handle->rollBack();
-            AbstractController::send([], 100003, $e->getMessage(), 500);
+            AbstractController::send([], 'throwableCatch', 500);
         }
     }
 
@@ -80,7 +86,7 @@ abstract class AbstractModel extends Cache
             return $this->pdo->handle->commit() && $this->afterDelete();
         } catch (\Throwable $e) {
             $this->pdo->handle->rollBack();
-            AbstractController::send([], 100005, $e->getMessage(), 500);
+            AbstractController::send([], 'throwableCatch', 500);
         }
     }
 
@@ -103,7 +109,7 @@ abstract class AbstractModel extends Cache
             return $this->pdo->handle->commit() && $this->afterPut();
         } catch (\Throwable $e) {
             $this->pdo->handle->rollBack();
-            AbstractController::send([], 100004, $e->getMessage(), 500);
+            AbstractController::send([], 'throwableCatch', 500);
         }
     }
 

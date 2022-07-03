@@ -1,9 +1,11 @@
 <?php
+declare(strict_types=1);
+
 use Yaf\{Dispatcher, Bootstrap_Abstract};
 
 class Bootstrap extends Bootstrap_Abstract
 {
-    public function _init(Dispatcher $dispatcher)
+    public function _initConfig(Dispatcher $dispatcher)
     {
         session_start();
 
@@ -19,7 +21,7 @@ class Bootstrap extends Bootstrap_Abstract
     }
 }
 
-function l(string $key)
+function l()
 {
-    return Yaconf::get('adminLang'.ucwords(APP_LANG_NAME).'.'.$key, $key);
+    return apcu_fetch('admin')[APP_LANG_NAME] + apcu_fetch(APP_NAME)[APP_LANG_NAME];
 }

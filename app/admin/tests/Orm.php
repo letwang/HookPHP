@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 require __DIR__ . '/../Init.php';
 
 $class = new ORM教程();

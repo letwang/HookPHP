@@ -1,43 +1,54 @@
 <?php
-isset($app) || exit('请至平台中运行：php app/[admin|iot|paas|payment|store]/bin/install.php'.PHP_EOL);
+declare(strict_types=1);
+
+isset($app) || exit('请至平台中运行：php app/[admin|iot|paas|payment|store]/bin/install.php' . PHP_EOL);
 
 use Hook\Db\{PdoConnect};
 
 function init(string $appName = APP_NAME)
 {
-    global $app;
+    global $app, $install;
     $pdo = PdoConnect::getInstance();
 
-    $pdo->handle->beginTransaction();
-    foreach (Yaconf::get('dicPdo.INSTALL.'.($appName === 'admin' ? 'ADMIN' : 'APP').'.STRUCT') as $sql) {
-        $sql = str_replace('%d', APP_CONFIG['mysql']['default']['dbname'], $sql);
-        $pdo->query($sql);
-    }
-    foreach (Yaconf::get('dicPdo.INSTALL.'.($appName === 'admin' ? 'ADMIN' : 'APP').'.DATA') as $sql) {
-        $pdo->query($sql);
-    }
-    $result = $pdo->handle->commit();
+    if ($install) {
+        foreach (apcu_fetch('global')['sql']['INSTALL'][$appName === 'admin' ? 'ADMIN' : 'APP']['STRUCT'] as $sql) {
+            $sql = str_replace('%d', APP_CONFIG['mysql']['default']['dbname'], $sql);
+            $pdo->query($sql);
+        }
 
-    $data = '';
-    foreach ($pdo->fetchAll(Yaconf::get('dicPdo.TABLE.GET_ALL'), [APP_CONFIG['application']['prefix'].$appName.'_%'], PDO::FETCH_NUM) as list($table)) {
-        $data .= '['.$table.']'.PHP_EOL;
-        foreach ($pdo->fetchAll('DESC `'.$table.'`') as $field) {
-            $data .= $field['Field'].'.type='.substr($field['Type'], 0, strpos($field['Type'], '(')).PHP_EOL;
-            $data .= $field['Field'].'.null='.$field['Null'].PHP_EOL;
-            $data .= $field['Field'].'.key='.$field['Key'].PHP_EOL;
-            $data .= $field['Field'].'.default='.$field['Default'].PHP_EOL;
-            $data .= $field['Field'].'.extra='.$field['Extra'].PHP_EOL;
+        $pdo->handle->beginTransaction();
+        foreach (apcu_fetch('global')['sql']['INSTALL'][$appName === 'admin' ? 'ADMIN' : 'APP']['DATA'] as $sql) {
+            $pdo->query($sql);
+        }
+        $result = $pdo->handle->commit();
+    } else {
+        $result = true;
+    }
+
+    $data = [];
+    foreach ($pdo->fetchAll(str_replace('?', '"'.APP_CONFIG['application']['prefix'] . $appName . '_%"', apcu_fetch('global')['sql']['TABLE']['GET_ALL']), [], PDO::FETCH_NUM) as list($table)) {
+        foreach ($pdo->fetchAll('DESC `' . $table . '`') as $field) {
+            $data[$table][$field['Field']] = [
+                'type' => strstr($field['Type'] . '(', '(', true),
+                'null' => $field['Null'],
+                'key' => $field['Key'],
+                'default' => $field['Default'],
+                'extra' => $field['Extra'],
+            ];
 
             $validate = validate($field['Type']);
-            $data .= $field['Field'].'.min='.$validate['min'].PHP_EOL;
-            $data .= $field['Field'].'.max='.$validate['max'].PHP_EOL;
-        }
-        $data .= PHP_EOL;
-    }
-    $result &= file_put_contents(getcwd().'/conf/'.$appName.'Table.ini', $data) > 0;
-    shell_exec('sudo service php7.4-fpm restart');
 
-    echo "初始化\e[3".($result ? 2 : 1)."m ".$appName." \e[0m平台数据完毕\n";
+            $data[$table][$field['Field']] += [
+                'min' => $validate['min'],
+                'max' => $validate['max'],
+            ];
+        }
+    }
+
+    $result &= file_put_contents(getcwd() . '/app/' . $appName . '/config/table.php', '<?php' . PHP_EOL . 'declare(strict_types=1);' . PHP_EOL. PHP_EOL . 'return ' . str_replace(['array (', ')'], ['[', ']'], var_export($data, true)) . ';') > 0;
+    shell_exec('sudo service php8.1-fpm restart');
+
+    echo "初始化\e[3" . ($result ? 2 : 1) . "m " . $appName . " \e[0m平台数据完毕\n";
 }
 
 function validate(string $type): array
@@ -48,7 +59,11 @@ function validate(string $type): array
         case strpos($type, 'tinyint') === 0:
             $data = ['min' => -128, 'max' => 127];
             if ($unsigned) {
-                $data = ['min' => 0, 'max' => strpos($type, '1') > 0 ? 1 : 255];
+                $data = ['min' => 0, 'max' => 255];
+            }  else {
+                if (strpos($type, '1')) {
+                    $data = ['min' => 0, 'max' => 1];
+                }
             }
             break;
         case strpos($type, 'smallint') === 0:
@@ -81,11 +96,13 @@ function validate(string $type): array
             return $data;
             break;
         case strpos($type, 'char') !== false:
-            $func = function ($value) {return mb_strlen($value);};
-            $data = ['min' => 0, 'max' => (int) preg_replace(['/var/', '/char/', '/\(/', '/\)/'], '', $type)];
+            $func = function ($value) {
+                return mb_strlen($value);
+            };
+            $data = ['min' => 0, 'max' => (int)preg_replace(['/var/', '/char/', '/\(/', '/\)/'], '', $type)];
             break;
         case strpos($type, 'binary') !== false:
-            $data = ['min' => 0, 'max' => (int) preg_replace(['/var/', '/binary/', '/\(/', '/\)/'], '', $type)];
+            $data = ['min' => 0, 'max' => (int)preg_replace(['/var/', '/binary/', '/\(/', '/\)/'], '', $type)];
             break;
         case strpos($type, 'tinytext') === 0 || strpos($type, 'tinyblob') === 0:
             $data = ['min' => 0, 'max' => 255];//255B

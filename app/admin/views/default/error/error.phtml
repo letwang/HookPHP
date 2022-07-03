@@ -1,28 +1,49 @@
 <?php require __DIR__.'/../top.phtml';?>
-<title><?php echo $this->title;?></title>
-<meta name="description" content="<?php echo $this->description;?>" />
-<meta name="keywords" content="<?php echo $this->keywords;?>" />
-</head>
-<body>
-<div class="app">
-  <?php require __DIR__.'/../head.phtml';?>
-  <?php require __DIR__.'/../left.phtml';?>
-  <main class="app-main">
-    <div class="wrapper">
-      <section class="empty-state">
-        <div class="empty-state-container">
-          <div class="state-figure">
-            <img class="img-fluid" src="/assets/images/illustration/img-2.png" style="max-width: 320px"> </div>
-          <h3 class="state-header"> Page Not found! </h3>
-          <p class="state-description lead text-muted"> <?php echo "Error Msg:" . $this->exception->getMessage();?> </p>
-          <div class="state-action">
-            <a href="/" class="btn btn-lg btn-light">
-              <i class="fa fa-angle-right"></i> Go Back</a>
-          </div>
+    <title><?php echo $this->title;?></title>
+    <meta name="description" content="<?php echo $this->description;?>" />
+    <meta name="keywords" content="<?php echo $this->keywords;?>" />
+    <link href="/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/css/app.min.css" rel="stylesheet" type="text/css" id="app-style" />
+    </head>
+    <body class="loading" data-layout-color="light" data-leftbar-theme="dark" data-layout-mode="fluid" data-rightbar-onstart="true">
+<div class="wrapper">
+    <?php require __DIR__.'/../left.phtml';?>
+    <div class="content-page">
+        <div class="content">
+            <?php require __DIR__.'/../topBar.phtml';?>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item"><a href="javascript: void(0);">Home</a></li>
+                                    <li class="breadcrumb-item"><a href="javascript: void(0);">Pages</a></li>
+                                    <li class="breadcrumb-item active">Starter</li>
+                                </ol>
+                            </div>
+                            <h4 class="page-title">Request ID:<?php echo SeasLog::getRequestID(); ?></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-lg-12">
+                        <div class="text-center">
+                            <img src="/assets/images/file-searching.svg" height="90" alt="File not found Image">
+
+                            <h1 class="text-error mt-4"><?php echo $this->exception->getCode(); ?></h1>
+                            <h4 class="text-danger mt-3"><?php echo $this->exception; ?></h4>
+                            <a class="btn btn-info mt-3" href="/"><i class="mdi mdi-reply"></i> Return Home</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </section>
+        <?php require __DIR__.'/../footer.phtml';?>
     </div>
-    <?php require __DIR__.'/../foot.phtml';?>
-  </main>
 </div>
+<?php require __DIR__.'/../rightBar.phtml';?>
+
+<script src="/assets/js/vendor.min.js"></script>
+<script src="/assets/js/app.min.js"></script>
 <?php require __DIR__.'/../bottom.phtml';?>
